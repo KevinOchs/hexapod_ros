@@ -1,0 +1,9 @@
+<!-- hexapod_teleop_joystick publisher -->
+<library path="lib/hexapod_teleop_joystick">
+  <class name="hexapod_teleop_joystick/hexapod_teleop_joystick" type="hexapod_teleop_joystick" 
+    base_class_type="nodelet::Nodelet">
+    <description>
+      hexapod_teleop_joystick publisher.
+    </description>
+  </class>
+</library>

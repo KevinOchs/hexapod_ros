@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>phidgets_api</name>
+  <version>0.2.0</version>
+  <description>A C++ Wrapper for the Phidgets C API</description>
+  
+  <maintainer email="muhrix@gmail.com">Murilo F. M. </maintainer>
+  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
+
+  <license>BSD</license>
+  <license>LGPLv3</license>
+
+  <url type="website">http://ros.org/wiki/phidgets_api</url>
+
+  <author>Tully Foote</author>
+  <author>Ivan Dryanovski</author>
+  <author email="patrick@phidgets.com">Copyright (C) 2010 Phidgets Inc. </author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

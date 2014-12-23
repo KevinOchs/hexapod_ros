@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <name>phidgets_drivers</name>
+  <version>0.2.0</version>
+  <description>API and ROS drivers for Phidgets devices</description>
+
+  <maintainer email="muhrix@gmail.com">Murilo F. M.</maintainer>
+  <maintainer email="ccnyroboticslab@gmail.com">Ivan Dryanovski</maintainer>
+
+  <license>BSD, LGPL</license>
+
+  <url type="website">http://ros.org/wiki/phidgets_drivers</url>
+
+  <author>Phidgets Inc.</author>
+  <author>Tully Foote</author>
+  <author>Ivan Dryanovski</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>phidgets_api</run_depend>
+  <run_depend>phidgets_imu</run_depend>
+
+  <export>
+    <metapackage />
+  </export>
+</package>

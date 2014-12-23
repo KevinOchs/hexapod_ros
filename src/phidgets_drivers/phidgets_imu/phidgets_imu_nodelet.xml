@@ -1,0 +1,9 @@
+<!-- Phidgets IMU nodelet publisher -->
+<library path="lib/libphidgets_imu_nodelet">
+  <class name="phidgets_imu/PhidgetsImuNodelet" type="PhidgetsImuNodelet" 
+    base_class_type="nodelet::Nodelet">
+    <description>
+      Phidgets IMU nodelet publisher.
+    </description>
+  </class>
+</library>

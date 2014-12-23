@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package>
+  <name>hexapod_locomotion</name>
+  <version>0.2.0</version>
+  <description>Locomtion node for a hexapod research platform</description>
+
+  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://ros.org</url>
+
+  <author email="kevin.ochs@gmail.com">Kevin Ochs</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>hexapod_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nodelet</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>std_srvs</build_depend>
+  <build_depend>tf</build_depend>
+  <run_depend>hexapod_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>nodelet</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>std_srvs</run_depend>
+  <run_depend>tf</run_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/hexapod_locomotion.xml" />
+  </export>
+</package>

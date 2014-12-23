@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot name="hexapod">
+    <link name="rr_coxa_link" />
+    <link name="rr_femur_link" />
+    <link name="rr_tibia_link" />
+    <link name="rr_tarsus_link" />
+
+    <link name="rm_coxa_link" />
+    <link name="rm_femur_link" />
+    <link name="rm_tibia_link" />
+    <link name="rm_tarsus_link" />
+
+    <link name="rf_coxa_link" />
+    <link name="rf_femur_link" />
+    <link name="rf_tibia_link" />
+    <link name="rf_tarsus_link" />
+
+    <link name="lr_coxa_link" />
+    <link name="lr_femur_link" />
+    <link name="lr_tibia_link" />
+    <link name="lr_tarsus_link" />
+
+    <link name="lm_coxa_link" />
+    <link name="lm_femur_link" />
+    <link name="lm_tibia_link" />
+    <link name="lm_tarsus_link" />
+
+    <link name="lf_coxa_link" />
+    <link name="lf_femur_link" />
+    <link name="lf_tibia_link" />
+    <link name="lf_tarsus_link" />
+
+    <link name="mm_body_link" />
+
+    <joint name="mm_body" type="floating">
+        <child link="mm_body_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <axis xyz="0 0.0 0" />
+    </joint>
+
+    <joint name="rr_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="rr_coxa_link"/>
+        <origin xyz="-82.5 177.8 0" rpy="0 -45 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="rr_femur_joint" type="planar">
+        <parent link="rr_coxa_link"/>
+        <child link="rr_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rr_tibia_joint" type="planar">
+        <parent link="rr_femur_link"/>
+        <child link="rr_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rr_tarsus_joint" type="planar">
+        <parent link="rr_tibia_link"/>
+        <child link="rr_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rr_tarsus_joint_end" type="fixed">
+        <parent link="rr_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <joint name="rm_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="rm_coxa_link"/>
+        <origin xyz="0 -133.35 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="rm_femur_joint" type="planar">
+        <parent link="rm_coxa_link"/>
+        <child link="rm_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rm_tibia_joint" type="planar">
+        <parent link="rm_femur_link"/>
+        <child link="rm_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rm_tarsus_joint" type="planar">
+        <parent link="rm_tibia_link"/>
+        <child link="rm_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rm_tarsus_joint_end" type="fixed">
+        <parent link="rm_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <joint name="rf_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="rf_coxa_link"/>
+        <origin xyz="-177.8 -82.5 0" rpy="0 45 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="rf_femur_joint" type="planar">
+        <parent link="rf_coxa_link"/>
+        <child link="rf_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rf_tibia_joint" type="planar">
+        <parent link="rf_femur_link"/>
+        <child link="rf_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rf_tarsus_joint" type="planar">
+        <parent link="rf_tibia_link"/>
+        <child link="rf_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="rf_tarsus_joint_end" type="fixed">
+        <parent link="rf_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <joint name="lr_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="lr_coxa_link"/>
+        <origin xyz="177.8 82.5 0" rpy="0 -45 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="lr_femur_joint" type="planar">
+        <parent link="lr_coxa_link"/>
+        <child link="lr_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lr_tibia_joint" type="planar">
+        <parent link="lr_femur_link"/>
+        <child link="lr_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lr_tarsus_joint" type="planar">
+        <parent link="lr_tibia_link"/>
+        <child link="lr_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lr_tarsus_joint_end" type="fixed">
+        <parent link="lr_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <joint name="lm_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="lm_coxa_link"/>
+        <origin xyz="0 133.35 0" rpy="0 0 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="lm_femur_joint" type="planar">
+        <parent link="lm_coxa_link"/>
+        <child link="lm_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lm_tibia_joint" type="planar">
+        <parent link="lm_femur_link"/>
+        <child link="lm_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lm_tarsus_joint" type="planar">
+        <parent link="lm_tibia_link"/>
+        <child link="lm_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lm_tarsus_joint_end" type="fixed">
+        <parent link="lm_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+    <joint name="lf_coxa_joint" type="planar">
+        <parent link="mm_body_link"/>
+        <child link="lf_coxa_link"/>
+        <origin xyz="-177.8 82.5 0" rpy="0 45 0" />
+        <axis xyz="0 1 0" />
+    </joint>
+
+    <joint name="lf_femur_joint" type="planar">
+        <parent link="lf_coxa_link"/>
+        <child link="lf_femur_link"/>
+        <origin xyz="58.93 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lf_tibia_joint" type="planar">
+        <parent link="lf_femur_link"/>
+        <child link="lf_tibia_link"/>
+        <origin xyz="107.984 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lf_tarsus_joint" type="planar">
+        <parent link="lf_tibia_link"/>
+        <child link="lf_tarsus_link"/>
+        <origin xyz="87.74 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 1" />
+    </joint>
+
+    <joint name="lf_tarsus_joint_end" type="fixed">
+        <parent link="lf_tarsus_link"/>
+        <origin xyz="120.65 0 0" rpy="0 0 0" />
+        <axis xyz="0 0 0" />
+    </joint>
+</robot>
