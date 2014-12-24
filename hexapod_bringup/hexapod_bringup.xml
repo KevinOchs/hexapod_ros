@@ -1,0 +1,9 @@
+<!-- hexapod_bringup publisher -->
+<library path="lib/hexapod_bringup">
+  <class name="hexapod_bringup/hexapod_bringup" type="hexapod_bringup" 
+    base_class_type="node::Node">
+    <description>
+      hexapod_bringup publisher.
+    </description>
+  </class>
+</library>

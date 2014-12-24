@@ -52,6 +52,21 @@ class ImuRosI : public Imu
     double angular_velocity_stdev_;
     double linear_acceleration_stdev_;
 
+    // compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
+    double cc_mag_field_;
+    double cc_offset0_;
+    double cc_offset1_;
+    double cc_offset2_;
+    double cc_gain0_;
+    double cc_gain1_;
+    double cc_gain2_;
+    double cc_T0_;
+    double cc_T1_;
+    double cc_T2_;
+    double cc_T3_;
+    double cc_T4_;
+    double cc_T5_;
+
     void calibrate();
     void initDevice();
     void dataHandler(CPhidgetSpatial_SpatialEventDataHandle* data, int count);

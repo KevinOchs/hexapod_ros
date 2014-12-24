@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Locomotion IMU launch file -->
 
 <launch>
@@ -71,6 +72,5 @@
             <!-- Distance from ground plane to femur rotation pivot -->
             FOOT_INIT_Z:         35.65
         </rosparam>
-
 </launch>
 

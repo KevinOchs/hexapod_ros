@@ -1,0 +1,95 @@
+<!-- Locomotion IMU launch file -->
+
+<launch>
+    <node name="Playstation3Controller" pkg="joy" type="joy_node" output="screen" />
+    <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" output="screen" />
+	<node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" args="load phidgets_imu/PhidgetsImuNodelet imu_manager" output="screen">
+    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
+		<param name="period" value="4"/>
+
+    # compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
+    <!-- <param name="cc_mag_field" value="0.52859"/>
+         <param name="cc_offset0" value="0.03921"/>
+         <param name="cc_offset1" value="0.19441"/>
+         <param name="cc_offset2" value="-0.03493"/>
+         <param name="cc_gain0" value="1.81704"/>
+         <param name="cc_gain1" value="1.81028"/>
+         <param name="cc_gain2" value="2.04819"/>
+         <param name="cc_t0" value="0.00142"/>
+         <param name="cc_t1" value="-0.03591"/>
+         <param name="cc_t2" value="0.00160 "/>
+         <param name="cc_t3" value="-0.05038"/>
+         <param name="cc_t4" value="-0.03942"/>
+         <param name="cc_t5" value="-0.05673"/> -->
+    </node>
+    <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" output="screen" />
+    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
+        <rosparam>
+            <!-- Gait Settings -->
+            CYCLE_LENGTH: 50
+            LEG_LIFT_HEIGHT: 40
+
+            <!-- Define Leg Measurements in mm -->
+            COXA_LENGTH:   58.93
+            FEMUR_LENGTH:  107.98
+            TIBIA_LENGTH:  87.74
+            TARSUS_LENGTH: 120.65
+
+            <!-- Define Angle Offsets in Degrees - Usually zero -->
+            OFFSET_ANGLE: 20
+
+            <!-- Define Initial Coxa Offsets in Degrees -->
+            RR_COXA_ANGLE: -45
+            RM_COXA_ANGLE:   0
+            RF_COXA_ANGLE:  45
+            LR_COXA_ANGLE: -45
+            LM_COXA_ANGLE:   0
+            LF_COXA_ANGLE:  45
+
+            <!-- Define distance in mm from center of the axis of the coxa joint -->
+            RR_OFFSET_Y: -82.5
+            RR_OFFSET_X:  177.8
+
+            RM_OFFSET_Y: -133.35
+            RM_OFFSET_X:  0.0
+
+            RF_OFFSET_Y: -82.5
+            RF_OFFSET_X: -177.8
+
+            LR_OFFSET_Y:  82.5
+            LR_OFFSET_X:  177.8
+
+            LM_OFFSET_Y:  133.35
+            LM_OFFSET_X:  0.0
+
+            LF_OFFSET_Y:  82.5
+            LF_OFFSET_X: -177.8
+
+            <!-- Define Start Position Of Feet in mm from the coxa joint -->
+            <!-- Middle Legs is body center to foot -->
+            <!-- math to find positions of front and back legs POS_Y = Middle leg start position * cos(45) -->
+            <!-- math to find positions of front and back legs POS_X = Middle leg start position * sin(45) -->
+
+            RR_INIT_FOOT_POS_Y:  134.35
+            RR_INIT_FOOT_POS_X:  134.35
+
+            RM_INIT_FOOT_POS_Y:  190.0
+            RM_INIT_FOOT_POS_X:  0
+
+            RF_INIT_FOOT_POS_Y:  134.35
+            RF_INIT_FOOT_POS_X: -134.35
+
+            LR_INIT_FOOT_POS_Y:  134.35
+            LR_INIT_FOOT_POS_X:  134.35
+
+            LM_INIT_FOOT_POS_Y:  190.0
+            LM_INIT_FOOT_POS_X:  0
+
+            LF_INIT_FOOT_POS_Y:  134.35
+            LF_INIT_FOOT_POS_X: -134.35
+
+            <!-- Distance from ground plane to femur rotation pivot -->
+            FOOT_INIT_Z:         35.65
+        </rosparam>
+</launch>
+

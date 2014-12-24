@@ -61,7 +61,8 @@ add_dependencies(phidget21 libphidget21)
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_library(phidgets_api src/phidget.cpp
-                         src/imu.cpp)
+                         src/imu.cpp
+                         src/ir.cpp)
 
 # the line below is not necessary, since the external project has already been built
 #add_dependencies(phidgets_api phidget21)

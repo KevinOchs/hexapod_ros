@@ -28,7 +28,9 @@
 // Author: Kevin M. Ochs
 
 #include <control.h>
+#include <math.h>
 
+static const double PI = atan(1.0)*4.0;
 //==============================================================================
 // Constructor
 //==============================================================================
@@ -37,6 +39,7 @@ Control::Control( void )
 {
     prev_hex_state_ = false;
     hex_state_ = false;
+    IMU_init_store_ = false;
     root_.y = 0.0;
     root_.x = 0.0;
     root_.yaw = 0.0;
@@ -62,6 +65,7 @@ Control::Control( void )
     body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this);
     head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this);
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this);
+    IMU_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data_raw", 1, &Control::IMUCallback, this);
 }
 
 //==============================================================================
@@ -150,5 +154,25 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             ROS_WARN("Hexapod locomotion shutting down servos.");
         }
     }
+}
+
+// So not ready. Just figuring out the math and hardware orientation 
+void Control::IMUCallback( const sensor_msgs::ImuConstPtr &imu_msg )
+{
+	const geometry_msgs::Vector3 &lin_acc = imu_msg->linear_acceleration; 
+
+    if ( IMU_init_store == false )
+    {
+		roll_init_ = atan2(lin_acc.x, sqrt(lin_acc.y*lin_acc.y + lin_acc.z*lin_acc.z));
+		pitch_init_ = -atan2(lin_acc.y, lin_acc.z));
+		// pitch_init = ( pitch_init >= 0 ) ? ( PI - pitch_init ) : ( -pitch_init - PI );
+        IMU_init_store = true;
+    }
+
+	double roll = atan2(lin_acc.x, sqrt(lin_acc.y*lin_acc.y + lin_acc.z*lin_acc.z));
+	double pitch = -atan2(lin_acc.y, lin_acc.z));
+	// pitch = ( pitch >= 0 ) ? ( PI - pitch ) : ( -pitch - PI );
+
+	ROS_INFO("-------------------------------------------");
 }
 

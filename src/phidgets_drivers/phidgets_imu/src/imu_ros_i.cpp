@@ -21,6 +21,21 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   if (!nh_private_.getParam ("linear_acceleration_stdev", linear_acceleration_stdev_))
     linear_acceleration_stdev_ = 300.0 * 1e-6 * G; // 300 ug as per manual
 
+  bool has_compass_params =
+      nh_private_.getParam ("cc_mag_field", cc_mag_field_)
+      && nh_private_.getParam ("cc_offset0", cc_offset0_)
+      && nh_private_.getParam ("cc_offset1", cc_offset1_)
+      && nh_private_.getParam ("cc_offset2", cc_offset2_)
+      && nh_private_.getParam ("cc_gain0", cc_gain0_)
+      && nh_private_.getParam ("cc_gain1", cc_gain1_)
+      && nh_private_.getParam ("cc_gain2", cc_gain2_)
+      && nh_private_.getParam ("cc_t0", cc_T0_)
+      && nh_private_.getParam ("cc_t1", cc_T1_)
+      && nh_private_.getParam ("cc_t2", cc_T2_)
+      && nh_private_.getParam ("cc_t3", cc_T3_)
+      && nh_private_.getParam ("cc_t4", cc_T4_)
+      && nh_private_.getParam ("cc_t5", cc_T5_);
+
   // **** advertise topics
 
   imu_publisher_ = nh_.advertise<ImuMsg>(
@@ -62,6 +77,23 @@ ImuRosI::ImuRosI(ros::NodeHandle nh, ros::NodeHandle nh_private):
   }
 
   initDevice();
+
+  if (has_compass_params)
+  {
+    int result = CPhidgetSpatial_setCompassCorrectionParameters(imu_handle_, cc_mag_field_,
+          cc_offset0_, cc_offset1_, cc_offset2_, cc_gain0_, cc_gain1_, cc_gain2_,
+          cc_T0_, cc_T1_, cc_T2_, cc_T3_, cc_T4_, cc_T5_);
+    if (result)
+    {
+      const char *err;
+      CPhidget_getErrorDescription(result, &err);
+      ROS_ERROR("Problem while trying to set compass correction params: '%s'.", err);
+    }
+  }
+  else
+  {
+    ROS_INFO("No compass correction params found.");
+  }
 }
 
 void ImuRosI::initDevice()
