@@ -62,25 +62,30 @@ class Control
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
         hexapod_msgs::State state_;
-		sensor_msgs::Imu init_IMU_;
-		sensor_msgs::Imu IMU_;
     private:
+		bool imu_init_stored_;
+		double imu_roll_lowpass_;
+		double imu_pitch_lowpass_;
+		double imu_yaw_lowpass_;
+		double imu_roll_init_;
+		double imu_pitch_init_;
+        hexapod_msgs::State imu_override_;
+		sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
-		bool IMU_init_store_;
-		double roll_init_;
-		double pitch_init_;
         void rootCallback( const hexapod_msgs::RootJointConstPtr &root_msg );
         void bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg );
         void headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg );
         void stateCallback( const hexapod_msgs::StateConstPtr &state_msg );
-        void IMUCallback( const sensor_msgs::ImuConstPtr &imu_msg );
+        void imuOverrideCallback( const hexapod_msgs::StateConstPtr &imuOverride_msg );
+        void imuCallback( const sensor_msgs::ImuConstPtr &imu_msg );
         ros::NodeHandle nh_;
         ros::Subscriber root_sub_;
         ros::Subscriber body_sub_;
         ros::Subscriber head_sub_;
         ros::Subscriber state_sub_;
-		ros::Subscriber IMU_sub_;
+		ros::Subscriber imu_sub_;
+		ros::Subscriber imu_override_sub_;
 };
 
 #endif // CONTROL_H_

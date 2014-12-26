@@ -39,7 +39,8 @@ Control::Control( void )
 {
     prev_hex_state_ = false;
     hex_state_ = false;
-    IMU_init_store_ = false;
+    imu_init_stored_ = false;
+    imu_override_.active = false;
     root_.y = 0.0;
     root_.x = 0.0;
     root_.yaw = 0.0;
@@ -65,7 +66,8 @@ Control::Control( void )
     body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this);
     head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this);
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this);
-    IMU_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data_raw", 1, &Control::IMUCallback, this);
+    imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this);
+    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data_raw", 1, &Control::imuCallback, this);
 }
 
 //==============================================================================
@@ -109,8 +111,11 @@ void Control::rootCallback( const hexapod_msgs::RootJointConstPtr &root_msg )
 
 void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
 {
-    body_.pitch = body_.pitch + ( body_msg->pitch - body_.pitch ) / 30.0; // 12 degrees max
-    body_.roll = body_.roll + ( body_msg->roll - body_.roll ) / 30.0; // 12 degrees max
+    if ( imu_override_.active == true )
+    {
+        body_.pitch = body_.pitch + ( body_msg->pitch - body_.pitch ) / 30.0; // 12 degrees max
+        body_.roll = body_.roll + ( body_msg->roll - body_.roll ) / 30.0; // 12 degrees max
+    }
 }
 
 void Control::headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg )
@@ -156,23 +161,65 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
     }
 }
 
-// So not ready. Just figuring out the math and hardware orientation 
-void Control::IMUCallback( const sensor_msgs::ImuConstPtr &imu_msg )
+void Control::imuOverrideCallback( const hexapod_msgs::StateConstPtr &imu_override_msg )
 {
-	const geometry_msgs::Vector3 &lin_acc = imu_msg->linear_acceleration; 
+    imu_override_.active = imu_override_msg->active;
+}
 
-    if ( IMU_init_store == false )
+void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
+{
+    if ( imu_override_.active == false )
     {
-		roll_init_ = atan2(lin_acc.x, sqrt(lin_acc.y*lin_acc.y + lin_acc.z*lin_acc.z));
-		pitch_init_ = -atan2(lin_acc.y, lin_acc.z));
-		// pitch_init = ( pitch_init >= 0 ) ? ( PI - pitch_init ) : ( -pitch_init - PI );
-        IMU_init_store = true;
+        const geometry_msgs::Vector3 &lin_acc = imu_msg->linear_acceleration;
+
+        if ( imu_init_stored_ == false )
+        {
+            imu_roll_init_ = atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) );
+            imu_pitch_init_ = -atan2( lin_acc.y, lin_acc.z );
+            imu_pitch_init_ = ( imu_pitch_init_ >= 0 ) ? ( PI - imu_pitch_init_ ) : ( -imu_pitch_init_ - PI );
+            imu_init_stored_ = true;
+        }
+
+        imu_roll_lowpass_ = lin_acc.x * 0.01 + ( imu_roll_lowpass_ * ( 1.0 - 0.01 ) );
+        imu_pitch_lowpass_ = lin_acc.y * 0.01 + ( imu_pitch_lowpass_ * ( 1.0 - 0.01 ) );
+        imu_yaw_lowpass_ = lin_acc.z * 0.01 + ( imu_yaw_lowpass_ * ( 1.0 - 0.01 ) );
+
+        double roll = atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) );
+        double pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
+        pitch = ( pitch >= 0 ) ? ( PI - pitch ) : ( -pitch - PI );
+
+		double roll_delta = std::abs( imu_roll_init_ ) - std::abs( roll );
+		double pitch_delta = std::abs( imu_pitch_init_ ) - std::abs( pitch );
+        roll_delta = roll_delta * 180.0 / PI;
+        pitch_delta = pitch_delta * 180.0 / PI;
+        // if ( roll_delta < -1 )
+        // {
+            // if ( body_.roll < 12 )
+            // {
+                // body_.roll = body_.roll + 0.01;
+            // }
+        // }
+        // if ( roll_delta > 1 )
+        // {
+            // if ( body_.roll > - 12 )
+            // {
+                // body_.roll = body_.roll - 0.01;
+            // }
+        // }
+        // if ( pitch_delta < -1 )
+        // {
+            // if ( body_.pitch > -12 )
+            // {
+                // body_.pitch = body_.pitch - 0.01;
+            // }
+        // }
+        // if ( pitch_delta > 1 )
+        // {
+            // if ( body_.pitch < 12 )
+            // {
+                // body_.pitch = body_.pitch + 0.01;
+            // }
+        // }
     }
-
-	double roll = atan2(lin_acc.x, sqrt(lin_acc.y*lin_acc.y + lin_acc.z*lin_acc.z));
-	double pitch = -atan2(lin_acc.y, lin_acc.z));
-	// pitch = ( pitch >= 0 ) ? ( PI - pitch ) : ( -pitch - PI );
-
-	ROS_INFO("-------------------------------------------");
 }
 

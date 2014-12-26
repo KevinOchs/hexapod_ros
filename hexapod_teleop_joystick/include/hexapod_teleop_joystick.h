@@ -43,10 +43,12 @@ class HexapodTeleopJoystick
         hexapod_msgs::BodyJoint body_;
         hexapod_msgs::HeadJoint head_;
         hexapod_msgs::State state_;
+        hexapod_msgs::State imu_override_;
         ros::Publisher root_pub_;
         ros::Publisher body_pub_;
         ros::Publisher head_pub_;
         ros::Publisher state_pub_;
+        ros::Publisher imu_override_pub_;
     private:
         void joyCallback( const sensor_msgs::Joy::ConstPtr &joy );
         ros::NodeHandle nh_;

@@ -47,11 +47,13 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     body_.roll = 0.0;
     head_.yaw = 0.0;
     state_.active = false;
+	imu_Override_.active = false;
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     root_pub_ = nh_.advertise<hexapod_msgs::RootJoint>("root", 100);
     body_pub_ = nh_.advertise<hexapod_msgs::BodyJoint>("body", 100);
     head_pub_ = nh_.advertise<hexapod_msgs::HeadJoint>("head", 100);
     state_pub_ = nh_.advertise<hexapod_msgs::State>("state", 100);
+    imu_override_pub_ = nh_.advertise<hexapod_msgs::State>("imu_override", 100);
 }
 
 //==============================================================================
@@ -75,17 +77,20 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
             state_.active = false;
         }
     }
-
     if ( joy->buttons[9] == 1 )
     {
-        head_.yaw = joy->axes[2] * 16.0;
+        imu_override_.active = true;
     }
-
+	else
+	{
+		imu_override_.active = false;
+	}
     // Body shift L1 Button for testing
     if ( joy->buttons[8] == 1 )
     {
-        body_.pitch = -joy->axes[1] * 12.0;
-        body_.roll = -joy->axes[0] * 12.0;
+        body_.pitch = -joy->axes[1] * 10.0;
+        body_.roll = -joy->axes[0] * 10.0;
+		head_.yaw = joy->axes[2] * 16.0;
     }
 
     // Travelling ( 8cm/s )
@@ -113,6 +118,7 @@ int main(int argc, char** argv)
         hexapodTeleopJoystick.body_pub_.publish( hexapodTeleopJoystick.body_ );
         hexapodTeleopJoystick.head_pub_.publish( hexapodTeleopJoystick.head_ );
         hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
+		hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
         loop_rate.sleep();
     }
 
