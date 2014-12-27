@@ -106,7 +106,7 @@ void Control::rootCallback( const hexapod_msgs::RootJointConstPtr &root_msg )
 {
     root_.y = root_.y + ( root_msg->y - root_.y ) / 20.0; // 40 mm max
     root_.x = root_.x + ( root_msg->x - root_.x ) / 20.0; // 40 mm max
-    root_.yaw = root_.yaw + ( root_msg->yaw - root_.yaw ) / 4.0; // 8 degrees max
+    root_.yaw = root_.yaw + ( root_msg->yaw - root_.yaw ) / 20.0; // 8 degrees max
 }
 
 void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
@@ -174,7 +174,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
         if ( imu_init_stored_ == false )
         {
-            imu_roll_init_ = atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) );
+            imu_roll_init_ = -atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) );
             imu_pitch_init_ = -atan2( lin_acc.y, lin_acc.z );
             imu_pitch_init_ = ( imu_pitch_init_ >= 0 ) ? ( PI - imu_pitch_init_ ) : ( -imu_pitch_init_ - PI );
             imu_init_stored_ = true;
@@ -184,42 +184,42 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         imu_pitch_lowpass_ = lin_acc.y * 0.01 + ( imu_pitch_lowpass_ * ( 1.0 - 0.01 ) );
         imu_yaw_lowpass_ = lin_acc.z * 0.01 + ( imu_yaw_lowpass_ * ( 1.0 - 0.01 ) );
 
-        double roll = atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) );
-        double pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
-        pitch = ( pitch >= 0 ) ? ( PI - pitch ) : ( -pitch - PI );
+        double imu_roll = -atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) );
+        double imu_pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
+        imu_pitch = ( imu_pitch >= 0 ) ? ( PI - imu_pitch ) : ( -imu_pitch - PI );
 
-		double roll_delta = std::abs( imu_roll_init_ ) - std::abs( roll );
-		double pitch_delta = std::abs( imu_pitch_init_ ) - std::abs( pitch );
-        roll_delta = roll_delta * 180.0 / PI;
-        pitch_delta = pitch_delta * 180.0 / PI;
-        // if ( roll_delta < -1 )
-        // {
-            // if ( body_.roll < 12 )
-            // {
-                // body_.roll = body_.roll + 0.01;
-            // }
-        // }
-        // if ( roll_delta > 1 )
-        // {
-            // if ( body_.roll > - 12 )
-            // {
-                // body_.roll = body_.roll - 0.01;
-            // }
-        // }
-        // if ( pitch_delta < -1 )
-        // {
-            // if ( body_.pitch > -12 )
-            // {
-                // body_.pitch = body_.pitch - 0.01;
-            // }
-        // }
-        // if ( pitch_delta > 1 )
-        // {
-            // if ( body_.pitch < 12 )
-            // {
-                // body_.pitch = body_.pitch + 0.01;
-            // }
-        // }
+		double imu_roll_delta = imu_roll_init_ - imu_roll;
+		double imu_pitch_delta = imu_pitch_init_ - imu_pitch;
+        imu_roll_delta = imu_roll_delta * 180.0 / PI;
+        imu_pitch_delta = imu_pitch_delta * 180.0 / PI;
+        if ( imu_roll_delta < -1 )
+        {
+            if ( body_.roll < 12 )
+            {
+                body_.roll = body_.roll + 0.01;
+            }
+        }
+        if ( imu_roll_delta > 1 )
+        {
+            if ( body_.roll > -12 )
+            {
+                body_.roll = body_.roll - 0.01;
+            }
+        }
+        if ( imu_pitch_delta < -1 )
+        {
+            if ( body_.pitch < 12 )
+            {
+                body_.pitch = body_.pitch + 0.01;
+            }
+        }
+        if ( imu_pitch_delta > 1 )
+        {
+            if ( body_.pitch > -12 )
+            {
+                body_.pitch = body_.pitch - 0.01;
+            }
+        }
     }
 }
 

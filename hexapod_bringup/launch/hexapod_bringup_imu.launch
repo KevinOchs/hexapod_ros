@@ -22,6 +22,14 @@
          <param name="cc_t4" value="-0.03942"/>
          <param name="cc_t5" value="-0.05673"/> -->
     </node>
+
+	<node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" 
+		args="load imu_filter_madgwick/ImuFilterNodelet imu_manager" 
+		output="screen">
+
+		<param name="use_mag" value="true"/>
+
+	</node>
     <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" output="screen" />
     <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
         <rosparam>

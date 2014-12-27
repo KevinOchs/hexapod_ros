@@ -36,7 +36,7 @@ ImuFilter::ImuFilter(ros::NodeHandle nh, ros::NodeHandle nh_private):
   // **** get paramters
 
   if (!nh_private_.getParam ("use_mag", use_mag_))
-   use_mag_ = false;
+   use_mag_ = true;
   if (!nh_private_.getParam ("publish_tf", publish_tf_))
    publish_tf_ = true;
   if (!nh_private_.getParam ("fixed_frame", fixed_frame_))
@@ -44,7 +44,7 @@ ImuFilter::ImuFilter(ros::NodeHandle nh, ros::NodeHandle nh_private):
   if (!nh_private_.getParam ("constant_dt", constant_dt_))
     constant_dt_ = 0.0;
   if (!nh_private_.getParam ("publish_debug_topics", publish_debug_topics_))
-    publish_debug_topics_= true;
+    publish_debug_topics_= false;
 
   // check for illegal constant_dt values
   if (constant_dt_ < 0.0)
