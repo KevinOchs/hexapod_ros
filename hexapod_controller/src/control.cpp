@@ -67,7 +67,7 @@ Control::Control( void )
     head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this);
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this);
     imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this);
-    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data_raw", 1, &Control::imuCallback, this);
+    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this);
 }
 
 //==============================================================================
@@ -104,17 +104,17 @@ bool Control::getPrevHexActiveState( void )
 
 void Control::rootCallback( const hexapod_msgs::RootJointConstPtr &root_msg )
 {
-    root_.y = root_.y + ( root_msg->y - root_.y ) / 20.0; // 40 mm max
-    root_.x = root_.x + ( root_msg->x - root_.x ) / 20.0; // 40 mm max
-    root_.yaw = root_.yaw + ( root_msg->yaw - root_.yaw ) / 20.0; // 8 degrees max
+	    root_.x = root_msg->x * 0.01 + ( root_.x * ( 1.0 - 0.01 ) );
+        root_.y  = root_msg->y * 0.01 + ( root_.y * ( 1.0 - 0.01 ) );
+        root_.yaw = root_msg->yaw * 0.01 + ( root_.yaw * ( 1.0 - 0.01 ) );
 }
 
 void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
 {
     if ( imu_override_.active == true )
     {
-        body_.pitch = body_.pitch + ( body_msg->pitch - body_.pitch ) / 30.0; // 12 degrees max
-        body_.roll = body_.roll + ( body_msg->roll - body_.roll ) / 30.0; // 12 degrees max
+	    body_.pitch  = body_msg->pitch * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
+        body_.roll = body_msg->roll * 0.01 + ( body_.roll * ( 1.0 - 0.01 ) );
     }
 }
 

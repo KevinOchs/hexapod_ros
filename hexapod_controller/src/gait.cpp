@@ -93,9 +93,9 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetP
 void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPositions *feet )
 {
     // Check to see if we are actually travelling
-    if ( ( std::abs( root.y ) > 0.5 ) ||
-         ( std::abs( root.x ) > 0.5 ) ||
-         ( std::abs( root.yaw ) > 0.5 ) )
+    if ( ( std::abs( root.y ) > 1 ) ||
+         ( std::abs( root.x ) > 1 ) ||
+         ( std::abs( root.yaw ) > 1 ) )
     {
         is_travelling_ = true;
     }

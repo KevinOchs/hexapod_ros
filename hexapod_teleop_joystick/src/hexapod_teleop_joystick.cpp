@@ -82,8 +82,8 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     if ( joy->buttons[8] == 1 )
     {
         imu_override_.active = true;
-        body_.pitch = -joy->axes[1] * 10.0;
-        body_.roll = -joy->axes[0] * 10.0;
+        body_.pitch = -joy->axes[1] * 8.0;
+        body_.roll = -joy->axes[0] * 8.0;
 		head_.yaw = joy->axes[2] * 16.0;
     }
 	else
@@ -94,9 +94,9 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     // Travelling ( 8cm/s )
     if ( joy->buttons[8] != 1 )
     {
-        root_.y = joy->axes[0] * 40.0;
-        root_.x = -joy->axes[1] * 40.0;
-        root_.yaw = -joy->axes[2] * 8.0;
+		root_.x = ( -joy->axes[1] * 40.0 ) * 0.05 + ( root_.x * ( 1.0 - 0.05 ) );
+		root_.y = ( joy->axes[0] * 40.0 ) * 0.05 + ( root_.y * ( 1.0 - 0.05 ) );
+		root_.yaw = ( -joy->axes[2] * 8.0 ) * 0.025 + ( root_.yaw * ( 1.0 - 0.025 ) );
     }
 }
 

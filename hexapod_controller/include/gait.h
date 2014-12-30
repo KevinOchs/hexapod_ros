@@ -35,6 +35,7 @@
 #include <algorithm>
 #include <hexapod_msgs/RootJoint.h>
 #include <hexapod_msgs/FeetPositions.h>
+#include <hexapod_msgs/RootJoint.h>
 
 //=============================================================================
 // Define structs and classes for gait system
