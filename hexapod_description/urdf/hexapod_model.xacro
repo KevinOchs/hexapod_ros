@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="hexapod">
+
+<!-- Build the body frame -->
+    <link name="base_link" />
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="body" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+    <link name="body">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <cylinder radius="5" length="5"/>
+                </geometry>
+                <material name="grey">
+                    <color rgba="0.5 0.5 0.5 1" />
+                </material>
+            </visual>
+    </link>
+
+<!-- Pi parameter -->
+    <xacro:property name="pi" value="3.1415926535897931" />
+
+<!-- Joint properties -->
+    <xacro:property name="joint_lower_limit" value="-${1.5}" />
+    <xacro:property name="joint_upper_limit" value="${1.5}" />
+    <xacro:property name="joint_effort" value="10000" />
+    <xacro:property name="joint_velocity" value="100" />
+
+    <!-- Leg macros -->
+    <xacro:macro name="leg" params="side position x y angle">
+
+<!-- Build leg -->
+
+        <joint name="${side}${position}_leg_center_joint" type="fixed">
+                <origin xyz="${x} ${y} 0" rpy="0 0 0" />
+                <parent link="body" />
+                <child link="${side}${position}_leg_center" />
+        </joint>
+
+        <link name="${side}${position}_leg_center" />
+
+        <joint name="${side}${position}_coxa_joint" type="revolute">
+                <origin xyz="0 0 0" rpy="0 0 ${angle}" />
+                <parent link="${side}${position}_leg_center" />
+                <child link="${side}${position}_coxa" />
+                <axis xyz="0 0 -1" />
+                <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+
+        <link name="${side}${position}_coxa">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <cylinder radius="1" length="3"/>
+                    </geometry>
+                    <material name="">
+                        <color rgba="0.7 0.7 0 1" />
+                    </material>
+                </visual>
+        </link>
+
+        <joint name="${side}${position}_femur_joint" type="revolute">
+                <origin xyz="58.93 0 0" rpy="-${pi/2} 0 0" />
+                <parent link="${side}${position}_coxa" />
+                <child link="${side}${position}_femur" />
+                <axis xyz="0 0 -1" />
+                <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+
+        <link name="${side}${position}_femur">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <cylinder radius="1" length="3"/>
+                    </geometry>
+                    <material name="">
+                        <color rgba="0 0.7 0.7 1" />
+                    </material>
+                </visual>
+        </link>
+
+        <joint name="${side}${position}_tibia_joint" type="revolute">
+                <origin xyz="107.98 0 0" rpy="-${pi/2} 0 0" />
+                <parent link="${side}${position}_femur" />
+                <child link="${side}${position}_tibia" />
+                <axis xyz="0 0 -1" />
+                <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+
+        <link name="${side}${position}_tibia">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <cylinder radius="1" length="3"/>
+                    </geometry>
+                    <material name="">
+                        <color rgba="0 0.7 0.7 1" />
+                    </material>
+                </visual>
+        </link>
+
+        <joint name="${side}${position}_tarsus_joint" type="revolute">
+                <origin xyz="87.74 0 0" rpy="${pi} 0 ${pi/2}" />
+                <parent link="${side}${position}_tibia" />
+                <child link="${side}${position}_tarsus" />
+                <axis xyz="0 0 1" />
+                <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+
+        <link name="${side}${position}_tarsus">
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <cylinder radius="1" length="3"/>
+                    </geometry>
+                    <material name="">
+                        <color rgba="0.7 0 0.7 1" />
+                    </material>
+                </visual>
+        </link>
+
+        <joint name="${side}${position}_tarsus_foot_joint" type="fixed">
+                <origin xyz="120.65 0 0" rpy="0 0 0" />
+                <parent link="${side}${position}_tarsus" />
+                <child link="${side}${position}_tarsus_foot" />
+        </joint>
+
+        <link name="${side}${position}_tarsus_foot" />
+
+    </xacro:macro>
+
+<!-- Build robot model -->
+    <xacro:leg side="R" position="R" x="177.8"  y="-82.5"   angle="-${pi/4}" />
+    <xacro:leg side="R" position="M" x="0.0"    y="-133.35" angle="${pi/2}" />
+    <xacro:leg side="R" position="F" x="-177.8" y="-82.5"   angle="${pi*1/4}" />
+    <xacro:leg side="L" position="R" x="177.8"  y="82.5"    angle="-${pi/4}" />
+    <xacro:leg side="L" position="M" x="0.0"    y="133.35"  angle="${pi/2}" />
+    <xacro:leg side="L" position="F" x="-177.8" y="82.5"    angle="${pi*1/4}" />
+
+</robot>

@@ -1,0 +1,116 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"body" [label="body"];
+"LF_leg_center" [label="LF_leg_center"];
+"LF_coxa" [label="LF_coxa"];
+"LF_femur" [label="LF_femur"];
+"LF_tibia" [label="LF_tibia"];
+"LF_tarsus" [label="LF_tarsus"];
+"LF_tarsus_foot" [label="LF_tarsus_foot"];
+"LM_leg_center" [label="LM_leg_center"];
+"LM_coxa" [label="LM_coxa"];
+"LM_femur" [label="LM_femur"];
+"LM_tibia" [label="LM_tibia"];
+"LM_tarsus" [label="LM_tarsus"];
+"LM_tarsus_foot" [label="LM_tarsus_foot"];
+"LR_leg_center" [label="LR_leg_center"];
+"LR_coxa" [label="LR_coxa"];
+"LR_femur" [label="LR_femur"];
+"LR_tibia" [label="LR_tibia"];
+"LR_tarsus" [label="LR_tarsus"];
+"LR_tarsus_foot" [label="LR_tarsus_foot"];
+"RF_leg_center" [label="RF_leg_center"];
+"RF_coxa" [label="RF_coxa"];
+"RF_femur" [label="RF_femur"];
+"RF_tibia" [label="RF_tibia"];
+"RF_tarsus" [label="RF_tarsus"];
+"RF_tarsus_foot" [label="RF_tarsus_foot"];
+"RM_leg_center" [label="RM_leg_center"];
+"RM_coxa" [label="RM_coxa"];
+"RM_femur" [label="RM_femur"];
+"RM_tibia" [label="RM_tibia"];
+"RM_tarsus" [label="RM_tarsus"];
+"RM_tarsus_foot" [label="RM_tarsus_foot"];
+"RR_leg_center" [label="RR_leg_center"];
+"RR_coxa" [label="RR_coxa"];
+"RR_femur" [label="RR_femur"];
+"RR_tibia" [label="RR_tibia"];
+"RR_tarsus" [label="RR_tarsus"];
+"RR_tarsus_foot" [label="RR_tarsus_foot"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "base_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"base_joint" -> "body"
+"body" -> "LF_leg_center_joint" [label="xyz: -177.8 82.5 0 \nrpy: 0 -0 0"]
+"LF_leg_center_joint" -> "LF_leg_center"
+"LF_leg_center" -> "LF_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0.785398"]
+"LF_coxa_joint" -> "LF_coxa"
+"LF_coxa" -> "LF_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"LF_femur_joint" -> "LF_femur"
+"LF_femur" -> "LF_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"LF_tibia_joint" -> "LF_tibia"
+"LF_tibia" -> "LF_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"LF_tarsus_joint" -> "LF_tarsus"
+"LF_tarsus" -> "LF_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"LF_tarsus_foot_joint" -> "LF_tarsus_foot"
+"body" -> "LM_leg_center_joint" [label="xyz: 0 133.35 0 \nrpy: 0 -0 0"]
+"LM_leg_center_joint" -> "LM_leg_center"
+"LM_leg_center" -> "LM_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 1.5708"]
+"LM_coxa_joint" -> "LM_coxa"
+"LM_coxa" -> "LM_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"LM_femur_joint" -> "LM_femur"
+"LM_femur" -> "LM_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"LM_tibia_joint" -> "LM_tibia"
+"LM_tibia" -> "LM_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"LM_tarsus_joint" -> "LM_tarsus"
+"LM_tarsus" -> "LM_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"LM_tarsus_foot_joint" -> "LM_tarsus_foot"
+"body" -> "LR_leg_center_joint" [label="xyz: 177.8 82.5 0 \nrpy: 0 -0 0"]
+"LR_leg_center_joint" -> "LR_leg_center"
+"LR_leg_center" -> "LR_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 0 -0.785398"]
+"LR_coxa_joint" -> "LR_coxa"
+"LR_coxa" -> "LR_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"LR_femur_joint" -> "LR_femur"
+"LR_femur" -> "LR_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"LR_tibia_joint" -> "LR_tibia"
+"LR_tibia" -> "LR_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"LR_tarsus_joint" -> "LR_tarsus"
+"LR_tarsus" -> "LR_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"LR_tarsus_foot_joint" -> "LR_tarsus_foot"
+"body" -> "RF_leg_center_joint" [label="xyz: -177.8 -82.5 0 \nrpy: 0 -0 0"]
+"RF_leg_center_joint" -> "RF_leg_center"
+"RF_leg_center" -> "RF_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0.785398"]
+"RF_coxa_joint" -> "RF_coxa"
+"RF_coxa" -> "RF_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"RF_femur_joint" -> "RF_femur"
+"RF_femur" -> "RF_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"RF_tibia_joint" -> "RF_tibia"
+"RF_tibia" -> "RF_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"RF_tarsus_joint" -> "RF_tarsus"
+"RF_tarsus" -> "RF_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"RF_tarsus_foot_joint" -> "RF_tarsus_foot"
+"body" -> "RM_leg_center_joint" [label="xyz: 0 -133.35 0 \nrpy: 0 -0 0"]
+"RM_leg_center_joint" -> "RM_leg_center"
+"RM_leg_center" -> "RM_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 1.5708"]
+"RM_coxa_joint" -> "RM_coxa"
+"RM_coxa" -> "RM_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"RM_femur_joint" -> "RM_femur"
+"RM_femur" -> "RM_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"RM_tibia_joint" -> "RM_tibia"
+"RM_tibia" -> "RM_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"RM_tarsus_joint" -> "RM_tarsus"
+"RM_tarsus" -> "RM_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"RM_tarsus_foot_joint" -> "RM_tarsus_foot"
+"body" -> "RR_leg_center_joint" [label="xyz: 177.8 -82.5 0 \nrpy: 0 -0 0"]
+"RR_leg_center_joint" -> "RR_leg_center"
+"RR_leg_center" -> "RR_coxa_joint" [label="xyz: 0 0 0 \nrpy: 0 0 -0.785398"]
+"RR_coxa_joint" -> "RR_coxa"
+"RR_coxa" -> "RR_femur_joint" [label="xyz: 58.93 0 0 \nrpy: -1.5708 0 0"]
+"RR_femur_joint" -> "RR_femur"
+"RR_femur" -> "RR_tibia_joint" [label="xyz: 107.98 0 0 \nrpy: -1.5708 0 0"]
+"RR_tibia_joint" -> "RR_tibia"
+"RR_tibia" -> "RR_tarsus_joint" [label="xyz: 87.74 0 0 \nrpy: -3.14159 1.26218e-29 1.5708"]
+"RR_tarsus_joint" -> "RR_tarsus"
+"RR_tarsus" -> "RR_tarsus_foot_joint" [label="xyz: 120.65 0 0 \nrpy: 0 -0 0"]
+"RR_tarsus_foot_joint" -> "RR_tarsus_foot"
+}
