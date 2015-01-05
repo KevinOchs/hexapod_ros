@@ -41,9 +41,9 @@ Control::Control( void )
     hex_state_ = false;
     imu_init_stored_ = false;
     imu_override_.active = false;
-    root_.y = 0.0;
-    root_.x = 0.0;
-    root_.yaw = 0.0;
+    base_.y = 0.0;
+    base_.x = 0.0;
+    base_.yaw = 0.0;
     body_.y = 0.0;
     body_.z = 0.0;
     body_.x = 0.0;
@@ -51,7 +51,7 @@ Control::Control( void )
     body_.yaw = 0.0;
     body_.roll = 0.0;
     head_.yaw = 0.0;
-    for ( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
         feet_.foot[leg_index].x = 0.0;
         feet_.foot[leg_index].y = 0.0;
@@ -62,7 +62,7 @@ Control::Control( void )
         legs_.leg[leg_index].tibia = 0.0;
         legs_.leg[leg_index].tarsus = 0.0;
     }
-    root_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "root", 50, &Control::rootCallback, this);
+    base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &Control::baseCallback, this);
     body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this);
     head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this);
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this);
@@ -98,22 +98,18 @@ bool Control::getPrevHexActiveState( void )
 // Topics we subscribe to
 //==============================================================================
 
-// rostopic pub /root hexapod_msgs/RootJoint '{yaw: 2.0 }'
-// rostopic pub /state hexapod_msgs/State true
-// rostopic pub /head hexapod_msgs/HeadJoint '{yaw: 2.0 }'
-
-void Control::rootCallback( const hexapod_msgs::RootJointConstPtr &root_msg )
+void Control::baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg )
 {
-	    root_.x = root_msg->x * 0.01 + ( root_.x * ( 1.0 - 0.01 ) );
-        root_.y  = root_msg->y * 0.01 + ( root_.y * ( 1.0 - 0.01 ) );
-        root_.yaw = root_msg->yaw * 0.01 + ( root_.yaw * ( 1.0 - 0.01 ) );
+        base_.x = base_msg->x * 0.01 + ( base_.x * ( 1.0 - 0.01 ) );
+        base_.y  = base_msg->y * 0.01 + ( base_.y * ( 1.0 - 0.01 ) );
+        base_.yaw = base_msg->yaw * 0.5 + ( base_.yaw * ( 1.0 - 0.5 ) );
 }
 
 void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
 {
-    if ( imu_override_.active == true )
+    if( imu_override_.active == true )
     {
-	    body_.pitch  = body_msg->pitch * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
+        body_.pitch  = body_msg->pitch * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
         body_.roll = body_msg->roll * 0.01 + ( body_.roll * ( 1.0 - 0.01 ) );
     }
 }
@@ -125,9 +121,9 @@ void Control::headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg )
 
 void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
 {
-    if (state_msg->active == true )
+    if(state_msg->active == true )
     {
-        if ( getHexActiveState() == false )
+        if( getHexActiveState() == false )
         {
             body_.y = 0.0;
             body_.z = 0.0;
@@ -135,26 +131,26 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             body_.pitch = 0.0;
             body_.yaw = 0.0;
             body_.roll = 0.0;
-            root_.y = 0.0;
-            root_.x = 0.0;
-            root_.yaw = 0.0;
+            base_.y = 0.0;
+            base_.x = 0.0;
+            base_.yaw = 0.0;
             setHexActiveState( true );
             ROS_INFO("Hexapod locomotion is now active.");
         }
     }
 
-    if ( state_msg->active == false )
+    if( state_msg->active == false )
     {
-        if ( getHexActiveState() == true )
+        if( getHexActiveState() == true )
         {
             body_.y = 0.0;
             body_.x = 0.0;
             body_.pitch = 0.0;
             body_.yaw = 0.0;
             body_.roll = 0.0;
-            root_.y = 0.0;
-            root_.x = 0.0;
-            root_.yaw = 0.0;
+            base_.y = 0.0;
+            base_.x = 0.0;
+            base_.yaw = 0.0;
             setHexActiveState( false );
             ROS_WARN("Hexapod locomotion shutting down servos.");
         }
@@ -168,11 +164,11 @@ void Control::imuOverrideCallback( const hexapod_msgs::StateConstPtr &imu_overri
 
 void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 {
-    if ( imu_override_.active == false )
+    if( imu_override_.active == false )
     {
         const geometry_msgs::Vector3 &lin_acc = imu_msg->linear_acceleration;
 
-        if ( imu_init_stored_ == false )
+        if( imu_init_stored_ == false )
         {
             imu_roll_init_ = -atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) );
             imu_pitch_init_ = -atan2( lin_acc.y, lin_acc.z );
@@ -188,36 +184,38 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         double imu_pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
         imu_pitch = ( imu_pitch >= 0 ) ? ( PI - imu_pitch ) : ( -imu_pitch - PI );
 
-		double imu_roll_delta = imu_roll_init_ - imu_roll;
-		double imu_pitch_delta = imu_pitch_init_ - imu_pitch;
-        imu_roll_delta = imu_roll_delta * 180.0 / PI;
-        imu_pitch_delta = imu_pitch_delta * 180.0 / PI;
-        if ( imu_roll_delta < -1 )
+        double imu_roll_delta = imu_roll_init_ - imu_roll;
+        double imu_pitch_delta = imu_pitch_init_ - imu_pitch;
+
+        if( imu_roll_delta < -0.0174532925 ) // 1 degree
         {
-            if ( body_.roll < 12 )
+            if( body_.roll < 0.209 )  // 12 degrees limit
             {
-                body_.roll = body_.roll + 0.01;
+                body_.roll = body_.roll + 0.0002; // 0.01 degree increments
             }
         }
-        if ( imu_roll_delta > 1 )
+
+        if( imu_roll_delta > 0.0174532925 ) // 1 degree
         {
-            if ( body_.roll > -12 )
+            if( body_.roll > -0.209 )  // 12 degrees limit
             {
-                body_.roll = body_.roll - 0.01;
+                body_.roll = body_.roll - 0.0002;  // 0.01 degree increments
             }
         }
-        if ( imu_pitch_delta < -1 )
+
+        if( imu_pitch_delta < -0.0174532925 ) // 1 degree
         {
-            if ( body_.pitch < 12 )
+            if( body_.pitch < 0.209 )  // 12 degrees limit
             {
-                body_.pitch = body_.pitch + 0.01;
+                body_.pitch = body_.pitch + 0.0002;  // 0.01 degree increments
             }
         }
-        if ( imu_pitch_delta > 1 )
+
+        if( imu_pitch_delta > 0.0174532925 ) // 1 degree
         {
-            if ( body_.pitch > -12 )
+            if( body_.pitch > -0.209 ) // 12 degrees limit
             {
-                body_.pitch = body_.pitch - 0.01;
+                body_.pitch = body_.pitch - 0.0002;  // 0.01 degree increments
             }
         }
     }

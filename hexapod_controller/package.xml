@@ -3,14 +3,11 @@
   <name>hexapod_locomotion</name>
   <version>0.2.0</version>
   <description>Locomtion node for a hexapod research platform</description>
-
-  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
-
-  <license>BSD</license>
-
-  <url type="website">http://ros.org</url>
-
   <author email="kevin.ochs@gmail.com">Kevin Ochs</author>
+  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
+  <license>BSD</license>
+  
+  <url type="website">http://ros.org</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>hexapod_msgs</build_depend>

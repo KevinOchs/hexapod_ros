@@ -52,12 +52,12 @@ int main( int argc, char **argv )
     ros::AsyncSpinner spinner(4); // Using 4 threads
     spinner.start();
     ros::Rate loop_rate( 1000 ); // 1000 hz
-    while ( ros::ok() )
+    while( ros::ok() )
     {
         // Start button on contxer has been pressed stand up
-        if ( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
+        if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
-            while ( control.body_.z < 90 )
+            while( control.body_.z < 90 )
             {
                 control.body_.z++;
 
@@ -72,10 +72,10 @@ int main( int argc, char **argv )
         }
 
         // We are live and standing up
-        if ( control.getHexActiveState() == true && control.getPrevHexActiveState() == true )
+        if( control.getHexActiveState() == true && control.getPrevHexActiveState() == true )
         {
             // Gait Sequencer
-            gait.gaitCycle( control.root_, &control.feet_ );
+            gait.gaitCycle( control.base_, &control.feet_ );
 
             // IK solver for legs and body orientation
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -88,14 +88,14 @@ int main( int argc, char **argv )
         }
 
         // Shutting down hex so let us do a gradual sit down and turn off torque
-        if ( control.getHexActiveState() == false && control.getPrevHexActiveState() == true )
+        if( control.getHexActiveState() == false && control.getPrevHexActiveState() == true )
         {
-            while ( control.body_.z > 0 )
+            while( control.body_.z > 0 )
             {
                 control.body_.z--;
 
                 // Gait Sequencer called to make sure we are on all six feet
-                gait.gaitCycle( control.root_, &control.feet_ );
+                gait.gaitCycle( control.base_, &control.feet_ );
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -113,7 +113,7 @@ int main( int argc, char **argv )
             control.setPrevHexActiveState( false );
         }
 
-        if ( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
+        if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
         }

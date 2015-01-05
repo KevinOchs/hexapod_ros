@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <package>
   <name>hexapod_teleop_joystick</name>
-  <version>1.0.0</version>
+  <version>0.2.0</version>
   <description>hexapod_teleop_joystick node for hexapod research platform</description>
-
-  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
-
-  <license>BSD</license>
-
-  <url type="website">http://ros.org</url>
-
   <author email="kevin.ochs@gmail.com">Kevin Ochs</author>
+  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
+  <license>BSD</license>
+  
+  <url type="website">http://ros.org</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>geometry_msgs</build_depend>

@@ -63,25 +63,25 @@ Gait::Gait( void )
 // step calculation
 //=============================================================================
 
-void Gait::cyclePeriod( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPositions *feet )
+void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
 {
-    for ( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
         // Lifts the leg and move it forward
-        if ( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
+        if( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
         {
-            feet->foot[leg_index].x = -root.x * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
-            feet->foot[leg_index].y =  -root.y * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
-            feet->foot[leg_index].z = leg_lift_height_ * sin( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
-            feet->foot[leg_index].yaw = -root.yaw * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
+            feet->foot[leg_index].x = -base.x * cos( cycle_period_ * PI / cycle_length_ );
+            feet->foot[leg_index].y =  -base.y * cos( cycle_period_ * PI / cycle_length_ );
+            feet->foot[leg_index].z = leg_lift_height_ * sin( cycle_period_ * PI / cycle_length_ );
+            feet->foot[leg_index].yaw = -base.yaw * cos( cycle_period_ * PI / cycle_length_ );
         }
         // Moves legs backward pushing the body forward
-        if ( cycle_leg_number_[leg_index] == 1 )
+        if( cycle_leg_number_[leg_index] == 1 )
         {
-            feet->foot[leg_index].x = root.x * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
-            feet->foot[leg_index].y = root.y * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
+            feet->foot[leg_index].x = base.x * cos( cycle_period_ * PI / cycle_length_ );
+            feet->foot[leg_index].y = base.y * cos( cycle_period_ * PI / cycle_length_ );
             feet->foot[leg_index].z = 0.0;
-            feet->foot[leg_index].yaw = root.yaw * cos( ( cycle_period_ * 180.0 / cycle_length_ ) * PI / 180.0 );
+            feet->foot[leg_index].yaw = base.yaw * cos( cycle_period_ * PI / cycle_length_ );
         }
     }
 }
@@ -90,12 +90,12 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetP
 // Gait Sequencing
 //=============================================================================
 
-void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPositions *feet )
+void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
 {
     // Check to see if we are actually travelling
-    if ( ( std::abs( root.y ) > 1 ) ||
-         ( std::abs( root.x ) > 1 ) ||
-         ( std::abs( root.yaw ) > 1 ) )
+    if( ( std::abs( base.y ) > 1 ) || // 1 mm
+        ( std::abs( base.x ) > 1 ) || // 1 mm
+        ( std::abs( base.yaw ) > 0.00436332313 ) ) // 0.25 degree
     {
         is_travelling_ = true;
     }
@@ -103,12 +103,12 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPos
     {
         is_travelling_ = false;
 
-        for ( int leg_index = 0; leg_index <= 5; leg_index++ )
+        for( int leg_index = 0; leg_index <= 5; leg_index++ )
         {
-            if ( ( std::abs( feet->foot[leg_index].x ) > 1 ) ||
-                 ( std::abs( feet->foot[leg_index].y ) > 1 ) ||
-                 ( std::abs( feet->foot[leg_index].yaw ) > 1 ) ||
-                   std::abs( feet->foot[leg_index].z) > 1 )
+            if( ( std::abs( feet->foot[leg_index].x ) > 1 ) || // 1 mm
+                ( std::abs( feet->foot[leg_index].y ) > 1 ) || // 1 mm
+                ( std::abs( feet->foot[leg_index].yaw ) > 0.034906585 ) || // 2 degrees
+                  std::abs( feet->foot[leg_index].z) > 1 ) // 1 mm
             {
                 // This forces another cycle to allow all legs to set down after travel is stopped
                 extra_gait_cycle_ = cycle_length_ - cycle_period_ + cycle_length_;
@@ -121,7 +121,7 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPos
         }
 
         // countdown for in_cycle state
-        if ( extra_gait_cycle_ > 1 )
+        if( extra_gait_cycle_ > 1 )
         {
             extra_gait_cycle_--;
             in_cycle_ = !( extra_gait_cycle_ == 1 );
@@ -129,9 +129,9 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPos
     }
 
     // If either is true we consider the gait active
-    if ( is_travelling_ == true || in_cycle_ == true  )
+    if( is_travelling_ == true || in_cycle_ == true  )
     {
-        cyclePeriod( root, feet );
+        cyclePeriod( base, feet );
         cycle_period_++;
     }
     else
@@ -141,11 +141,11 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPos
     }
 
     // Loop cycle and switch the leg groupings for cycle
-    if ( cycle_period_ == cycle_length_ )
+    if( cycle_period_ == cycle_length_ )
     {
         cycle_period_ = 1;
 
-        for ( int leg_index = 0; leg_index <= 5; leg_index++ )
+        for( int leg_index = 0; leg_index <= 5; leg_index++ )
         {
             cycle_leg_number_[leg_index] = cycle_leg_number_[leg_index] * -1 + 1;
         }

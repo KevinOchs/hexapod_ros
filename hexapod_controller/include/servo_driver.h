@@ -103,7 +103,7 @@ class ServoDriver
         int pose_steps_[SERVO_COUNT];
         int write_pos_[SERVO_COUNT];
         bool servos_free_;
-        int OFFSET_ANGLE;
+        double OFFSET_ANGLE;
 };
 
 #endif // SERVO_DRIVER_H_

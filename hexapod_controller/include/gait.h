@@ -45,9 +45,9 @@ class Gait
 {
     public:
         Gait( void );
-        void gaitCycle( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPositions *feet );
+        void gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet );
     private:
-        void cyclePeriod( const hexapod_msgs::RootJoint &root, hexapod_msgs::FeetPositions *feet );
+        void cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet );
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
         bool in_cycle_;           // True if the robot is in a gait cycle
         int cycle_length_;        // Number of steps in cycle

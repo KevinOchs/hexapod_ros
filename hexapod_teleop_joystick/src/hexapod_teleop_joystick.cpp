@@ -36,9 +36,9 @@
 
 HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 {
-    root_.y = 0.0;
-    root_.x = 0.0;
-    root_.yaw = 0.0;
+    base_.y = 0.0;
+    base_.x = 0.0;
+    base_.yaw = 0.0;
     body_.y = 0.0;
     body_.z = 0.0;
     body_.x = 0.0;
@@ -47,9 +47,9 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     body_.roll = 0.0;
     head_.yaw = 0.0;
     state_.active = false;
-	imu_override_.active = false;
+    imu_override_.active = false;
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
-    root_pub_ = nh_.advertise<hexapod_msgs::RootJoint>("root", 100);
+    base_pub_ = nh_.advertise<hexapod_msgs::RootJoint>("base", 100);
     body_pub_ = nh_.advertise<hexapod_msgs::BodyJoint>("body", 100);
     head_pub_ = nh_.advertise<hexapod_msgs::HeadJoint>("head", 100);
     state_pub_ = nh_.advertise<hexapod_msgs::State>("state", 100);
@@ -77,26 +77,26 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
             state_.active = false;
         }
     }
-	
+
     // Body shift L1 Button for testing
     if ( joy->buttons[8] == 1 )
     {
         imu_override_.active = true;
-        body_.pitch = -joy->axes[1] * 8.0;
-        body_.roll = -joy->axes[0] * 8.0;
-		head_.yaw = joy->axes[2] * 16.0;
+        body_.pitch = -joy->axes[1] * 0.13962634; // 8 degrees max
+        body_.roll = -joy->axes[0] * 0.13962634; // 8 degrees max
+        head_.yaw = joy->axes[2] * 0.27925268; // 16 degrees max
     }
-	else
-	{
-		imu_override_.active = false;
-	}
+    else
+    {
+        imu_override_.active = false;
+    }
 
     // Travelling ( 8cm/s )
     if ( joy->buttons[8] != 1 )
     {
-		root_.x = ( -joy->axes[1] * 40.0 ) * 0.05 + ( root_.x * ( 1.0 - 0.05 ) );
-		root_.y = ( joy->axes[0] * 40.0 ) * 0.05 + ( root_.y * ( 1.0 - 0.05 ) );
-		root_.yaw = ( -joy->axes[2] * 8.0 ) * 0.025 + ( root_.yaw * ( 1.0 - 0.025 ) );
+        base_.x = ( -joy->axes[1] * 40.0 ) * 0.05 + ( base_.x * ( 1.0 - 0.05 ) ); // 40 mm max
+        base_.y = ( joy->axes[0] * 40.0 ) * 0.05 + ( base_.y * ( 1.0 - 0.05 ) ); // 40 mm max
+        base_.yaw = ( -joy->axes[2] * 0.13962634 ) * 0.5 + ( base_.yaw * ( 1.0 - 0.5 ) ); // 8 degrees max
     }
 }
 
@@ -112,11 +112,11 @@ int main(int argc, char** argv)
     ros::Rate loop_rate( 2000 ); // 1000 hz
     while ( ros::ok() )
     {
-        hexapodTeleopJoystick.root_pub_.publish( hexapodTeleopJoystick.root_ );
+        hexapodTeleopJoystick.base_pub_.publish( hexapodTeleopJoystick.base_ );
         hexapodTeleopJoystick.body_pub_.publish( hexapodTeleopJoystick.body_ );
         hexapodTeleopJoystick.head_pub_.publish( hexapodTeleopJoystick.head_ );
         hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
-		hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
+        hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
         loop_rate.sleep();
     }
 

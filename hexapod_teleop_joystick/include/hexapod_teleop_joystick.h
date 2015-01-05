@@ -39,12 +39,12 @@ class HexapodTeleopJoystick
 {
     public:
         HexapodTeleopJoystick( void );
-        hexapod_msgs::RootJoint root_;
+        hexapod_msgs::RootJoint base_;
         hexapod_msgs::BodyJoint body_;
         hexapod_msgs::HeadJoint head_;
         hexapod_msgs::State state_;
         hexapod_msgs::State imu_override_;
-        ros::Publisher root_pub_;
+        ros::Publisher base_pub_;
         ros::Publisher body_pub_;
         ros::Publisher head_pub_;
         ros::Publisher state_pub_;

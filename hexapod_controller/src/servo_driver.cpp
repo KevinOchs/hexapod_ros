@@ -28,8 +28,8 @@
 // Author: Kevin M. Ochs
 
 #include <servo_driver.h>
-
-static const double MX_TIC_PER_DEG = ( MX_CENTER_VALUE*2 ) / 360;
+static const double PI = atan(1.0)*4.0;
+static const double RAD_TO_MX_RESOLUTION = ( MX_CENTER_VALUE*2 ) / ( PI*2 );
 
 //=============================================================================
 // Servo ID array ( Does not change )
@@ -54,7 +54,7 @@ ServoDriver::ServoDriver( void )
     int baudnum = 1;
     int deviceIndex = 0;
 
-    if ( dxl_initialize(deviceIndex, baudnum) == 0 )
+    if( dxl_initialize(deviceIndex, baudnum) == 0 )
     {
         ROS_ERROR("Servo Communication Failed!");
     }
@@ -73,26 +73,26 @@ ServoDriver::ServoDriver( void )
 
 void ServoDriver::convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head )
 {
-    for ( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
         // Update Right Legs
-        if ( leg_index <= 2 )
+        if( leg_index <= 2 )
         {
-            goal_pos_[FIRST_COXA_ID   + leg_index] = round( -legs.leg[leg_index].coxa * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_FEMUR_ID  + leg_index] = round(  ( legs.leg[leg_index].femur - OFFSET_ANGLE ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_TIBIA_ID  + leg_index] = round( -( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_TARSUS_ID + leg_index] = round(  ( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
+            goal_pos_[FIRST_COXA_ID   + leg_index] = MX_CENTER_VALUE + round( -legs.leg[leg_index].coxa * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_FEMUR_ID  + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].femur - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_TIBIA_ID  + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_TARSUS_ID + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * RAD_TO_MX_RESOLUTION );
         }
         else
         // Update Left Legs
         {
-            goal_pos_[FIRST_COXA_ID   + leg_index] = round(  legs.leg[leg_index].coxa * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_FEMUR_ID  + leg_index] = round( -( legs.leg[leg_index].femur - OFFSET_ANGLE ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_TIBIA_ID  + leg_index] = round(  ( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
-            goal_pos_[FIRST_TARSUS_ID + leg_index] = round( -( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
+            goal_pos_[FIRST_COXA_ID   + leg_index] = MX_CENTER_VALUE + round(  legs.leg[leg_index].coxa * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_FEMUR_ID  + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].femur - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_TIBIA_ID  + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
+            goal_pos_[FIRST_TARSUS_ID + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * RAD_TO_MX_RESOLUTION );
         }
     }
-    goal_pos_[24] = round( head.yaw * MX_TIC_PER_DEG ) + MX_CENTER_VALUE;
+    goal_pos_[24] = MX_CENTER_VALUE + round( head.yaw * RAD_TO_MX_RESOLUTION );
 }
 
 //==============================================================================
@@ -101,14 +101,14 @@ void ServoDriver::convertAngles( const hexapod_msgs::LegsJoints &legs, const hex
 
 void ServoDriver::makeSureServosAreOn( void )
 {
-    if ( !servos_free_ )
+    if( !servos_free_ )
     {
         // Servos are on so return
         return;
     }
 
     // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
-    for ( int i = 0; i < SERVO_COUNT; i++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
         cur_pos_[i] = dxl_read_word( servo_id[i], MX_PRESENT_POSITION_L );
         ros::Duration( 0.01 ).sleep();
@@ -130,22 +130,22 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
     makeSureServosAreOn();
 
     int interpolating = 0;
-    for ( int i = 0; i < SERVO_COUNT; i++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
         // If any of these differ we need to indicate a new packet needs to be sent
-        if ( cur_pos_[i] != goal_pos_[i] )
+        if( cur_pos_[i] != goal_pos_[i] )
         {
             interpolating++;
         }
     }
 
     // If nothing moved we abort no need to send packet with same positions
-    if ( interpolating != 0 )
+    if( interpolating != 0 )
     {
         int complete[SERVO_COUNT];
-        for ( int i = 0; i < SERVO_COUNT; i++ )
+        for( int i = 0; i < SERVO_COUNT; i++ )
         {
-            if ( cur_pos_[i] == goal_pos_[i] )
+            if( cur_pos_[i] == goal_pos_[i] )
             {
                 // Nothing is moving on this particular servo
                 pose_steps_[i] = 0;
@@ -162,7 +162,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
 
         bool finished = false;
         ros::Rate loop_rate( 900 ); // 900 Hz loop
-        while ( finished == false )
+        while( finished == false )
         {
             // Prepare packet for broadcast
             dxl_set_txpacket_id( 254 );
@@ -172,26 +172,26 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
             dxl_set_txpacket_parameter( 1, 4 );
 
             int total_complete = 0;
-            for ( int i = 0; i < SERVO_COUNT; i++ )
+            for( int i = 0; i < SERVO_COUNT; i++ )
             {
-                if ( pose_steps_[i] == 1 && complete[i] != 1 )
+                if( pose_steps_[i] == 1 && complete[i] != 1 )
                 {
-                    if ( cur_pos_[i] < goal_pos_[i] )
+                    if( cur_pos_[i] < goal_pos_[i] )
                     {
                         write_pos_[i] = write_pos_[i] + pose_steps_[i];
 
-                        if ( write_pos_[i] >= goal_pos_[i] )
+                        if( write_pos_[i] >= goal_pos_[i] )
                         {
                             write_pos_[i] = goal_pos_[i];
                             complete[i] = 1;
                         }
                     }
 
-                    if ( cur_pos_[i] > goal_pos_[i] )
+                    if( cur_pos_[i] > goal_pos_[i] )
                     {
                         write_pos_[i] = write_pos_[i] - pose_steps_[i];
 
-                        if ( write_pos_[i] <= goal_pos_[i] )
+                        if( write_pos_[i] <= goal_pos_[i] )
                         {
                             write_pos_[i] = goal_pos_[i];
                             complete[i] = 1;
@@ -200,7 +200,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
                 }
 
                 // Tally up which servos are at their goal position
-                if ( complete[i] == 1 )
+                if( complete[i] == 1 )
                 {
                     total_complete++;
                 }
@@ -215,7 +215,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
             dxl_txrx_packet();
 
             // Since we loop until all servos are finished we check here if complete to stop loop
-            if ( total_complete == 25 )
+            if( total_complete == 25 )
             {
                 finished = true;
             }
@@ -223,7 +223,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
         }
 
         // Store write pose as current pose (goal) since we are now done
-        for ( int i = 0; i < SERVO_COUNT; i++ )
+        for( int i = 0; i < SERVO_COUNT; i++ )
         {
             cur_pos_[i] = write_pos_[i];
         }
