@@ -2,7 +2,7 @@
 
 <launch>
     <include file="$(find hexapod_bringup)/launch/hexapod_bringup.launch" />
-   <!--  <include file="$(find openni2_launch)/launch/openni2.launch"/> -->
+    <include file="$(find openni2_launch)/launch/openni2.launch"/>
 
     <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" output="screen" />
 
