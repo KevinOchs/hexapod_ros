@@ -2,8 +2,10 @@
 <!-- Locomotion IMU launch file    add: roslaunch openni2_launch openni2.launch depth_registration:=true -->
 
 <launch>
+    <include file="$(find openni2_launch)/launch/openni2.launch"/>
     <node name="Playstation3Controller" pkg="joy" type="joy_node" output="screen" />
     <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" output="screen" />
+    <node name="Hexapod_Sound_Play" pkg="sound_play" type="soundplay_node.py"/>
     <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
         <rosparam>
             <!-- Gait Settings -->

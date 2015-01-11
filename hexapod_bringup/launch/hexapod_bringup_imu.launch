@@ -2,13 +2,12 @@
 
 <launch>
     <include file="$(find hexapod_bringup)/launch/hexapod_bringup.launch" />
-    <include file="$(find openni2_launch)/launch/openni2.launch"/>
 
     <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" output="screen" />
 
     <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" args="load phidgets_imu/PhidgetsImuNodelet imu_manager" output="screen">
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
-        <param name="period" value="4"/>		
+        <param name="period" value="4"/>
     # compass correction params (see http://www.phidgets.com/docs/1044_User_Guide)
          <param name="cc_mag_field" value="0.49062"/>
          <param name="cc_offset0" value="-1.05668"/>
