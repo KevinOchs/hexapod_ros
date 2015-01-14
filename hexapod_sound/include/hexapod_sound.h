@@ -30,13 +30,17 @@
 
 #include <ros/ros.h>
 #include <sound_play/sound_play.h>
+#include <hexapod_msgs/Sounds.h>
 
 class HexapodSound
 {
     public:
         HexapodSound( void );
         sound_play::SoundRequest sound_req_;
-        ros::Publisher sound_pub_;
+		hexapod_msgs::Sounds sounds_;
+		ros::Publisher sound_pub_;
     private:
         ros::NodeHandle nh_;
+        void soundsCallback( const hexapod_msgs::SoundsConstPtr &sounds_msg );
+        ros::Subscriber sounds_sub_;
 };

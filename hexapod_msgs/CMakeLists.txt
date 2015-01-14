@@ -21,6 +21,7 @@ add_message_files(
    BodyJoint.msg
    HeadJoint.msg
    State.msg
+   Sounds.msg
 )
 
 ## Generate added messages and services with any dependencies listed here

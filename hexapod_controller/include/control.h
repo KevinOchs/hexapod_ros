@@ -42,6 +42,7 @@
 #include <hexapod_msgs/FootPosition.h>
 #include <hexapod_msgs/FeetPositions.h>
 #include <hexapod_msgs/State.h>
+#include <hexapod_msgs/Sounds.h>
 
 //==============================================================================
 // Define class Control: This is the main structure of data that manipulates
@@ -62,6 +63,8 @@ class Control
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
         hexapod_msgs::State state_;
+        hexapod_msgs::Sounds sounds_;
+        ros::Publisher sounds_pub_;
     private:
         bool imu_init_stored_;
         double imu_roll_lowpass_;

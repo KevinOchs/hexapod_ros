@@ -37,8 +37,44 @@
 HexapodSound::HexapodSound( void )
 {
     sound_pub_ = nh_.advertise<sound_play::SoundRequest>("/robotsound", 1, 0);
+    sounds_sub_ = nh_.subscribe<hexapod_msgs::Sounds>( "sounds", 1, &HexapodSound::soundsCallback, this);
 }
 
+void HexapodSound::soundsCallback( const hexapod_msgs::SoundsConstPtr &sounds_msg )
+{
+    if( sounds_msg->stand == true )
+    {
+        if( sounds_.stand != true )
+        {
+            sounds_.stand = true;
+        }
+    }
+
+    if( sounds_msg->shut_down == true )
+    {
+        if( sounds_.shut_down != true )
+        {
+            sounds_.shut_down = true;
+        }
+    }
+
+    if( sounds_msg->waiting == true )
+    {
+        if( sounds_.waiting != true )
+        {
+            sounds_.waiting = true;
+        }
+    }
+
+    if( sounds_msg->auto_level == true )
+    {
+        if( sounds_.auto_level != true )
+        {
+            sounds_.auto_level = true;
+        }
+    }
+
+}
 
 int main(int argc, char** argv)
 {
@@ -46,19 +82,47 @@ int main(int argc, char** argv)
     HexapodSound hexapodSound;
     hexapodSound.sound_req_.sound = sound_play::SoundRequest::PLAY_FILE;
     hexapodSound.sound_req_.command = sound_play::SoundRequest::PLAY_ONCE;
-
     hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/empty.ogg"; // need to due this due to bug in sound_play
     hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
-    ros::Duration( 1 ).sleep();
-
-    hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/batteryGood.ogg";
-    hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
-    ros::Duration( 3 ).sleep();
-    hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/standingUp.ogg";
-    hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
-    ros::Duration( 3 ).sleep();
-    hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/cameraIsActive.ogg";
-    hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
     ros::Duration( 3 ).sleep();
 
+    ros::AsyncSpinner spinner( 1 ); // Using 1 threads
+    spinner.start();
+    ros::Rate loop_rate( 20 ); // 20 hz
+    while( ros::ok() )
+    {
+        if( hexapodSound.sounds_.stand == true )
+        {
+            hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/standingUp.ogg";
+            hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+            ros::Duration( 3 ).sleep();
+            hexapodSound.sounds_.stand = false;
+        }
+
+        if( hexapodSound.sounds_.auto_level == true )
+        {
+            hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/autoLevelingBody.ogg";
+            hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+            ros::Duration( 3 ).sleep();
+            hexapodSound.sounds_.auto_level = false;
+        }
+
+        if( hexapodSound.sounds_.waiting == true )
+        {
+            hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/activeAwaitingCommands.ogg";
+            hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+            ros::Duration( 3 ).sleep();
+            hexapodSound.sounds_.waiting = false;
+        }
+
+        if( hexapodSound.sounds_.shut_down == true )
+        {
+            hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/shuttingDown.ogg";
+            hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+            ros::Duration( 3 ).sleep();
+            hexapodSound.sounds_.shut_down = false;
+        }
+
+        loop_rate.sleep();
+    }
 }

@@ -62,12 +62,13 @@ Control::Control( void )
         legs_.leg[leg_index].tibia = 0.0;
         legs_.leg[leg_index].tarsus = 0.0;
     }
-    base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &Control::baseCallback, this);
-    body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this);
-    head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this);
-    state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this);
-    imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this);
-    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this);
+    base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &Control::baseCallback, this );
+    body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this );
+    head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this );
+    state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this );
+    imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
+    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
+	sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
 }
 
 //==============================================================================
@@ -136,6 +137,9 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             base_.yaw = 0.0;
             setHexActiveState( true );
             ROS_INFO("Hexapod locomotion is now active.");
+            sounds_.stand = true;
+            sounds_pub_.publish( sounds_ );
+            sounds_.stand = false;
         }
     }
 
@@ -153,6 +157,9 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             base_.yaw = 0.0;
             setHexActiveState( false );
             ROS_WARN("Hexapod locomotion shutting down servos.");
+            sounds_.shut_down = true;
+            sounds_pub_.publish( sounds_ );
+            sounds_.shut_down = false;
         }
     }
 }
