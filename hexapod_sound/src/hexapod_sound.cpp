@@ -85,10 +85,16 @@ int main(int argc, char** argv)
     hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/empty.ogg"; // need to due this due to bug in sound_play
     hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
     ros::Duration( 3 ).sleep();
+    hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/intelChime.ogg";
+    hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+    ros::Duration( 3 ).sleep();
+    hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/activeAwaitingCommands.ogg";
+    hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
+    ros::Duration( 3 ).sleep();
 
     ros::AsyncSpinner spinner( 1 ); // Using 1 threads
     spinner.start();
-    ros::Rate loop_rate( 20 ); // 20 hz
+    ros::Rate loop_rate( 10 ); // 10 hz
     while( ros::ok() )
     {
         if( hexapodSound.sounds_.stand == true )
@@ -103,7 +109,7 @@ int main(int argc, char** argv)
         {
             hexapodSound.sound_req_.arg = "/home/kevino/ROS_hexapod/src/hexapod_sound/sounds/autoLevelingBody.ogg";
             hexapodSound.sound_pub_.publish( hexapodSound.sound_req_ );
-            ros::Duration( 3 ).sleep();
+            ros::Duration( 6 ).sleep();
             hexapodSound.sounds_.auto_level = false;
         }
 

@@ -31,6 +31,7 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
+#include <math.h>
 #include <ros/ros.h>
 #include <geometry_msgs/Vector3.h>
 #include <sensor_msgs/Imu.h>
@@ -46,7 +47,7 @@
 
 //==============================================================================
 // Define class Control: This is the main structure of data that manipulates
-// Golem.
+// the hexapod.
 //==============================================================================
 
 class Control

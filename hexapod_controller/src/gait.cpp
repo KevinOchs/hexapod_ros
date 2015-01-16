@@ -71,7 +71,7 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetP
         if( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
         {
             feet->foot[leg_index].x = -base.x * cos( cycle_period_ * PI / cycle_length_ );
-            feet->foot[leg_index].y =  -base.y * cos( cycle_period_ * PI / cycle_length_ );
+            feet->foot[leg_index].y = -base.y * cos( cycle_period_ * PI / cycle_length_ );
             feet->foot[leg_index].z = leg_lift_height_ * sin( cycle_period_ * PI / cycle_length_ );
             feet->foot[leg_index].yaw = -base.yaw * cos( cycle_period_ * PI / cycle_length_ );
         }

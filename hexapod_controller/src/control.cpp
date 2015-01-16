@@ -28,7 +28,6 @@
 // Author: Kevin M. Ochs
 
 #include <control.h>
-#include <math.h>
 
 static const double PI = atan(1.0)*4.0;
 //==============================================================================
@@ -68,7 +67,7 @@ Control::Control( void )
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this );
     imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
-	sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
+    sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
 }
 
 //==============================================================================
@@ -99,12 +98,20 @@ bool Control::getPrevHexActiveState( void )
 // Topics we subscribe to
 //==============================================================================
 
+//==============================================================================
+// Base link movement callback
+//==============================================================================
+
 void Control::baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg )
 {
         base_.x = base_msg->x * 0.01 + ( base_.x * ( 1.0 - 0.01 ) );
         base_.y  = base_msg->y * 0.01 + ( base_.y * ( 1.0 - 0.01 ) );
         base_.yaw = base_msg->yaw * 0.5 + ( base_.yaw * ( 1.0 - 0.5 ) );
 }
+
+//==============================================================================
+// Override IMU and manipulate body orientation callback
+//==============================================================================
 
 void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
 {
@@ -115,10 +122,18 @@ void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
     }
 }
 
+//==============================================================================
+// Pan head callback
+//==============================================================================
+
 void Control::headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg )
 {
     head_.yaw = head_msg->yaw; // 25 degrees max
 }
+
+//==============================================================================
+// Active state callback - currently simple on/off - stand/sit
+//==============================================================================
 
 void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
 {
@@ -126,6 +141,7 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
     {
         if( getHexActiveState() == false )
         {
+            // Activating hexapod
             body_.y = 0.0;
             body_.z = 0.0;
             body_.x = 0.0;
@@ -147,6 +163,7 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
     {
         if( getHexActiveState() == true )
         {
+            // Sit down hexapod
             body_.y = 0.0;
             body_.x = 0.0;
             body_.pitch = 0.0;
@@ -164,10 +181,18 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
     }
 }
 
+//==============================================================================
+// IMU override callback
+//==============================================================================
+
 void Control::imuOverrideCallback( const hexapod_msgs::StateConstPtr &imu_override_msg )
 {
     imu_override_.active = imu_override_msg->active;
 }
+
+//==============================================================================
+// IMU callback to autolevel body if on angled ground
+//==============================================================================
 
 void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 {
@@ -193,6 +218,13 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
         double imu_roll_delta = imu_roll_init_ - imu_roll;
         double imu_pitch_delta = imu_pitch_init_ - imu_pitch;
+
+        if( ( std::abs( imu_roll_delta ) > 0.0872664626 ) || ( std::abs( imu_pitch_delta ) > 0.0872664626 ) )
+        {
+            sounds_.auto_level = true;
+            sounds_pub_.publish( sounds_ );
+            sounds_.auto_level = false;
+        }
 
         if( imu_roll_delta < -0.0174532925 ) // 1 degree
         {

@@ -54,7 +54,7 @@ int main( int argc, char **argv )
     ros::Rate loop_rate( 1000 ); // 1000 hz
     while( ros::ok() )
     {
-        // Start button on contxer has been pressed stand up
+        // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
             while( control.body_.z < 90 )
