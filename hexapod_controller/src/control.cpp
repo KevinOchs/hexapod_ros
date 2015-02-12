@@ -68,6 +68,7 @@ Control::Control( void )
     imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
+	joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
 }
 
 //==============================================================================
@@ -92,6 +93,40 @@ void Control::setPrevHexActiveState( bool state )
 bool Control::getPrevHexActiveState( void )
 {
     return prev_hex_state_;
+}
+
+#define    RR    0
+#define    RM    1
+#define    RF    2
+#define    LR    3
+#define    LM    4
+#define    LF    5
+void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs )
+{
+	joint_state_.header.stamp = ros::Time::now();
+	joint_state_.name.resize( 24 );
+	joint_state_.position.resize( 24 );
+
+	for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    {
+        // Update Right Legs
+        if( leg_index <= 2 )
+        {
+            joint_state_.position[FIRST_COXA_ID   + leg_index] = -legs.leg[leg_index].coxa;
+            joint_state_.position[FIRST_FEMUR_ID  + leg_index] =  legs.leg[leg_index].femur;
+            joint_state_.position[FIRST_TIBIA_ID  + leg_index] = -legs.leg[leg_index].tibia;
+            joint_state_.position[FIRST_TARSUS_ID + leg_index] =  legs.leg[leg_index].tarsus;
+        }
+        else
+        // Update Left Legs
+        {
+            joint_state_.position[FIRST_COXA_ID   + leg_index] =  legs.leg[leg_index].coxa;
+            joint_state_.position[FIRST_FEMUR_ID  + leg_index] = -legs.leg[leg_index].femur;
+            joint_state_.position[FIRST_TIBIA_ID  + leg_index] =  legs.leg[leg_index].tibia;
+            joint_state_.position[FIRST_TARSUS_ID + leg_index] = -legs.leg[leg_index].tarsus;
+        }
+    }
+	joint_state_pub_.publish( joint_state_ );
 }
 
 //==============================================================================

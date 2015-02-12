@@ -35,6 +35,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Vector3.h>
 #include <sensor_msgs/Imu.h>
+#include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/RootJoint.h>
 #include <hexapod_msgs/BodyJoint.h>
 #include <hexapod_msgs/HeadJoint.h>
@@ -58,6 +59,8 @@ class Control
         bool getHexActiveState( void );
         void setPrevHexActiveState( bool state );
         bool getPrevHexActiveState( void );
+        void publishJointStates( const hexapod_msgs::LegsJoints &legs );
+		sensor_msgs::JointState joint_state_;
         hexapod_msgs::RootJoint base_;
         hexapod_msgs::BodyJoint body_;
         hexapod_msgs::HeadJoint head_;
@@ -66,6 +69,7 @@ class Control
         hexapod_msgs::State state_;
         hexapod_msgs::Sounds sounds_;
         ros::Publisher sounds_pub_;
+        ros::Publisher joint_state_pub_;
     private:
         bool imu_init_stored_;
         double imu_roll_lowpass_;
