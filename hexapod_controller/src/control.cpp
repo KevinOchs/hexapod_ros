@@ -95,12 +95,11 @@ bool Control::getPrevHexActiveState( void )
     return prev_hex_state_;
 }
 
-#define    RR    0
-#define    RM    1
-#define    RF    2
-#define    LR    3
-#define    LM    4
-#define    LF    5
+#define FIRST_COXA_ID     0
+#define FIRST_FEMUR_ID    6
+#define FIRST_TIBIA_ID    12
+#define FIRST_TARSUS_ID   18
+
 void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs )
 {
 	joint_state_.header.stamp = ros::Time::now();
