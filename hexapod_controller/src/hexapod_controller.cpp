@@ -112,7 +112,7 @@ int main( int argc, char **argv )
             // Locomotion is now shut off
             control.setPrevHexActiveState( false );
         }
-
+		control.publishJointStates( control.legs_ );
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();

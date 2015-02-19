@@ -75,5 +75,8 @@
             <!-- Distance from ground plane to femur rotation pivot -->
             FOOT_INIT_Z:         35.65
         </rosparam>
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/urdf.rviz" />
 </launch>
 
