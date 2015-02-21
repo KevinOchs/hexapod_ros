@@ -26,19 +26,19 @@
 					<box size="${body_length_x} ${body_length_y} 0.05"/>
 	  			</geometry>
 	 			<material name="grey">
-					<color rgba="0.5 0.5 0.5 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 	  			</material>
 			</visual>
 	</link>
 
 	<!-- Joint properties -->
-	<xacro:property name="joint_lower_limit" value="-${1.5}" />
-	<xacro:property name="joint_upper_limit" value="${1.5}" />
+	<xacro:property name="joint_lower_limit" value="-${3.14}" />
+	<xacro:property name="joint_upper_limit" value="${3.14}" />
 	<xacro:property name="joint_effort" value="10000" />
 	<xacro:property name="joint_velocity" value="100" />
 
 	<!-- Leg macro -->
-	<xacro:macro name="leg" params="side position x y angle">
+	<xacro:macro name="leg" params="side position x y angle axis">
 	
 		<!-- leg position -->
 		<joint name="leg_center_joint_${side}${position}" type="fixed">
@@ -54,7 +54,7 @@
 			<origin xyz="0 0 0" rpy="0 0 ${angle}" />
 			<parent link="leg_center_${side}${position}" />
 			<child link="coxa_${side}${position}" />
-			<axis xyz="0 0 -1" />
+			<axis xyz="0 0 ${axis}" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 
@@ -65,7 +65,7 @@
 					<cylinder length="0.0508" radius="0.015875"/>
 				</geometry>
 				<material name="">
-					<color rgba="0.7 0.7 0 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 			<visual>
@@ -74,7 +74,7 @@
 					<cylinder length="${coxa_length}" radius="0.0127"/>
 				</geometry>
 				<material name="">
-					<color rgba="0.7 0.7 0 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 		</link>
@@ -84,7 +84,7 @@
 			<origin xyz="${coxa_length} 0 0" rpy="-${pi/2} 0 0" />
 			<parent link="coxa_${side}${position}" />
 			<child link="femur_${side}${position}" />
-			<axis xyz="0 0 -1" />
+			<axis xyz="0 0 ${axis*-1}" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 
@@ -95,7 +95,7 @@
 					<cylinder length="0.0508" radius="0.015875"/>
 				</geometry>
 				<material name="">
-					<color rgba="0 0.7 0.7 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 			<visual>
@@ -104,7 +104,7 @@
 					<cylinder length="${femur_length}" radius="0.0127"/>
 				</geometry>
 				<material name="">
-					<color rgba="0 0.7 0.7 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 		</link>
@@ -114,7 +114,7 @@
 			<origin xyz="0 -${femur_length} 0" rpy="${pi} 0 0" />
 			<parent link="femur_${side}${position}" />
 			<child link="tibia_${side}${position}" />
-			<axis xyz="0 0 1" />
+			<axis xyz="0 0 ${axis*-1}" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 
@@ -125,7 +125,7 @@
 					<cylinder length="0.0508" radius="0.015875"/>
 				</geometry>
 				<material name="">
-					<color rgba="0.7 0 0.7 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 			<visual>
@@ -134,7 +134,7 @@
 					<cylinder length="${tibia_length}" radius="0.0127"/>
 				</geometry>
 				<material name="">
-					<color rgba="0.7 0 0.7 1" />
+					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
 		</link>
@@ -144,7 +144,7 @@
 			<origin xyz="${tibia_length} 0 0" rpy="0 0 -${pi/2}" />
 			<parent link="tibia_${side}${position}" />
 			<child link="tarsus_${side}${position}" />
-			<axis xyz="0 0 1" />
+			<axis xyz="0 0 ${axis*-1}" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 
@@ -172,11 +172,11 @@
 	</xacro:macro>
 
 <!-- Build robot model -->
-	<xacro:leg side="R" position="R" x="0.1778" y="-0.0825" angle="-${pi/4}" />
-	<xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="${pi/2}" />
-	<xacro:leg side="R" position="F" x="-0.1778" y="-0.0825" angle="${pi*1/4}" />	
-	<xacro:leg side="L" position="R" x="0.1778" y="0.0825" angle="-${pi/4}" />
-	<xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" />
-	<xacro:leg side="L" position="F" x="-0.1778" y="0.0825" angle="${pi*1/4}" />
+	<xacro:leg side="R" position="R" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="-1" />
+	<xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="-${pi/2}" axis="-1" />
+	<xacro:leg side="R" position="F" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="-1" />	
+	<xacro:leg side="L" position="R" x="0.1778" y="0.0825" angle="${pi/4}" axis="1" />
+	<xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" axis="1" />
+	<xacro:leg side="L" position="F" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="1" />
   
 </robot>

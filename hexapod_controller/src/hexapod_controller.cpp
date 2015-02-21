@@ -54,6 +54,7 @@ int main( int argc, char **argv )
     ros::Rate loop_rate( 1000 ); // 1000 hz
     while( ros::ok() )
     {
+        control.publishJointStates( control.legs_ );
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
@@ -112,13 +113,13 @@ int main( int argc, char **argv )
             // Locomotion is now shut off
             control.setPrevHexActiveState( false );
         }
-		control.publishJointStates( control.legs_ );
+
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
         }
         loop_rate.sleep();
     }
-	return 0;
+    return 0;
 }
 

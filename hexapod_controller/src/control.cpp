@@ -68,7 +68,7 @@ Control::Control( void )
     imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
-	joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
+    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
 }
 
 //==============================================================================
@@ -95,24 +95,6 @@ bool Control::getPrevHexActiveState( void )
     return prev_hex_state_;
 }
 
-
-
-
-
-void chatterLegsState (const LegsStateConstPtr& state){
-	std::string joint_name;
-	for (int name=0; name<4; name++){
-		for(int suf=0; suf<6; suf++){
-			joint_name = names[name] + suffixes[suf];
-			joint_msg.name.push_back(joint_name.c_str());
-			joint_msg.position.push_back(state->joints_state[suf].joint[name]);
-		}
-	}
-	joint_msg_pub.publish(joint_msg);
-	joint_msg.name.clear();
-	joint_msg.position.clear();
-}
-
 #define FIRST_COXA_ID     0
 #define FIRST_FEMUR_ID    6
 #define FIRST_TIBIA_ID    12
@@ -122,37 +104,37 @@ const std::string suffix[6] = {"RR", "RM", "RF", "LR", "LM", "LF"};
 
 void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs )
 {
-	joint_state_.header.stamp = ros::Time::now();
-	joint_state_.name.resize( 24 );
-	joint_state_.position.resize( 24 );
-	for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    joint_state_.header.stamp = ros::Time::now();
+    joint_state_.name.resize( 24 );
+    joint_state_.position.resize( 24 );
+    for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
         // Update Right Legs
         if( leg_index <= 2 )
         {
             joint_state_.position[FIRST_COXA_ID   + leg_index] = -legs.leg[leg_index].coxa;
-            joint_state_.position[FIRST_FEMUR_ID  + leg_index] =  legs.leg[leg_index].femur;
+            joint_state_.position[FIRST_FEMUR_ID  + leg_index] =  legs.leg[leg_index].femur + PI/2; // add 90 degrees
             joint_state_.position[FIRST_TIBIA_ID  + leg_index] = -legs.leg[leg_index].tibia;
-            joint_state_.position[FIRST_TARSUS_ID + leg_index] =  legs.leg[leg_index].tarsus;
+            joint_state_.position[FIRST_TARSUS_ID + leg_index] =  legs.leg[leg_index].tarsus + PI/2; // add 90 degrees
         }
         else
         // Update Left Legs
         {
             joint_state_.position[FIRST_COXA_ID   + leg_index] =  legs.leg[leg_index].coxa;
-            joint_state_.position[FIRST_FEMUR_ID  + leg_index] = -legs.leg[leg_index].femur;
+            joint_state_.position[FIRST_FEMUR_ID  + leg_index] = -( legs.leg[leg_index].femur + PI/2 ); // add 90 degrees
             joint_state_.position[FIRST_TIBIA_ID  + leg_index] =  legs.leg[leg_index].tibia;
-            joint_state_.position[FIRST_TARSUS_ID + leg_index] = -legs.leg[leg_index].tarsus;
+            joint_state_.position[FIRST_TARSUS_ID + leg_index] = -( legs.leg[leg_index].tarsus + PI/2 ); // add 90 degrees
         }
 
-		joint_state_.name[FIRST_COXA_ID   + leg_index] = "coxa_joint_" + suffix[leg_index];
+        joint_state_.name[FIRST_COXA_ID   + leg_index] = "coxa_joint_" + suffix[leg_index];
         joint_state_.name[FIRST_FEMUR_ID  + leg_index] = "femur_joint_" + suffix[leg_index];
         joint_state_.name[FIRST_TIBIA_ID  + leg_index] = "tibia_joint_" + suffix[leg_index];
         joint_state_.name[FIRST_TARSUS_ID + leg_index] = "tarsus_joint_" + suffix[leg_index];
 
-	}
-	joint_state_pub_.publish( joint_state_ );
-	joint_state_.name.clear();
-	joint_state_.position.clear();
+    }
+    joint_state_pub_.publish( joint_state_ );
+    joint_state_.name.clear();
+    joint_state_.position.clear();
 }
 
 //==============================================================================
