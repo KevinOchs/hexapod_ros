@@ -22,12 +22,12 @@
 	<link name="body">
 			<visual>
 	  			<origin	xyz="0 0 0" rpy="0 0 0" />
-	  			<geometry>
-					<box size="${body_length_x} ${body_length_y} 0.05"/>
-	  			</geometry>
-	 			<material name="grey">
+      			<geometry>
+        			<mesh filename="package://hexapod_description/meshes/body.stl" />
+      			</geometry>
+				<material name="">
 					<color rgba="0.7 0.7 0.7 1" />
-	  			</material>
+				</material>
 			</visual>
 	</link>
 
@@ -61,18 +61,9 @@
 		<link name="coxa_${side}${position}">
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
-				<geometry>
-					<cylinder length="0.0508" radius="0.015875"/>
-				</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-			<visual>
-				<origin xyz="${coxa_length/2} 0 0" rpy="0 ${pi/2} 0" />
-				<geometry>
-					<cylinder length="${coxa_length}" radius="0.0127"/>
-				</geometry>
+      			<geometry>
+        			<mesh filename="package://hexapod_description/meshes/coxa.stl" />
+      			</geometry>
 				<material name="">
 					<color rgba="0.7 0.7 0.7 1" />
 				</material>
@@ -91,18 +82,9 @@
 		<link name="femur_${side}${position}">
 			<visual>
 				<origin xyz="0 0 0" rpy="0 0 0" />
-				<geometry>
-					<cylinder length="0.0508" radius="0.015875"/>
-				</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-			<visual>
-				<origin xyz="0 -${femur_length/2} 0" rpy="${pi/2} 0 0" />
-				<geometry>
-					<cylinder length="${femur_length}" radius="0.0127"/>
-				</geometry>
+      			<geometry>
+        			<mesh filename="package://hexapod_description/meshes/femur.stl" />
+      			</geometry>
 				<material name="">
 					<color rgba="0.7 0.7 0.7 1" />
 				</material>
