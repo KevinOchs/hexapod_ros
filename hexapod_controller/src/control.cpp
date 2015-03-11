@@ -112,7 +112,7 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs )
         // Update Right Legs
         if( leg_index <= 2 )
         {
-            joint_state_.position[FIRST_COXA_ID   + leg_index] = -legs.leg[leg_index].coxa;
+            joint_state_.position[FIRST_COXA_ID   + leg_index] =  legs.leg[leg_index].coxa;
             joint_state_.position[FIRST_FEMUR_ID  + leg_index] =  legs.leg[leg_index].femur + PI/2; // add 90 degrees
             joint_state_.position[FIRST_TIBIA_ID  + leg_index] = -legs.leg[leg_index].tibia;
             joint_state_.position[FIRST_TARSUS_ID + leg_index] =  legs.leg[leg_index].tarsus + PI/2; // add 90 degrees
