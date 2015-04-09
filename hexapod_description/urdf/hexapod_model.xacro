@@ -11,13 +11,22 @@
 	<xacro:property name="tarsus_length" value="0.12065" />
 
 	<!-- Build the body frame -->
-	<link name="base_link" />
+    <link name="footprint" />
 
+    <joint name="footprint_joint" type="fixed">
+        <parent link="footprint"/>
+        <child link="base_link"/>
+		<origin xyz="0 0 0" rpy="0 0 0" />
+    </joint>
+
+	<link name="base_link" />
+	
 	<joint name="base_joint" type="fixed">
 		<parent link="base_link" />
 		<child link="body" />
 		<origin xyz="0 0 0" rpy="0 0 0" />
-	</joint>		
+	</joint>
+
 	<link name="body">
 			<visual>
 	  			<origin	xyz="0 0 0" rpy="0 0 0" />
@@ -38,16 +47,16 @@
 
 	<!-- Leg macro -->
 	<xacro:macro name="leg" params="side position x y angle axis">
-	
+
 		<!-- leg position -->
 		<joint name="leg_center_joint_${side}${position}" type="fixed">
-			<origin xyz="${x} ${y} 0" rpy="0 0 0" /> 
+			<origin xyz="${x} ${y} 0" rpy="0 0 0" />
 			<parent link="body" />
 			<child link="leg_center_${side}${position}" />
 		</joint>
 
 		<link name="leg_center_${side}${position}" />
-		
+
 		<!-- coxa -->
 		<joint name="coxa_joint_${side}${position}" type="revolute">
 			<origin xyz="0 0 0" rpy="0 0 ${angle}" />
@@ -126,15 +135,15 @@
 					<color rgba="0.7 0.7 0.7 1" />
 				</material>
 			</visual>
-		</link>		
+		</link>
 	</xacro:macro>
 
 <!-- Build robot model -->
 	<xacro:leg side="R" position="R" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="1" />
 	<xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="-${pi/2}" axis="1" />
-	<xacro:leg side="R" position="F" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />	
+	<xacro:leg side="R" position="F" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />
 	<xacro:leg side="L" position="R" x="0.1778" y="0.0825" angle="${pi/4}" axis="-1" />
 	<xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" axis="-1" />
 	<xacro:leg side="L" position="F" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="-1" />
-  
+
 </robot>

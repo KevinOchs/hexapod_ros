@@ -54,7 +54,7 @@ int main( int argc, char **argv )
     ros::Rate loop_rate( 1000 ); // 1000 hz
     while( ros::ok() )
     {
-        control.publishJointStates( control.legs_ );
+        control.publishJointStates( control.legs_, control.body_ );
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {

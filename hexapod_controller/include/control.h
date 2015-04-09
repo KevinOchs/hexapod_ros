@@ -59,7 +59,7 @@ class Control
         bool getHexActiveState( void );
         void setPrevHexActiveState( bool state );
         bool getPrevHexActiveState( void );
-        void publishJointStates( const hexapod_msgs::LegsJoints &legs );
+        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::BodyJoint &body );
         sensor_msgs::JointState joint_state_;
         hexapod_msgs::RootJoint base_;
         hexapod_msgs::BodyJoint body_;

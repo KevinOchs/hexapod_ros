@@ -102,7 +102,7 @@ bool Control::getPrevHexActiveState( void )
 
 const std::string suffix[6] = {"RR", "RM", "RF", "LR", "LM", "LF"};
 
-void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs )
+void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::BodyJoint &body )
 {
     joint_state_.header.stamp = ros::Time::now();
     joint_state_.name.resize( 24 );
