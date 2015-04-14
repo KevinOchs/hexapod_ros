@@ -62,7 +62,7 @@
 			<origin xyz="0 0 0" rpy="0 0 ${angle}" />
 			<parent link="leg_center_${side}${position}" />
 			<child link="coxa_${side}${position}" />
-			<axis xyz="0 0 ${axis}" />
+			<axis xyz="0 0 ${-axis}" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 		<link name="coxa_${side}${position}">
@@ -139,11 +139,12 @@
 	</xacro:macro>
 
 <!-- Build robot model -->
-	<xacro:leg side="R" position="R" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="1" />
+	<xacro:leg side="R" position="R" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />
 	<xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="-${pi/2}" axis="1" />
-	<xacro:leg side="R" position="F" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />
-	<xacro:leg side="L" position="R" x="0.1778" y="0.0825" angle="${pi/4}" axis="-1" />
+	<xacro:leg side="R" position="F" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="1" />
+
+	<xacro:leg side="L" position="R" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="-1" />
 	<xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" axis="-1" />
-	<xacro:leg side="L" position="F" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="-1" />
+	<xacro:leg side="L" position="F" x="0.1778" y="0.0825" angle="${pi/4}" axis="-1" />
 
 </robot>
