@@ -2,7 +2,6 @@
 <!-- Locomotion launch file -->
 
 <launch>
-    <include file="$(find openni2_launch)/launch/openni2.launch"/>
     <node name="Sound_Play" pkg="sound_play" type="soundplay_node.py"/>
     <node name="Hexapod_Sounds" pkg="hexapod_sound" type="hexapod_sound" />
     <node name="Playstation3Controller" pkg="joy" type="joy_node" output="screen" />
@@ -77,6 +76,9 @@
         </rosparam>
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+    <include file="$(find hexapod_bringup)/launch/hexapod_bringup_depth_laserscan.launch" />
+
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/urdf.rviz" />
 </launch>
 
