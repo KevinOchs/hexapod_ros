@@ -1,5 +1,5 @@
 
-// ROS Hexapod Sound Node
+// ROS Hexapod Odometry Node
 // Copyright (c) 2014, Kevin M. Ochs
 // All rights reserved.
 
@@ -29,18 +29,21 @@
 
 
 #include <ros/ros.h>
-#include <sound_play/sound_play.h>
-#include <hexapod_msgs/Sounds.h>
+#include <tf/transform_broadcaster.h>
+#include <nav_msgs/Odometry.h>
+#include <hexapod_msgs/RootJoint.h>
 
-class HexapodSound
+class HexapodOdometry
 {
     public:
-        HexapodSound( void );
-        sound_play::SoundRequest sound_req_;
-        hexapod_msgs::Sounds sounds_;
-        ros::Publisher sound_pub_;
+        HexapodOdometry( void );
+        hexapod_msgs::RootJoint base_;
+        ros::Publisher odom_pub_;
+        double vx;
+        double vy;
+        double vth;
     private:
+        void odometryCallback( const hexapod_msgs::RootJointConstPtr &base_msg );
+        ros::Subscriber base_sub_;
         ros::NodeHandle nh_;
-        void soundsCallback( const hexapod_msgs::SoundsConstPtr &sounds_msg );
-        ros::Subscriber sounds_sub_;
 };

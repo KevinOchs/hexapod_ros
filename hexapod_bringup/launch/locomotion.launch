@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Locomotion launch file -->
+
+<launch>
+    <node name="Sound_Play" pkg="sound_play" type="soundplay_node.py"/>
+    <node name="Hexapod_Sounds" pkg="hexapod_sound" type="hexapod_sound" />
+    <node name="Playstation3Controller" pkg="joy" type="joy_node" />
+    <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" />
+    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" />
+        <rosparam>
+            <!-- Gait Settings -->
+            CYCLE_LENGTH: 50
+            LEG_LIFT_HEIGHT: 40
+
+            <!-- Define Leg Measurements in mm -->
+            COXA_LENGTH:   58.93
+            FEMUR_LENGTH:  107.98
+            TIBIA_LENGTH:  87.74
+            TARSUS_LENGTH: 120.65
+
+            <!-- Define Angle Offsets in Radians - Usually zero -->
+            OFFSET_ANGLE: !degrees 20
+
+            <!-- Define Initial Coxa Offsets in Radians -->
+            RR_COXA_ANGLE: !degrees -45
+            RM_COXA_ANGLE: 0
+            RF_COXA_ANGLE: !degrees 45
+            LR_COXA_ANGLE: !degrees -45
+            LM_COXA_ANGLE: 0
+            LF_COXA_ANGLE: !degrees 45
+
+            <!-- Define distance in mm from center of the axis of the coxa joint -->
+            RR_OFFSET_X:  177.8
+            RR_OFFSET_Y: -82.5
+
+            RM_OFFSET_X:  0.0
+            RM_OFFSET_Y: -133.35
+
+            RF_OFFSET_X: -177.8
+            RF_OFFSET_Y: -82.5
+
+            LR_OFFSET_X:  177.8
+            LR_OFFSET_Y:  82.5
+
+            LM_OFFSET_X:  0.0
+            LM_OFFSET_Y:  133.35
+
+            LF_OFFSET_X: -177.8
+            LF_OFFSET_Y:  82.5
+
+            <!-- Define Start Position Of Feet in mm from the coxa joint -->
+            <!-- Middle Legs is body center to foot -->
+            <!-- math to find positions of front and back legs POS_Y = Middle leg start position * cos(45) -->
+            <!-- math to find positions of front and back legs POS_X = Middle leg start position * sin(45) -->
+
+            RR_INIT_FOOT_POS_Y:  134.35
+            RR_INIT_FOOT_POS_X:  134.35
+
+            RM_INIT_FOOT_POS_Y:  190.0
+            RM_INIT_FOOT_POS_X:  0
+
+            RF_INIT_FOOT_POS_Y:  134.35
+            RF_INIT_FOOT_POS_X: -134.35
+
+            LR_INIT_FOOT_POS_Y:  134.35
+            LR_INIT_FOOT_POS_X:  134.35
+
+            LM_INIT_FOOT_POS_Y:  190.0
+            LM_INIT_FOOT_POS_X:  0
+
+            LF_INIT_FOOT_POS_Y:  134.35
+            LF_INIT_FOOT_POS_X: -134.35
+
+            <!-- Distance from ground plane to femur rotation pivot -->
+            FOOT_INIT_Z:         35.65
+        </rosparam>
+</launch>
+

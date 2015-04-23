@@ -10,24 +10,23 @@
 	<xacro:property name="tibia_length" value="0.08774" />
 	<xacro:property name="tarsus_length" value="0.12065" />
 
-	<!-- Build the body frame -->
-    <link name="footprint" />
-
-    <joint name="footprint_joint" type="fixed">
-        <parent link="footprint"/>
-        <child link="base_link"/>
-		<origin xyz="0 0 0" rpy="0 0 0" />
+    <link name="base_footprint" /> 
+ 
+    <joint name="footprint_joint" type="fixed"> 
+        <parent link="base_footprint"/> 
+        <child link="base_link"/> 
+		<origin xyz="0 0 0" rpy="0 0 0" /> 
     </joint>
 
 	<link name="base_link" />
 	
 	<joint name="base_joint" type="fixed">
 		<parent link="base_link" />
-		<child link="body" />
+		<child link="body_link" />
 		<origin xyz="0 0 0" rpy="0 0 0" />
 	</joint>
 
-	<link name="body">
+	<link name="body_link">
 			<visual>
 	  			<origin	xyz="0 0 0" rpy="0 0 0" />
       			<geometry>
@@ -39,15 +38,30 @@
 			</visual>
 	</link>
 
-	<joint name="camera" type="fixed">
-		<parent link="base_link" />
-		<child link="camera_link" />
-		<origin xyz="0 0 0" rpy="${pi/2} ${pi} ${pi/2}" />
+	<joint name="camera_rgb_joint" type="fixed">
+		<parent link="body_link" />
+		<child link="camera_rgb_link" />
+		<origin xyz="0.150 0.0255 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
 	</joint>
 	
-	<link name="camera_link">
-	</link>
+	<link name="camera_rgb_link" />
+
+	<joint name="camera_depth_joint" type="fixed">
+		<parent link="body_link" />
+		<child link="camera_depth_link" />
+		<origin xyz="0.150 -0.0225 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
+	</joint>
 	
+	<link name="camera_depth_link" />
+
+	<joint name="imu_joint" type="fixed">
+		<parent link="base_footprint" />
+		<child link="imu_link" />
+		<origin xyz="0 0 0" rpy="${pi} 0 0" />
+	</joint>
+	
+	<link name="imu_link" />
+
 	<!-- Joint properties -->
 	<xacro:property name="joint_lower_limit" value="-${3.14}" />
 	<xacro:property name="joint_upper_limit" value="${3.14}" />
@@ -60,7 +74,7 @@
 		<!-- leg position -->
 		<joint name="leg_center_joint_${side}${position}" type="fixed">
 			<origin xyz="${x} ${y} 0" rpy="0 0 0" />
-			<parent link="body" />
+			<parent link="body_link" />
 			<child link="leg_center_${side}${position}" />
 		</joint>
 

@@ -1,0 +1,9 @@
+<!-- hexapod_odometry publisher -->
+<library path="lib/hexapod_odometry">
+  <class name="hexapod_odometry/hexapod_odometry" type="hexapod_odometry" 
+    base_class_type="nodelet::Nodelet">
+    <description>
+      hexapod_odometry publisher.
+    </description>
+  </class>
+</library>

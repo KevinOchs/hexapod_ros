@@ -1,5 +1,5 @@
 
-// ROS Hexapod Teleop Joystick Node
+// ROS Hexapod Sound Node
 // Copyright (c) 2014, Kevin M. Ochs
 // All rights reserved.
 

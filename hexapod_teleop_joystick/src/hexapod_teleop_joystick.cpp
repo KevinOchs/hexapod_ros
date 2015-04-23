@@ -94,9 +94,9 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     // Travelling ( 8cm/s )
     if ( joy->buttons[8] != 1 )
     {
-        base_.x = ( -joy->axes[1] * 40.0 ) * 0.05 + ( base_.x * ( 1.0 - 0.05 ) ); // 40 mm max
-        base_.y = ( joy->axes[0] * 40.0 ) * 0.05 + ( base_.y * ( 1.0 - 0.05 ) ); // 40 mm max
-        base_.yaw = ( -joy->axes[2] * 0.13962634 ) * 0.5 + ( base_.yaw * ( 1.0 - 0.5 ) ); // 8 degrees max
+        base_.x = ( -joy->axes[1] * 40.0 ) * 0.06 + ( base_.x * ( 1.0 - 0.06 ) ); // 40 mm max
+        base_.y = ( joy->axes[0] * 40.0 ) * 0.06 + ( base_.y * ( 1.0 - 0.06 ) ); // 40 mm max
+        base_.yaw = ( -joy->axes[2] * 0.13962634 ) * 0.6 + ( base_.yaw * ( 1.0 - 0.6 ) ); // 8 degrees max
     }
 }
 

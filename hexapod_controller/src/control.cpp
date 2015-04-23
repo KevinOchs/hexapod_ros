@@ -147,9 +147,9 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
 
 void Control::baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg )
 {
-        base_.x = base_msg->x * 0.01 + ( base_.x * ( 1.0 - 0.01 ) );
-        base_.y  = base_msg->y * 0.01 + ( base_.y * ( 1.0 - 0.01 ) );
-        base_.yaw = base_msg->yaw * 0.5 + ( base_.yaw * ( 1.0 - 0.5 ) );
+    base_.x = base_msg->x;
+    base_.y = base_msg->y;
+    base_.yaw = base_msg->yaw;
 }
 
 //==============================================================================
