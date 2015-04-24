@@ -2,6 +2,11 @@ ROS Hexapod Stack
 =================
 This is a work in progress of my implementation of a hexapod functioning in the ROS framework. It is still very much a work in progress and I am still actively developing it. Its current capabilities are up to mapping its environment.
 
+Author: Kevin M. Ochs
+
+Contributor: Renée Love
+
+
 Dependencies
 ------------
 
@@ -30,8 +35,31 @@ Install
 git clone https://github.com/KevinOchs/ROS_hexapod.git
 ```
 
-For PhantomX:
+For PhantomX branch created by Renée Love:
 
 ```
 git checkout PhantomX
 ```
+
+Pictures
+--------
+Rviz screenshot of point cloud and laserscan active.
+![ScreenShot](http://forums.trossenrobotics.com/gallery/files/8/6/6/6/depthwithlaser.jpg)]
+
+2D room mapping in Rviz.
+![ScreenShot](http://forums.trossenrobotics.com/gallery/files/8/6/6/6/2d_slam.jpg)]
+
+Renée Love's adaptation of the Hexapod stack for Trossen's  [PhantomX](http://www.trossenrobotics.com/phantomx-ax-hexapod.aspx).
+![ScreenShot](http://forums.trossenrobotics.com/gallery/files/1/2/6/6/9/screenshot_from_2015-04-22_20_23_15.png)]
+
+
+Videos 
+------
+_Click on picture for redirect to YouTube video._
+
+
+Small video of Golem research platform and IMU testing. 
+[![ScreenShot](http://forums.trossenrobotics.com/gallery/files/8/6/6/6/golem_996787.jpg)](https://www.youtube.com/watch?v=IP-1HebkZnU)
+
+Renée Love's odometry test video using the phantomX.
+[![ScreenShot](http://forums.trossenrobotics.com/gallery/files/1/2/6/6/9/screenshot_from_2015-04-22_20_23_15.png)](https://www.youtube.com/watch?v=VYBAM0MrvWI)
