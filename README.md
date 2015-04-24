@@ -57,7 +57,6 @@ Videos
 ------
 _Click on picture for redirect to YouTube video._
 
-http://img.youtube.com/vi/VIDEO-ID/0.jpg
 Small video of Golem research platform and IMU testing. 
 [![ScreenShot](http://img.youtube.com/vi/IP-1HebkZnU/0.jpg)](https://www.youtube.com/watch?v=IP-1HebkZnU)
 
