@@ -1,6 +1,6 @@
 ROS Hexapod Stack
 =================
-This is a work in progress of my implementation of a hexapod functioning in the ROS framework. It is still very much a work in progress and I am still actively developing it. Its current capabilities are up to mapping its environment.
+This is a work in progress of my implementation of a hexapod functioning in the ROS framework. It is still very much a work in progress and I am still actively developing it. Its current capabilities are up to 2D mapping its environment.
 
 Author: Kevin M. Ochs
 
