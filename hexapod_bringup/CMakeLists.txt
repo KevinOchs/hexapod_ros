@@ -3,17 +3,14 @@ project(hexapod_bringup)
 
 find_package( catkin REQUIRED COMPONENTS )
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES hexapod_bringup
-  CATKIN_DEPENDS
-)
+catkin_package()
 
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
 
 install(FILES hexapod_bringup.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
   
  

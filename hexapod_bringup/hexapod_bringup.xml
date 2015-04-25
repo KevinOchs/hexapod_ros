@@ -3,7 +3,7 @@
   <class name="hexapod_bringup/hexapod_bringup" type="hexapod_bringup" 
     base_class_type="node::Node">
     <description>
-      hexapod_bringup publisher.
+      hexapod_bringup launcher.
     </description>
   </class>
 </library>
