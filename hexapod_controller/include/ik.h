@@ -54,7 +54,7 @@ class Ik
         void calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::BodyJoint &body, hexapod_msgs::LegsJoints *legs );
     private:
         Trig getSinCos( double angle_rad );
-        double BODY_CENTER_TO_COXA_X[6], BODY_CENTER_TO_COXA_Y[6];
+        double COXA_TO_CENTER_X[6], COXA_TO_CENTER_Y[6];
         double INIT_COXA_ANGLE[6];
         double INIT_FOOT_POS_X[6], INIT_FOOT_POS_Y[6], INIT_FOOT_POS_Z;
         double COXA_LENGTH, FEMUR_LENGTH, TIBIA_LENGTH, TARSUS_LENGTH;

@@ -22,57 +22,35 @@
             OFFSET_ANGLE: !degrees 20
 
             <!-- Define Initial Coxa Offsets in Radians -->
-            RR_COXA_ANGLE: !degrees -45
-            RM_COXA_ANGLE: 0
-            RF_COXA_ANGLE: !degrees 45
-            LR_COXA_ANGLE: !degrees -45
-            LM_COXA_ANGLE: 0
-            LF_COXA_ANGLE: !degrees 45
+            FRONT_COXA_ANGLE: !degrees 45
+            MID_COXA_ANGLE: 0
+            REAR_COXA_ANGLE: !degrees -45
 
-            <!-- Define distance in mm from center of the axis of the coxa joint -->
-            RR_OFFSET_X:  177.8
-            RR_OFFSET_Y: -82.5
+            <!-- Define distance in mm from coxa joint to the center -->
+            FRONT_COXA_TO_CENTER_X: 177.80
+            FRONT_COXA_TO_CENTER_Y:  82.50
 
-            RM_OFFSET_X:  0.0
-            RM_OFFSET_Y: -133.35
+            MID_COXA_TO_CENTER_X:  0.0
+            MID_COXA_TO_CENTER_Y:  133.35
 
-            RF_OFFSET_X: -177.8
-            RF_OFFSET_Y: -82.5
-
-            LR_OFFSET_X:  177.8
-            LR_OFFSET_Y:  82.5
-
-            LM_OFFSET_X:  0.0
-            LM_OFFSET_Y:  133.35
-
-            LF_OFFSET_X: -177.8
-            LF_OFFSET_Y:  82.5
+            REAR_COXA_TO_CENTER_X: -177.80
+            REAR_COXA_TO_CENTER_Y:  82.50
 
             <!-- Define Start Position Of Feet in mm from the coxa joint -->
-            <!-- Middle Legs is body center to foot -->
+            <!-- Middle Legs is coxa axis to foot -->
             <!-- math to find positions of front and back legs POS_Y = Middle leg start position * cos(45) -->
             <!-- math to find positions of front and back legs POS_X = Middle leg start position * sin(45) -->
+            FRONT_INIT_FOOT_POS_X:  134.35
+            FRONT_INIT_FOOT_POS_Y:  134.35
 
-            RR_INIT_FOOT_POS_Y:  134.35
-            RR_INIT_FOOT_POS_X:  134.35
+            MID_INIT_FOOT_POS_X:  0.0
+            MID_INIT_FOOT_POS_Y:  190.00
 
-            RM_INIT_FOOT_POS_Y:  190.0
-            RM_INIT_FOOT_POS_X:  0
-
-            RF_INIT_FOOT_POS_Y:  134.35
-            RF_INIT_FOOT_POS_X: -134.35
-
-            LR_INIT_FOOT_POS_Y:  134.35
-            LR_INIT_FOOT_POS_X:  134.35
-
-            LM_INIT_FOOT_POS_Y:  190.0
-            LM_INIT_FOOT_POS_X:  0
-
-            LF_INIT_FOOT_POS_Y:  134.35
-            LF_INIT_FOOT_POS_X: -134.35
+            REAR_INIT_FOOT_POS_X: -134.35
+            REAR_INIT_FOOT_POS_Y:  134.35
 
             <!-- Distance from ground plane to femur rotation pivot -->
-            FOOT_INIT_Z:         35.65
+            ALL_FOOT_INIT_Z: 35.65
         </rosparam>
 </launch>
 

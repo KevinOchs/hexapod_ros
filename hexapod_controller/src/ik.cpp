@@ -38,53 +38,53 @@ static const double PI = atan(1.0)*4.0;
 Ik::Ik( void )
 {
     //=============================================================================
-    // Distance in mm from center of the body to the coxa joint <launch file>
+    // Distance in mm from the coxa axis to the center of the body <see locomotion launch file>
     //=============================================================================
 
-    ros::param::get( "RR_OFFSET_X", BODY_CENTER_TO_COXA_X[0] );
-    ros::param::get( "RM_OFFSET_X", BODY_CENTER_TO_COXA_X[1] );
-    ros::param::get( "RF_OFFSET_X", BODY_CENTER_TO_COXA_X[2] );
-    ros::param::get( "LR_OFFSET_X", BODY_CENTER_TO_COXA_X[3] );
-    ros::param::get( "LM_OFFSET_X", BODY_CENTER_TO_COXA_X[4] );
-    ros::param::get( "LF_OFFSET_X", BODY_CENTER_TO_COXA_X[5] );
+    ros::param::get( "REAR_COXA_TO_CENTER_X", COXA_TO_CENTER_X[0] );
+    ros::param::get( "MID_COXA_TO_CENTER_X", COXA_TO_CENTER_X[1] );
+    ros::param::get( "FRONT_COXA_TO_CENTER_X", COXA_TO_CENTER_X[2] );
+    ros::param::get( "REAR_COXA_TO_CENTER_X", COXA_TO_CENTER_X[3] );
+    ros::param::get( "MID_COXA_TO_CENTER_X", COXA_TO_CENTER_X[4] );
+    ros::param::get( "FRONT_COXA_TO_CENTER_X", COXA_TO_CENTER_X[5] );
 
-    ros::param::get( "RR_OFFSET_Y", BODY_CENTER_TO_COXA_Y[0] );
-    ros::param::get( "RM_OFFSET_Y", BODY_CENTER_TO_COXA_Y[1] );
-    ros::param::get( "RF_OFFSET_Y", BODY_CENTER_TO_COXA_Y[2] );
-    ros::param::get( "LR_OFFSET_Y", BODY_CENTER_TO_COXA_Y[3] );
-    ros::param::get( "LM_OFFSET_Y", BODY_CENTER_TO_COXA_Y[4] );
-    ros::param::get( "LF_OFFSET_Y", BODY_CENTER_TO_COXA_Y[5] );
+    ros::param::get( "REAR_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[0] );
+    ros::param::get( "MID_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[1] );
+    ros::param::get( "FRONT_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[2] );
+    ros::param::get( "REAR_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[3] );
+    ros::param::get( "MID_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[4] );
+    ros::param::get( "FRONT_COXA_TO_CENTER_Y", COXA_TO_CENTER_Y[5] );
 
     //=============================================================================
     // Define Initial Coxa Offsets in Degrees <launch file>
     //=============================================================================
 
-    ros::param::get( "RR_COXA_ANGLE", INIT_COXA_ANGLE[0] );
-    ros::param::get( "RM_COXA_ANGLE", INIT_COXA_ANGLE[1] );
-    ros::param::get( "RF_COXA_ANGLE", INIT_COXA_ANGLE[2] );
-    ros::param::get( "LR_COXA_ANGLE", INIT_COXA_ANGLE[3] );
-    ros::param::get( "LM_COXA_ANGLE", INIT_COXA_ANGLE[4] );
-    ros::param::get( "LF_COXA_ANGLE", INIT_COXA_ANGLE[5] );
+    ros::param::get( "REAR_COXA_ANGLE", INIT_COXA_ANGLE[0] );
+    ros::param::get( "MID_COXA_ANGLE", INIT_COXA_ANGLE[1] );
+    ros::param::get( "FRONT_COXA_ANGLE", INIT_COXA_ANGLE[2] );
+    ros::param::get( "REAR_COXA_ANGLE", INIT_COXA_ANGLE[3] );
+    ros::param::get( "MID_COXA_ANGLE", INIT_COXA_ANGLE[4] );
+    ros::param::get( "FRONT_COXA_ANGLE", INIT_COXA_ANGLE[5] );
 
     //=============================================================================
     // Define distance in mm from center of the body to the coxa joint <launch file>
     //=============================================================================
 
-    ros::param::get( "RR_INIT_FOOT_POS_X", INIT_FOOT_POS_X[0] );
-    ros::param::get( "RM_INIT_FOOT_POS_X", INIT_FOOT_POS_X[1] );
-    ros::param::get( "RF_INIT_FOOT_POS_X", INIT_FOOT_POS_X[2] );
-    ros::param::get( "LR_INIT_FOOT_POS_X", INIT_FOOT_POS_X[3] );
-    ros::param::get( "LM_INIT_FOOT_POS_X", INIT_FOOT_POS_X[4] );
-    ros::param::get( "LF_INIT_FOOT_POS_X", INIT_FOOT_POS_X[5] );
+    ros::param::get( "REAR_INIT_FOOT_POS_X", INIT_FOOT_POS_X[0] );
+    ros::param::get( "MID_INIT_FOOT_POS_X", INIT_FOOT_POS_X[1] );
+    ros::param::get( "FRONT_INIT_FOOT_POS_X", INIT_FOOT_POS_X[2] );
+    ros::param::get( "REAR_INIT_FOOT_POS_X", INIT_FOOT_POS_X[3] );
+    ros::param::get( "MID_INIT_FOOT_POS_X", INIT_FOOT_POS_X[4] );
+    ros::param::get( "FRONT_INIT_FOOT_POS_X", INIT_FOOT_POS_X[5] );
 
-    ros::param::get( "RR_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[0] );
-    ros::param::get( "RM_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[1] );
-    ros::param::get( "RF_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[2] );
-    ros::param::get( "LR_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[3] );
-    ros::param::get( "LM_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[4] );
-    ros::param::get( "LF_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[5] );
+    ros::param::get( "REAR_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[0] );
+    ros::param::get( "MID_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[1] );
+    ros::param::get( "FRONT_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[2] );
+    ros::param::get( "REAR_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[3] );
+    ros::param::get( "MID_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[4] );
+    ros::param::get( "FRONT_INIT_FOOT_POS_Y", INIT_FOOT_POS_Y[5] );
 
-    ros::param::get( "FOOT_INIT_Z", INIT_FOOT_POS_Z );
+    ros::param::get( "ALL_FOOT_INIT_Z", INIT_FOOT_POS_Z );
 
     //=============================================================================
     // Define Leg Measurements in mm <launch file>
@@ -116,16 +116,16 @@ Trig Ik::getSinCos( double angle_rad )
 
 void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::BodyJoint &body, hexapod_msgs::LegsJoints *legs )
 {
-    char sign = -1;
+    double sign = -1.0;
     for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
         if( leg_index <= 2 )
         {
-            sign = -1;
+            sign = -1.0;
         }
         else
         {
-            sign = 1;
+            sign = 1.0;
         }
 
         // First calculate sinus and co-sinus for each angular axis
@@ -133,11 +133,10 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         Trig B = getSinCos( body.pitch );
         Trig G = getSinCos( body.roll );
 
-        // Calculating totals from center of the body to the feet
-        double cpr_x = BODY_CENTER_TO_COXA_X[leg_index] + INIT_FOOT_POS_X[leg_index] + body.x + feet.foot[leg_index].x;
-        double cpr_y = BODY_CENTER_TO_COXA_Y[leg_index] + sign*( INIT_FOOT_POS_Y[leg_index] + body.y ) + feet.foot[leg_index].y;
-        double cpr_z = INIT_FOOT_POS_Z - TARSUS_LENGTH + body.z - feet.foot[leg_index].z;
-
+        // Calculating totals from the feet to center of the body
+        double cpr_x = feet.foot[leg_index].x + body.x - INIT_FOOT_POS_X[leg_index] - COXA_TO_CENTER_X[leg_index];
+        double cpr_y = feet.foot[leg_index].y + sign*( body.y + INIT_FOOT_POS_Y[leg_index] + COXA_TO_CENTER_Y[leg_index] );
+        double cpr_z = feet.foot[leg_index].z + body.z + TARSUS_LENGTH - INIT_FOOT_POS_Z;
         // Calculation of angular matrix of body (Tait-Bryan angles Z, Y, X)
         // http://en.wikipedia.org/wiki/Euler_angles
 
@@ -154,9 +153,9 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         double body_pos_z = cpr_z - ( ( -cpr_x * B.sine ) + ( cpr_y * B.cosine * G.sine ) + ( cpr_z * B.cosine * G.cosine ) );
 
         // Calculate foot position
-        double feet_pos_x = INIT_FOOT_POS_X[leg_index] + body.x - body_pos_x + feet.foot[leg_index].x;
-        double feet_pos_y = INIT_FOOT_POS_Y[leg_index] + sign*( body.y - body_pos_y + feet.foot[leg_index].y );
-        double feet_pos_z = INIT_FOOT_POS_Z - TARSUS_LENGTH + body.z - body_pos_z - feet.foot[leg_index].z;
+        double feet_pos_x = -INIT_FOOT_POS_X[leg_index] + body.x - body_pos_x + feet.foot[leg_index].x;
+        double feet_pos_y =  INIT_FOOT_POS_Y[leg_index] + sign*( body.y - body_pos_y + feet.foot[leg_index].y );
+        double feet_pos_z =  INIT_FOOT_POS_Z - TARSUS_LENGTH + body.z - body_pos_z - feet.foot[leg_index].z;
 
         // Length between the Root and Foot Position ...Pythagorean theorem
         double femur_to_tarsus = sqrt( pow( feet_pos_x, 2 ) + pow( feet_pos_y, 2 ) ) - COXA_LENGTH;
