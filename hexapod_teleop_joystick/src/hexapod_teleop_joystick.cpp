@@ -91,11 +91,11 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         imu_override_.active = false;
     }
 
-    // Travelling ( 8cm/s )
+    // Travelling ( 8cm/s ) 0.078m/s
     if ( joy->buttons[8] != 1 )
     {
-        base_.x = ( -joy->axes[1] * 40.0 ) * 0.06 + ( base_.x * ( 1.0 - 0.06 ) ); // 40 mm max
-        base_.y = ( joy->axes[0] * 40.0 ) * 0.06 + ( base_.y * ( 1.0 - 0.06 ) ); // 40 mm max
+        base_.x = ( -joy->axes[1] * 40.0 ) * 0.05 + ( base_.x * ( 1.0 - 0.05 ) ); // 40 mm max
+        base_.y = ( joy->axes[0] * 40.0 ) * 0.05 + ( base_.y * ( 1.0 - 0.05 ) ); // 40 mm max
         base_.yaw = ( -joy->axes[2] * 0.13962634 ) * 0.6 + ( base_.yaw * ( 1.0 - 0.6 ) ); // 8 degrees max
     }
 }
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(1); // Using 4 threads
     spinner.start();
 
-    ros::Rate loop_rate( 2000 ); // 1000 hz
+    ros::Rate loop_rate( 1000 ); // 1000 hz
     while ( ros::ok() )
     {
         hexapodTeleopJoystick.base_pub_.publish( hexapodTeleopJoystick.base_ );

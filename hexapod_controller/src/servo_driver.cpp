@@ -62,9 +62,16 @@ ServoDriver::ServoDriver( void )
     {
         ROS_INFO( "Servo Communication Opened!" );
     }
+
     servos_free_ = true;
 
     ros::param::get("OFFSET_ANGLE", OFFSET_ANGLE );
+    for( int i = 0; i < SERVO_COUNT; i++ )
+    {
+        cur_pos_[i] = MX_CENTER_VALUE;
+        goal_pos_[i] = MX_CENTER_VALUE;
+        write_pos_[i] = MX_CENTER_VALUE;
+    }
 }
 
 //==============================================================================
@@ -111,7 +118,7 @@ void ServoDriver::makeSureServosAreOn( void )
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
         cur_pos_[i] = dxl_read_word( servo_id[i], MX_PRESENT_POSITION_L );
-        ros::Duration( 0.01 ).sleep();
+        ros::Duration( 0.02 ).sleep();
     }
 
     // Turn torque on
