@@ -112,12 +112,12 @@ int main(int argc, char** argv)
         odom.pose.pose.position.z = 0.0;
         odom.pose.pose.orientation = odom_quat;
 
-        odom.pose.covariance[0] = 0.0001;  // x
-        odom.pose.covariance[7] = 0.0001;  // y
-        odom.pose.covariance[14] = 5;      // z
-        odom.pose.covariance[21] = 1;      // rot x
-        odom.pose.covariance[28] = 1;      // rot y
-        odom.pose.covariance[35] = 1;      // rot z
+        odom.pose.covariance[0] = 0.00001;  // x
+        odom.pose.covariance[7] = 0.00001;  // y
+        odom.pose.covariance[14] = 5;       // z
+        odom.pose.covariance[21] = 5;       // rot x
+        odom.pose.covariance[28] = 5;       // rot y
+        odom.pose.covariance[35] = 0.00001; // rot z
 
         //set the velocity
         odom.twist.twist.linear.x = hexapodOdometry.vx;
