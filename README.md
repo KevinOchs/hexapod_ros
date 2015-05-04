@@ -43,6 +43,19 @@ For PhantomX branch created by Renée Love:
 git checkout PhantomX
 ```
 
+For Raspberry Pi2 please add these compiler optimizations after first build.
+```
+[workspace]/build/CMakeCache.txt
+Change: CMAKE_CXX_FLAGS:STRING=-O3 -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7
+```
+
+For ODROID XU3 please add these compiler optimizations after first build.
+```
+[workspace]/build/CMakeCache.txt
+Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=hard
+```
+
+
 Pictures
 --------
 Rviz screenshot of point cloud and laserscan active.
