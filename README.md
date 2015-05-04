@@ -11,6 +11,7 @@ Dependencies
 ------------
 
 ```
+sudo apt-get install git
 sudo apt-get install ros-indigo-sound-play
 sudo apt-get install ros-indigo-diagnostic-updater
 sudo apt-get install ros-indigo-xacro
