@@ -33,6 +33,7 @@
 
 #include <cmath> // std::abs
 #include <algorithm>
+#include <ros/ros.h>
 #include <hexapod_msgs/RootJoint.h>
 #include <hexapod_msgs/FeetPositions.h>
 #include <hexapod_msgs/RootJoint.h>
@@ -48,12 +49,13 @@ class Gait
         void gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet );
     private:
         void cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet );
+		hexapod_msgs::RootJoint smooth_base_;
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
         bool in_cycle_;           // True if the robot is in a gait cycle
-        int cycle_length_;        // Number of steps in cycle
+        int CYCLE_LENGTH;         // Number of steps in cycle
         int cycle_period_;        // Current period in cycle
         int cycle_leg_number_[6]; // Leg order in cycle of the leg
-        int leg_lift_height_;     // Height of a leg cycle
+        int LEG_LIFT_HEIGHT;      // Height of a leg cycle
         int extra_gait_cycle_;    // Forcing some extra timed cycles
 };
 

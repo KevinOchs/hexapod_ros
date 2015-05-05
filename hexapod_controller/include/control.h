@@ -34,6 +34,7 @@
 #include <math.h>
 #include <ros/ros.h>
 #include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/Twist.h> 
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/RootJoint.h>
@@ -61,6 +62,7 @@ class Control
         bool getPrevHexActiveState( void );
         void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::BodyJoint &body );
         sensor_msgs::JointState joint_state_;
+		geometry_msgs::Twist cmd_vel_;
         hexapod_msgs::RootJoint base_;
         hexapod_msgs::BodyJoint body_;
         hexapod_msgs::HeadJoint head_;
@@ -77,23 +79,29 @@ class Control
         double imu_yaw_lowpass_;
         double imu_roll_init_;
         double imu_pitch_init_;
+		double FEMUR_LENGTH;
+		double TIBIA_LENGTH;
+		double STEP_RANGE;
+		double STEP_SEGMENT;
         hexapod_msgs::State imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
-        void baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg );
+        ros::Subscriber cmd_vel_sub_;
+        void cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg );
+        ros::Subscriber base_sub_;
+        void baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg );		
+        ros::Subscriber body_sub_;
         void bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg );
+        ros::Subscriber head_sub_;
         void headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg );
+        ros::Subscriber state_sub_;
         void stateCallback( const hexapod_msgs::StateConstPtr &state_msg );
+        ros::Subscriber imu_override_sub_;
         void imuOverrideCallback( const hexapod_msgs::StateConstPtr &imuOverride_msg );
+        ros::Subscriber imu_sub_;
         void imuCallback( const sensor_msgs::ImuConstPtr &imu_msg );
         ros::NodeHandle nh_;
-        ros::Subscriber base_sub_;
-        ros::Subscriber body_sub_;
-        ros::Subscriber head_sub_;
-        ros::Subscriber state_sub_;
-        ros::Subscriber imu_sub_;
-        ros::Subscriber imu_override_sub_;
 };
 
 #endif // CONTROL_H_

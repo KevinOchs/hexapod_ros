@@ -38,6 +38,9 @@ HexapodOdometry::HexapodOdometry( void )
 {
     base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &HexapodOdometry::odometryCallback, this );
     odom_pub_ = nh_.advertise<nav_msgs::Odometry>("odom", 50);
+	vx = 0.0;
+	vy = 0.0;
+	vth = 0.0;
 }
 
 //==============================================================================
@@ -114,10 +117,10 @@ int main(int argc, char** argv)
 
         odom.pose.covariance[0] = 0.00001;  // x
         odom.pose.covariance[7] = 0.00001;  // y
-        odom.pose.covariance[14] = 5;       // z
-        odom.pose.covariance[21] = 5;       // rot x
-        odom.pose.covariance[28] = 5;       // rot y
-        odom.pose.covariance[35] = 0.00001; // rot z
+        odom.pose.covariance[14] = 0.001;      // z
+        odom.pose.covariance[21] = 1;       // rot x
+        odom.pose.covariance[28] = 1;       // rot y
+        odom.pose.covariance[35] = 1;       // rot z
 
         //set the velocity
         odom.twist.twist.linear.x = hexapodOdometry.vx;
