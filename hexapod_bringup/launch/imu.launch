@@ -6,7 +6,7 @@
     # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
         <param name="period" value="8"/>
         <param name="frame_id" value="imu_link"/>
-		<param name="cc_mag_field" value="0.49062"/>
+        <param name="cc_mag_field" value="0.49062"/>
         <param name="cc_offset0" value="-1.05668"/>
         <param name="cc_offset1" value="1.23766"/>
         <param name="cc_offset2" value="0.00607"/>

@@ -46,22 +46,22 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     body_.yaw = 0.0;
     body_.roll = 0.0;
     head_.yaw = 0.0;
-	cmd_vel_.linear.x = 0.0;
-	cmd_vel_.linear.y = 0.0;
-	cmd_vel_.linear.z = 0.0;
-	cmd_vel_.angular.x = 0.0;
-	cmd_vel_.angular.y = 0.0;
-	cmd_vel_.angular.z = 0.0;	
+    cmd_vel_.linear.x = 0.0;
+    cmd_vel_.linear.y = 0.0;
+    cmd_vel_.linear.z = 0.0;
+    cmd_vel_.angular.x = 0.0;
+    cmd_vel_.angular.y = 0.0;
+    cmd_vel_.angular.z = 0.0;
     state_.active = false;
     imu_override_.active = false;
-	ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
-	ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
+    ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
+    ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     base_pub_ = nh_.advertise<hexapod_msgs::RootJoint>("base", 100);
     body_pub_ = nh_.advertise<hexapod_msgs::BodyJoint>("body", 100);
     head_pub_ = nh_.advertise<hexapod_msgs::HeadJoint>("head", 100);
     state_pub_ = nh_.advertise<hexapod_msgs::State>("state", 100);
-	cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
+    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
     imu_override_pub_ = nh_.advertise<hexapod_msgs::State>("imu_override", 100);
 }
 
@@ -106,7 +106,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         base_.x = -joy->axes[1] * 40.0; // 40 mm max
         base_.y = joy->axes[0] * 40.0; // 40 mm max
         base_.yaw = -joy->axes[2] * 0.13962634; // 8 degrees max
-		cmd_vel_.linear.x = ( -joy->axes[1] * MAX_METERS_PER_SEC ); // 0.078m/s max
+        cmd_vel_.linear.x = ( -joy->axes[1] * MAX_METERS_PER_SEC ); // 0.078m/s max
         cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC ); // 0.078m/s max
         cmd_vel_.angular.z = ( -joy->axes[2] * MAX_RADIANS_PER_SEC ); // 0.407rad/s max
     }
@@ -127,7 +127,7 @@ int main(int argc, char** argv)
         hexapodTeleopJoystick.body_pub_.publish( hexapodTeleopJoystick.body_ );
         hexapodTeleopJoystick.head_pub_.publish( hexapodTeleopJoystick.head_ );
         hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
-		hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
+        hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
         hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
         loop_rate.sleep();
     }

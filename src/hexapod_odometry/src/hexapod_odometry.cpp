@@ -38,9 +38,9 @@ HexapodOdometry::HexapodOdometry( void )
 {
     base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &HexapodOdometry::odometryCallback, this );
     odom_pub_ = nh_.advertise<nav_msgs::Odometry>("odom", 50);
-	vx = 0.0;
-	vy = 0.0;
-	vth = 0.0;
+    vx = 0.0;
+    vy = 0.0;
+    vth = 0.0;
 }
 
 //==============================================================================

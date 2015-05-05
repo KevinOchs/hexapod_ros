@@ -45,7 +45,7 @@ const static double PI = atan(1.0)*4.0;
 Gait::Gait( void )
 {
     ros::param::get( "CYCLE_LENGTH", CYCLE_LENGTH );
-	ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
+    ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
     cycle_leg_number_[RF] = 0;
     cycle_leg_number_[LM] = 0;
     cycle_leg_number_[RR] = 0;
@@ -56,7 +56,7 @@ Gait::Gait( void )
     is_travelling_ = false;
     in_cycle_ == false;
     extra_gait_cycle_ = 1;
-	smooth_base_.y = 0.0;
+    smooth_base_.y = 0.0;
     smooth_base_.x = 0.0;
     smooth_base_.yaw = 0.0;
 }
@@ -94,7 +94,7 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetP
 
 void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
 {
-	smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
+    smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
     smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
     smooth_base_.yaw = base.yaw * 0.05 + ( smooth_base_.yaw * ( 1.0 - 0.05 ) );
 
