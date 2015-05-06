@@ -16,7 +16,6 @@ This is my implementation of a hexapod functioning in the ROS framework. It is s
 * IMU (Current master branch uses a Phidgets 3/3/3 Spatial
 
 ## 3. Dependencies
--
 
 ```
 sudo apt-get install git
