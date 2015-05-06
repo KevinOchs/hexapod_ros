@@ -33,6 +33,7 @@
 
 #include <math.h>
 #include <ros/ros.h>
+#include <std_srvs/Empty.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Imu.h>
@@ -72,6 +73,8 @@ class Control
         hexapod_msgs::Sounds sounds_;
         ros::Publisher sounds_pub_;
         ros::Publisher joint_state_pub_;
+		ros::ServiceClient imu_calibrate_;
+		std_srvs::Empty calibrate_;
     private:
         bool imu_init_stored_;
         double imu_roll_lowpass_;

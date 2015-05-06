@@ -85,6 +85,9 @@ Control::Control( void )
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
+	// Ping the imu to re-calibrate
+	imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
+	imu_calibrate_.call( calibrate_ );
 }
 
 //==============================================================================
