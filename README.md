@@ -1,14 +1,22 @@
-ROS Hexapod Stack
-=================
+
+
+# ROS Hexapod Stack
+
+
+## 1. Documentation
+
 This is my implementation of a hexapod functioning in the ROS framework. It is still very much a work in progress and I am still actively developing it. Its current capabilities are up to 2D mapping its environment. Full navigation stack compliance will be pushed up in mid-May 2015.
 
-Author: Kevin M. Ochs
+* Author: Kevin M. Ochs
+* Contributor: Renée Love
 
-Contributor: Renée Love
+## 2. Expected Hardware
 
+* Primesense Sensor or Asus Xtion
+* IMU (Current master branch uses a Phidgets 3/3/3 Spatial
 
-Dependencies
-------------
+## 3. Dependencies
+-
 
 ```
 sudo apt-get install git
@@ -23,15 +31,14 @@ sudo apt-get install ros-indigo-gmapping
 sudo apt-get install libusb-1.0-0-dev
 ```
 
-_Joystick_
-----------
+**_Joystick_**
+
 
 For pairing a PS3 controller you can either install BlueZ5 or follow the below link.
 
 https://help.ubuntu.com/community/Sixaxis
 
-Install
--------
+## 4. Install
 
 ```
 git clone https://github.com/KevinOchs/ROS_hexapod.git
@@ -56,8 +63,8 @@ Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-
 ```
 
 
-Pictures
---------
+## Pictures
+
 Rviz screenshot of point cloud and laserscan active.
 ![ScreenShot](http://forums.trossenrobotics.com/gallery/files/8/6/6/6/depthwithlaser.jpg)
 
