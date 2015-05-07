@@ -45,7 +45,7 @@ static const int servo_id[SERVO_COUNT] =
 };
 
 //==============================================================================
-//  Constructor: Open USB2AX and 
+//  Constructor: Open USB2AX and
 // If servos are not on, no worries we read them later just to be safe
 //==============================================================================
 
@@ -114,16 +114,18 @@ void ServoDriver::makeSureServosAreOn( void )
         // Servos are on so return
         return;
     }
-
-    // Turn torque on
-    dxl_write_word( 254, MX_TORQUE_ENABLE, 1 );
-    servos_free_ = false;
-    ros::Duration( 0.5 ).sleep();
-
-    // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
-    for( int i = 0; i < SERVO_COUNT; i++ )
+    else
     {
-        cur_pos_[i] = dxl_read_word( servo_id[i], MX_PRESENT_POSITION_L );
+        // Turn torque on
+        dxl_write_word( 254, MX_TORQUE_ENABLE, 1 );
+        servos_free_ = false;
+        ros::Duration( 0.5 ).sleep();
+
+        // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
+        for( int i = 0; i < SERVO_COUNT; i++ )
+        {
+            cur_pos_[i] = dxl_read_word( servo_id[i], MX_PRESENT_POSITION_L );
+        }
     }
 }
 

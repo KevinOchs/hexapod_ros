@@ -106,9 +106,9 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         base_.x = -joy->axes[1] * 40.0; // 40 mm max
         base_.y = joy->axes[0] * 40.0; // 40 mm max
         base_.yaw = -joy->axes[2] * 0.13962634; // 8 degrees max
-        cmd_vel_.linear.x = ( -joy->axes[1] * MAX_METERS_PER_SEC ); // 0.078m/s max
-        cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC ); // 0.078m/s max
-        cmd_vel_.angular.z = ( -joy->axes[2] * MAX_RADIANS_PER_SEC ); // 0.407rad/s max
+        cmd_vel_.linear.x = ( joy->axes[1] * MAX_METERS_PER_SEC ); // 0.04m/s max
+        cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC ); // 0.04m/s max
+        cmd_vel_.angular.z = ( joy->axes[2] * MAX_RADIANS_PER_SEC ); // 0.52359rad/s max
     }
 }
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(1); // Using 1 threads
     spinner.start();
 
-    ros::Rate loop_rate( 500 ); // 1000 hz
+    ros::Rate loop_rate( 500 ); // 500 hz
     while ( ros::ok() )
     {
         hexapodTeleopJoystick.base_pub_.publish( hexapodTeleopJoystick.base_ );

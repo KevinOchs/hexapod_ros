@@ -7,8 +7,8 @@
     <node name="Playstation3Controller" pkg="joy" type="joy_node" />
     <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" />
         <rosparam>
-            MAX_METERS_PER_SEC: 0.078
-            MAX_RADIANS_PER_SEC: 0.407
+            MAX_METERS_PER_SEC: 0.08
+            MAX_RADIANS_PER_SEC: 0.52359
         </rosparam>
     <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen"/>
         <rosparam>

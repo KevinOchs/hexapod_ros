@@ -31,19 +31,19 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/Twist.h>
 #include <hexapod_msgs/RootJoint.h>
 
 class HexapodOdometry
 {
     public:
         HexapodOdometry( void );
-        hexapod_msgs::RootJoint base_;
         ros::Publisher odom_pub_;
         double vx;
         double vy;
         double vth;
     private:
-        void odometryCallback( const hexapod_msgs::RootJointConstPtr &base_msg );
-        ros::Subscriber base_sub_;
+        void odometryCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg );
+        ros::Subscriber cmd_vel_sub_;
         ros::NodeHandle nh_;
 };
