@@ -50,9 +50,9 @@ HexapodOdometry::HexapodOdometry( void )
 
 void HexapodOdometry::odometryCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg )
 {
-    vx = cmd_vel_msg->linear.x; // FLIPPING SO IT WORKS SO NEED TO FIX THE MATH
+    vx = cmd_vel_msg->linear.x;
     vy = cmd_vel_msg->linear.y;
-    vth = cmd_vel_msg->angular.z; // FLIPPING SO IT WORKS SO NEED TO FIX THE MATH * 3.75
+    vth = cmd_vel_msg->angular.z;
 }
 
 int main(int argc, char** argv)

@@ -38,28 +38,27 @@
 			</visual>
 	</link>
 
+	<!-- Camera properties -->
 	<joint name="camera_rgb_joint" type="fixed">
 		<parent link="body_link" />
-		<child link="camera_rgb_link" />
+		<child link="camera_rgb_optical_frame" />
 		<origin xyz="0.150 0.0255 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
-	</joint>
-	
-	<link name="camera_rgb_link" />
+	</joint>	
+	<link name="camera_rgb_optical_frame" />
 
 	<joint name="camera_depth_joint" type="fixed">
 		<parent link="body_link" />
-		<child link="camera_depth_link" />
+		<child link="camera_depth_optical_frame" />
 		<origin xyz="0.150 -0.0225 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
-	</joint>
-	
-	<link name="camera_depth_link" />
+	</joint>	
+	<link name="camera_depth_optical_frame" />
 
+	<!-- IMU properties -->
 	<joint name="imu_joint" type="fixed">
 		<parent link="base_footprint" />
 		<child link="imu_link" />
 		<origin xyz="0 0 0" rpy="${pi} 0 0" />
-	</joint>
-	
+	</joint>	
 	<link name="imu_link" />
 
 	<!-- Joint properties -->
@@ -77,7 +76,6 @@
 			<parent link="body_link" />
 			<child link="leg_center_${side}${position}" />
 		</joint>
-
 		<link name="leg_center_${side}${position}" />
 
 		<!-- coxa -->

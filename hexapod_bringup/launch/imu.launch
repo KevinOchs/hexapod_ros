@@ -1,17 +1,16 @@
 <!-- IMU launch file -->
 <launch>
-    <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" output="screen" />
+    <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" />
 
-    <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" args="load phidgets_imu/PhidgetsImuNodelet imu_manager">
-    # supported data rates: 4 8 16 24 32 40 ... 1000 (in ms)
-        <param name="period" value="4"/>
-        <param name="frame_id" value="imu_link"/>
+    <node pkg="nodelet" type="nodelet" name="PhidgetsImuNodelet" args="load phidgets_imu/PhidgetsImuNodelet imu_manager" >
+    <!-- supported data rates: 4 8 16 24 32 40 ... 1000 (in ms) -->
+        <param name="period" value="4" />
+        <param name="frame_id" value="imu_link" />
     </node>
-
-    <node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" args="load imu_filter_madgwick/ImuFilterNodelet imu_manager">
-        <param name="use_mag" value="false"/>
-        <param name="fixed_frame" value="base_footprint"/>
-        <param name="publish_tf" value="false"/>
+    <node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" args="load imu_filter_madgwick/ImuFilterNodelet imu_manager" >
+        <param name="use_mag" value="false" />
+        <param name="fixed_frame" value="base_footprint" />
+        <param name="publish_tf" value="false" />
     </node>
 </launch>
 

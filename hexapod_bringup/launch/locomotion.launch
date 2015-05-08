@@ -2,15 +2,18 @@
 <!-- Locomotion launch file -->
 
 <launch>
-    <node name="Sound_Play" pkg="sound_play" type="soundplay_node.py"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'" />
+
+    <node name="Sound_Play" pkg="sound_play" type="soundplay_node.py" />
     <node name="Hexapod_Sounds" pkg="hexapod_sound" type="hexapod_sound" />
-    <node name="Playstation3Controller" pkg="joy" type="joy_node" />
+    <node name="Playstation3_Controller" pkg="joy" type="joy_node" />
     <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" />
         <rosparam>
             MAX_METERS_PER_SEC: 0.08
             MAX_RADIANS_PER_SEC: 0.52359
         </rosparam>
-    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen"/>
+    <node name="Hexapod_Odometry" pkg="hexapod_odometry" type="hexapod_odometry" />
+    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
         <rosparam>
             <!-- Gait Settings -->
             CYCLE_LENGTH: 50
@@ -56,5 +59,6 @@
             <!-- Distance from ground plane to femur rotation pivot -->
             ALL_FOOT_INIT_Z: 35.65
         </rosparam>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 </launch>
 

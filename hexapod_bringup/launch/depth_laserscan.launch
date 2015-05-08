@@ -1,60 +1,12 @@
 <!-- depth sensor and laser scan launch file -->
 
 <launch>
-    <arg name="camera"      default="camera"/>
-    <arg name="publish_tf"  default="true"/>
-
-    <!-- Factory-calibrated depth registration -->
-    <arg name="depth_registration"              default="true"/>
-    <arg     if="$(arg depth_registration)" name="depth" value="depth_registered" />
-    <arg unless="$(arg depth_registration)" name="depth" value="depth" />
-
-    <!-- Processing Modules -->
-    <arg name="rgb_processing"                  default="true"/>
-    <arg name="ir_processing"                   default="true"/>
-    <arg name="depth_processing"                default="true"/>
-    <arg name="depth_registered_processing"     default="true"/>
-    <arg name="disparity_processing"            default="true"/>
-    <arg name="disparity_registered_processing" default="true"/>
-    <arg name="scan_processing"                 default="true"/>
-
-    <!-- Worker threads for the nodelet manager -->
-    <arg name="num_worker_threads" default="4" />
-
-    <!-- Laserscan topic -->
-    <arg name="scan_topic" default="scan"/>
-
-    <include file="$(find openni2_launch)/launch/openni2.launch">
-      <arg name="camera"                          value="$(arg camera)"/>
-      <arg name="rgb_frame_id"   default="camera_rgb_link" />
-      <arg name="depth_frame_id" default="camera_depth_link" />
-      <arg name="publish_tf"                      value="$(arg publish_tf)"/>
-      <arg name="depth_registration"              value="$(arg depth_registration)"/>
-      <arg name="num_worker_threads"              value="$(arg num_worker_threads)" />
-
-      <!-- Processing Modules -->
-      <arg name="rgb_processing"                  value="$(arg rgb_processing)"/>
-      <arg name="ir_processing"                   value="$(arg ir_processing)"/>
-      <arg name="depth_processing"                value="$(arg depth_processing)"/>
-      <arg name="depth_registered_processing"     value="$(arg depth_registered_processing)"/>
-      <arg name="disparity_processing"            value="$(arg disparity_processing)"/>
-      <arg name="disparity_registered_processing" value="$(arg disparity_registered_processing)"/>
-    </include>
-
-   <!-- Laserscan -->
-  <group if="$(arg scan_processing)">
-    <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan" args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet $(arg camera)/$(arg camera)_nodelet_manager">
-      <!-- Pixel rows to use to generate the laserscan. For each column, the scan will
-           return the minimum value for those pixels centered vertically in the image. -->
-      <param name="scan_height" value="10"/>
-      <param name="output_frame_id" value="base_footprint"/>
-      <param name="range_min" value="0.45"/>
-      <remap from="image" to="$(arg camera)/$(arg depth)/image_raw"/>
-      <remap from="scan" to="$(arg scan_topic)"/>
-
-      <remap from="$(arg camera)/image" to="$(arg camera)/$(arg depth)/image_raw"/>
-      <remap from="$(arg camera)/scan" to="$(arg scan_topic)"/>
+    <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan" args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet camera/camera_nodelet_manager" >
+        <param name="scan_height" value="10" />
+        <param name="output_frame_id" value="base_footprint" />
+        <param name="range_min" value="0.45" />
+        <remap from="image" to="camera/depth_registered/image_raw" />
+        <remap from="camera/image" to="camera/depth_registered/image_raw" />
+        <remap from="camera/scan" to="scan" />
     </node>
-  </group>
 </launch>
-
