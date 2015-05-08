@@ -28,6 +28,7 @@ sudo apt-get install ros-indigo-joystick-drivers
 sudo apt-get install ros-indigo-imu-filter-madgwick
 sudo apt-get install ros-indigo-gmapping
 sudo apt-get install libusb-1.0-0-dev
+sudo apt-get install libfovis
 ```
 
 **_Joystick_**
