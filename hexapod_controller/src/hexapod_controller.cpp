@@ -63,6 +63,7 @@ int main( int argc, char **argv )
         {
             while( control.body_.z < 90 )
             {
+                // slowly raise the body to standing up position
                 control.body_.z++;
 
                 // IK solver for legs and body orientation
@@ -96,6 +97,7 @@ int main( int argc, char **argv )
         {
             while( control.body_.z > 0 )
             {
+                // Slowly lower body to the ground
                 control.body_.z--;
 
                 // Gait Sequencer called to make sure we are on all six feet
@@ -119,6 +121,7 @@ int main( int argc, char **argv )
 
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
+            // Waiting for active command.
             ros::Duration( 0.5 ).sleep();
         }
         loop_rate.sleep();
