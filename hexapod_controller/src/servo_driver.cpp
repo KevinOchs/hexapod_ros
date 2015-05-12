@@ -66,6 +66,7 @@ ServoDriver::ServoDriver( void )
     servos_free_ = true;
 
     ros::param::get("OFFSET_ANGLE", OFFSET_ANGLE );
+    // Initializing to center will get changed in first function call 
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
         cur_pos_[i] = MX_CENTER_VALUE;
