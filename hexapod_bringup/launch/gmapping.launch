@@ -1,0 +1,11 @@
+<!-- depth sensor and laser scan launch file -->
+
+<launch>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" >
+        <param name="base_frame" value="base_footprint" />
+        <param name="odom_frame" value="odom_combined" />
+        <param name="maxUrange" value="3.0" />
+        <param name="maxRange" value="3.1" />
+        <param name="linearUpdate" value="0.2" />
+    </node>
+</launch>

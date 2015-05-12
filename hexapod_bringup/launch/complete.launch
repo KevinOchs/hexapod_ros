@@ -7,37 +7,9 @@
     <include file="$(find hexapod_bringup)/launch/locomotion.launch" />
     <include file="$(find hexapod_bringup)/launch/imu.launch" />
     <include file="$(find hexapod_bringup)/launch/depth_laserscan.launch" />
-<!--
-    <node pkg="fovis_ros" type="fovis_mono_depth_odometer" name="fovis" output="screen" >
-        <param name="publish_tf" value="false" />
-        <param name="base_link_frame_id" value="base_footprint" />
-        <param name="odom_frame_id" value="odom_combined" />
-        <remap from="/camera/rgb/image_rect" to="/camera/rgb/image_rect_color" />
-        <remap from="/camera/depth_registered/image_rect" to="/camera/depth_registered/image_raw" />
-        <remap from="/camera/depth_registered/camera_info" to="/camera/depth_registered/sw_registered/camera_info" />
-    </node>
+    <include file="$(find hexapod_bringup)/launch/robot_localization_ekf.launch" />
+    <include file="$(find hexapod_bringup)/launch/rtabmap.launch" />
 
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="screen">
-        <param name="output_frame" value="odom_combined"/>
-        <remap from="imu_data" to="imu/data" />
-        <remap from="vo" to="fovis/odometry" />
-        <param name="freq" value="30.0"/>
-        <param name="sensor_timeout" value="1.0"/>
-        <param name="odom_used" value="true"/>
-        <param name="imu_used" value="true"/>
-        <param name="vo_used" value="true"/>
-        <param name="debug" value="false"/>
-        <param name="self_diagnose" value="false"/>
-    </node>
--->
-    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen" >
-        <param name="base_frame" value="base_footprint" />
-        <param name="odom_frame" value="odom_combined" />
-        <param name="maxUrange" value="3.0" />
-        <param name="maxRange" value="3.1" />
-        <param name="linearUpdate" value="0.2" />
-    </node>
-
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/urdf.rviz" />
+ <!--    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/urdf.rviz" /> -->
 </launch>
 

@@ -1,0 +1,12 @@
+<!-- depth sensor and laser scan launch file -->
+
+<launch>
+    <node pkg="fovis_ros" type="fovis_mono_depth_odometer" name="fovis" output="screen" >
+        <param name="publish_tf" value="false" />
+        <param name="base_link_frame_id" value="base_footprint" />
+        <param name="odom_frame_id" value="odom_combined" />
+        <remap from="/camera/rgb/image_rect" to="/camera/rgb/image_rect_color" />
+        <remap from="/camera/depth_registered/image_rect" to="/camera/depth_registered/image_raw" />
+        <remap from="/camera/depth_registered/camera_info" to="/camera/depth_registered/sw_registered/camera_info" />
+    </node>
+</launch>
