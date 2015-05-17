@@ -1,4 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- IMU launch file -->
+
 <launch>
     <node pkg="nodelet" type="nodelet" name="imu_manager" args="manager" />
 
@@ -9,8 +11,7 @@
     </node>
     <node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" args="load imu_filter_madgwick/ImuFilterNodelet imu_manager" >
         <param name="use_mag" value="false" />
-        <param name="fixed_frame" value="base_footprint" />
+        <param name="fixed_frame" value="base_link" />
         <param name="publish_tf" value="false" />
     </node>
 </launch>
-

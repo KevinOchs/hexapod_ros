@@ -52,7 +52,7 @@ int main( int argc, char **argv )
     // Establish initial leg positions for default pose in robot publisher
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
-    ros::AsyncSpinner spinner(2); // Using 2 threads
+    ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
     ros::Rate loop_rate( 1000 );  // 1000 hz
     while( ros::ok() )
@@ -63,7 +63,6 @@ int main( int argc, char **argv )
         {
             while( control.body_.z < 90 )
             {
-                // slowly raise the body to standing up position
                 control.body_.z++;
 
                 // IK solver for legs and body orientation
@@ -97,7 +96,6 @@ int main( int argc, char **argv )
         {
             while( control.body_.z > 0 )
             {
-                // Slowly lower body to the ground
                 control.body_.z--;
 
                 // Gait Sequencer called to make sure we are on all six feet
@@ -121,7 +119,6 @@ int main( int argc, char **argv )
 
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
-            // Waiting for active command.
             ros::Duration( 0.5 ).sleep();
         }
         loop_rate.sleep();

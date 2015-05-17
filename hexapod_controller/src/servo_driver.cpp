@@ -66,7 +66,6 @@ ServoDriver::ServoDriver( void )
     servos_free_ = true;
 
     ros::param::get("OFFSET_ANGLE", OFFSET_ANGLE );
-    // Initializing to center will get changed in first function call 
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
         cur_pos_[i] = MX_CENTER_VALUE;
@@ -120,8 +119,6 @@ void ServoDriver::makeSureServosAreOn( void )
         // Turn torque on
         dxl_write_word( 254, MX_TORQUE_ENABLE, 1 );
         servos_free_ = false;
-
-        // Testing having a pause before a servo read helps prevent an occasional misred
         ros::Duration( 0.5 ).sleep();
 
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )

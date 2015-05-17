@@ -1,171 +1,164 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" ?>
+
 <robot xmlns:xacro="http://ros.org/wiki/xacro" name="Golem">
 
-	<!-- parameters -->
-	<xacro:property name="pi" value="3.1415926535897931" />
-	<xacro:property name="body_length_x" value="0.3556" />
-	<xacro:property name="body_length_y" value="0.165" />
-	<xacro:property name="coxa_length" value="0.05893" />
-	<xacro:property name="femur_length" value="0.10798" />
-	<xacro:property name="tibia_length" value="0.08774" />
-	<xacro:property name="tarsus_length" value="0.12065" />
+    <!-- parameters -->
+    <xacro:property name="pi" value="3.1415926535897931" />
+    <xacro:property name="body_length_x" value="0.3556" />
+    <xacro:property name="body_length_y" value="0.165" />
+    <xacro:property name="coxa_length" value="0.05893" />
+    <xacro:property name="femur_length" value="0.10798" />
+    <xacro:property name="tibia_length" value="0.08774" />
+    <xacro:property name="tarsus_length" value="0.12065" />
 
-    <link name="base_footprint" /> 
- 
-    <joint name="footprint_joint" type="fixed"> 
-        <parent link="base_footprint"/> 
-        <child link="base_link"/> 
-		<origin xyz="0 0 0" rpy="0 0 0" /> 
+    <link name="base_link" />
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="body_link" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
     </joint>
 
-	<link name="base_link" />
-	
-	<joint name="base_joint" type="fixed">
-		<parent link="base_link" />
-		<child link="body_link" />
-		<origin xyz="0 0 0" rpy="0 0 0" />
-	</joint>
+    <link name="body_link">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://hexapod_description/meshes/body.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.7 0.7 0.7 1" />
+                </material>
+            </visual>
+    </link>
 
-	<link name="body_link">
-			<visual>
-	  			<origin	xyz="0 0 0" rpy="0 0 0" />
-      			<geometry>
-        			<mesh filename="package://hexapod_description/meshes/body.stl" scale="0.001 0.001 0.001"/>
-      			</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-	</link>
+    <!-- Camera properties -->
+    <joint name="camera_rgb_joint" type="fixed">
+        <parent link="body_link" />
+        <child link="camera_rgb_optical_frame" />
+        <origin xyz="0.150 0.0255 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
+    </joint>
+    <link name="camera_rgb_optical_frame" />
 
-	<!-- Camera properties -->
-	<joint name="camera_rgb_joint" type="fixed">
-		<parent link="body_link" />
-		<child link="camera_rgb_optical_frame" />
-		<origin xyz="0.150 0.0255 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
-	</joint>	
-	<link name="camera_rgb_optical_frame" />
+    <joint name="camera_depth_joint" type="fixed">
+        <parent link="body_link" />
+        <child link="camera_depth_optical_frame" />
+        <origin xyz="0.150 -0.0225 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
+    </joint>
+    <link name="camera_depth_optical_frame" />
 
-	<joint name="camera_depth_joint" type="fixed">
-		<parent link="body_link" />
-		<child link="camera_depth_optical_frame" />
-		<origin xyz="0.150 -0.0225 0.034" rpy="${pi/2} ${pi} ${pi/2}" />
-	</joint>	
-	<link name="camera_depth_optical_frame" />
+    <!-- IMU properties -->
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="imu_link" />
+        <origin xyz="0 0 0.034" rpy="${pi} 0 0" />
+    </joint>
+    <link name="imu_link" />
 
-	<!-- IMU properties -->
-	<joint name="imu_joint" type="fixed">
-		<parent link="base_footprint" />
-		<child link="imu_link" />
-		<origin xyz="0 0 0" rpy="${pi} 0 0" />
-	</joint>	
-	<link name="imu_link" />
+    <!-- Joint properties -->
+    <xacro:property name="joint_lower_limit" value="-${3.14}" />
+    <xacro:property name="joint_upper_limit" value="${3.14}" />
+    <xacro:property name="joint_effort" value="10000" />
+    <xacro:property name="joint_velocity" value="100" />
 
-	<!-- Joint properties -->
-	<xacro:property name="joint_lower_limit" value="-${3.14}" />
-	<xacro:property name="joint_upper_limit" value="${3.14}" />
-	<xacro:property name="joint_effort" value="10000" />
-	<xacro:property name="joint_velocity" value="100" />
+    <!-- Leg macro -->
+    <xacro:macro name="leg" params="side position x y angle axis">
 
-	<!-- Leg macro -->
-	<xacro:macro name="leg" params="side position x y angle axis">
+        <!-- leg position -->
+        <joint name="leg_center_joint_${side}${position}" type="fixed">
+            <origin xyz="${x} ${y} 0" rpy="0 0 0" />
+            <parent link="body_link" />
+            <child link="leg_center_${side}${position}" />
+        </joint>
+        <link name="leg_center_${side}${position}" />
 
-		<!-- leg position -->
-		<joint name="leg_center_joint_${side}${position}" type="fixed">
-			<origin xyz="${x} ${y} 0" rpy="0 0 0" />
-			<parent link="body_link" />
-			<child link="leg_center_${side}${position}" />
-		</joint>
-		<link name="leg_center_${side}${position}" />
+        <!-- coxa -->
+        <joint name="coxa_joint_${side}${position}" type="revolute">
+            <origin xyz="0 0 0" rpy="0 0 ${angle}" />
+            <parent link="leg_center_${side}${position}" />
+            <child link="coxa_${side}${position}" />
+            <axis xyz="0 0 ${-axis}" />
+            <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+        <link name="coxa_${side}${position}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://hexapod_description/meshes/coxa.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.7 0.7 0.7 1" />
+                </material>
+            </visual>
+        </link>
 
-		<!-- coxa -->
-		<joint name="coxa_joint_${side}${position}" type="revolute">
-			<origin xyz="0 0 0" rpy="0 0 ${angle}" />
-			<parent link="leg_center_${side}${position}" />
-			<child link="coxa_${side}${position}" />
-			<axis xyz="0 0 ${-axis}" />
-			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
-		</joint>
-		<link name="coxa_${side}${position}">
-			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
-      			<geometry>
-        			<mesh filename="package://hexapod_description/meshes/coxa.stl" scale="0.001 0.001 0.001"/>
-      			</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-		</link>
+        <!-- femur -->
+        <joint name="femur_joint_${side}${position}" type="revolute">
+            <origin xyz="${coxa_length} 0 0" rpy="-${pi/2} 0 0" />
+            <parent link="coxa_${side}${position}" />
+            <child link="femur_${side}${position}" />
+            <axis xyz="0 0 ${axis}" />
+            <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+        <link name="femur_${side}${position}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://hexapod_description/meshes/femur.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.7 0.7 0.7 1" />
+                </material>
+            </visual>
+        </link>
 
-		<!-- femur -->
-		<joint name="femur_joint_${side}${position}" type="revolute">
-			<origin xyz="${coxa_length} 0 0" rpy="-${pi/2} 0 0" />
-			<parent link="coxa_${side}${position}" />
-			<child link="femur_${side}${position}" />
-			<axis xyz="0 0 ${axis}" />
-			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
-		</joint>
-		<link name="femur_${side}${position}">
-			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
-      			<geometry>
-        			<mesh filename="package://hexapod_description/meshes/femur.stl" scale="0.001 0.001 0.001"/>
-      			</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-		</link>
+        <!-- tibia -->
+        <joint name="tibia_joint_${side}${position}" type="revolute">
+            <origin xyz="0 -${femur_length} 0" rpy="${pi} 0 0" />
+            <parent link="femur_${side}${position}" />
+            <child link="tibia_${side}${position}" />
+            <axis xyz="0 0 ${axis}" />
+            <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+        <link name="tibia_${side}${position}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://hexapod_description/meshes/tibia.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.7 0.7 0.7 1" />
+                </material>
+            </visual>
+        </link>
 
-		<!-- tibia -->
-		<joint name="tibia_joint_${side}${position}" type="revolute">
-			<origin xyz="0 -${femur_length} 0" rpy="${pi} 0 0" />
-			<parent link="femur_${side}${position}" />
-			<child link="tibia_${side}${position}" />
-			<axis xyz="0 0 ${axis}" />
-			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
-		</joint>
-		<link name="tibia_${side}${position}">
-			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
-      			<geometry>
-        			<mesh filename="package://hexapod_description/meshes/tibia.stl" scale="0.001 0.001 0.001"/>
-      			</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-		</link>
-
-		<!-- tarsus -->
-		<joint name="tarsus_joint_${side}${position}" type="revolute">
-			<origin xyz="${tibia_length} 0 0" rpy="0 0 -${pi/2}" />
-			<parent link="tibia_${side}${position}" />
-			<child link="tarsus_${side}${position}" />
-			<axis xyz="0 0 ${axis}" />
-			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
-		</joint>
-		<link name="tarsus_${side}${position}">
-			<visual>
-				<origin xyz="0 0 0" rpy="0 0 0" />
-      			<geometry>
-        			<mesh filename="package://hexapod_description/meshes/tarsus.stl" scale="0.001 0.001 0.001"/>
-      			</geometry>
-				<material name="">
-					<color rgba="0.7 0.7 0.7 1" />
-				</material>
-			</visual>
-		</link>
-	</xacro:macro>
+        <!-- tarsus -->
+        <joint name="tarsus_joint_${side}${position}" type="revolute">
+            <origin xyz="${tibia_length} 0 0" rpy="0 0 -${pi/2}" />
+            <parent link="tibia_${side}${position}" />
+            <child link="tarsus_${side}${position}" />
+            <axis xyz="0 0 ${axis}" />
+            <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
+        </joint>
+        <link name="tarsus_${side}${position}">
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <mesh filename="package://hexapod_description/meshes/tarsus.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="">
+                    <color rgba="0.7 0.7 0.7 1" />
+                </material>
+            </visual>
+        </link>
+    </xacro:macro>
 
 <!-- Build robot model -->
-	<xacro:leg side="R" position="R" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />
-	<xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="-${pi/2}" axis="1" />
-	<xacro:leg side="R" position="F" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="1" />
+    <xacro:leg side="R" position="R" x="-0.1778" y="-0.0825" angle="-${pi*3/4}" axis="1" />
+    <xacro:leg side="R" position="M" x="0.0" y="-0.13335" angle="-${pi/2}" axis="1" />
+    <xacro:leg side="R" position="F" x="0.1778" y="-0.0825" angle="-${pi/4}" axis="1" />
 
-	<xacro:leg side="L" position="R" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="-1" />
-	<xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" axis="-1" />
-	<xacro:leg side="L" position="F" x="0.1778" y="0.0825" angle="${pi/4}" axis="-1" />
+    <xacro:leg side="L" position="R" x="-0.1778" y="0.0825" angle="${pi*3/4}" axis="-1" />
+    <xacro:leg side="L" position="M" x="0.0" y="0.13335" angle="${pi/2}" axis="-1" />
+    <xacro:leg side="L" position="F" x="0.1778" y="0.0825" angle="${pi/4}" axis="-1" />
 
 </robot>

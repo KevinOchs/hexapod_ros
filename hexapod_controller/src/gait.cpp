@@ -67,7 +67,6 @@ Gait::Gait( void )
 
 void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
 {
-    // Calculate distance and height values for this cycle period
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
     double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
 
@@ -98,7 +97,6 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetP
 
 void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
 {
-    // low pass filter to remove sudden value changes to prevnt jerkiness 
     smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
     smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
     smooth_base_.yaw = base.yaw * 0.05 + ( smooth_base_.yaw * ( 1.0 - 0.05 ) );

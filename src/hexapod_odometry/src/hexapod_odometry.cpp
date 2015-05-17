@@ -37,7 +37,7 @@
 HexapodOdometry::HexapodOdometry( void )
 {
     cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 50, &HexapodOdometry::odometryCallback, this );
-    odom_pub_ = nh_.advertise<nav_msgs::Odometry>("odom", 50);
+    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odom", 50 );
     vx = 0.0;
     vy = 0.0;
     vth = 0.0;
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
     HexapodOdometry hexapodOdometry;
     tf::TransformBroadcaster odom_broadcaster;
-    ros::AsyncSpinner spinner(1); // Using 1 thread
+    ros::AsyncSpinner spinner( 1 ); // Using 1 thread
     spinner.start();
 
     double x = 0.0;
@@ -92,8 +92,8 @@ int main(int argc, char** argv)
         // first, we'll publish the transform over tf
         geometry_msgs::TransformStamped odom_trans;
         odom_trans.header.stamp = current_time;
-        odom_trans.header.frame_id = "odom_combined";
-        odom_trans.child_frame_id = "base_footprint";
+        odom_trans.header.frame_id = "odom";
+        odom_trans.child_frame_id = "base_link";
 
         odom_trans.transform.translation.x = x;
         odom_trans.transform.translation.y = y;
@@ -101,13 +101,13 @@ int main(int argc, char** argv)
         odom_trans.transform.rotation = odom_quat;
 
         // send the transform
-        odom_broadcaster.sendTransform( odom_trans ); // ONLY NEEDED FOR DEBUGGING!!! DON'T USE WITH EKF
+        odom_broadcaster.sendTransform( odom_trans );
 
         //next, we'll publish the odometry message over ROS
         nav_msgs::Odometry odom;
         odom.header.stamp = current_time;
-        odom.header.frame_id = "odom_combined";
-        odom.child_frame_id = "base_footprint";
+        odom.header.frame_id = "odom";
+        odom.child_frame_id = "base_link";
 
         //set the position
         odom.pose.pose.position.x = x;
@@ -117,9 +117,9 @@ int main(int argc, char** argv)
 
         odom.pose.covariance[0] = 0.00001;  // x
         odom.pose.covariance[7] = 0.00001;  // y
-        odom.pose.covariance[14] = 0.95;    // z
-        odom.pose.covariance[21] = 0.0001;  // rot x
-        odom.pose.covariance[28] = 0.0001;  // rot y
+        odom.pose.covariance[14] = 0.00001; // z
+        odom.pose.covariance[21] = 0.00001; // rot x
+        odom.pose.covariance[28] = 0.00001; // rot y
         odom.pose.covariance[35] = 0.00001; // rot z
 
         //set the velocity
