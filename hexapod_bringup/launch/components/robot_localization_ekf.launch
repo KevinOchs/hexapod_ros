@@ -27,7 +27,7 @@
            are operating in a planar environment and want to ignore the effect of small variations in the
            ground plane that might otherwise be detected by, for example, an IMU. Defaults to false if
            unspecified. -->
-      <param name="two_d_mode" value="false"/>
+      <param name="two_d_mode" value="true"/>
 
       <!-- REP-105 (http://www.ros.org/reps/rep-0105.html) specifies three principal coordinate frames: map,
            odom, and base_link. base_link is the coordinate frame that is affixed to the robot. The robot's
@@ -82,10 +82,10 @@
                                       false, false, false]</rosparam>
 
       <rosparam param="imu0_config">[false, false, false,
+                                     true, true, true,
                                      false, false, false,
                                      false, false, false,
-                                     false, false, true,
-                                     true, true, false,]</rosparam>
+                                     true, true, true]</rosparam>
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
            measurements and let the nodes integrate them. However, this isn't always feasible, and so the state estimation
