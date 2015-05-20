@@ -4,7 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Imu1/Status1
         - /Imu1/Box properties1
       Splitter Ratio: 0.807339
     Tree Height: 456
@@ -58,10 +57,6 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
         base_link:
           Alpha: 1
           Show Axes: false
@@ -238,7 +233,7 @@ Visualization Manager:
       Color: 255; 25; 0
       Enabled: true
       Keep: 100
-      Length: 0.1
+      Length: 0.5
       Name: Calculated Odometry
       Position Tolerance: 0.1
       Topic: /odom
@@ -269,7 +264,7 @@ Visualization Manager:
       Color: 17; 255; 0
       Enabled: true
       Keep: 100
-      Length: 0.1
+      Length: 0.6
       Name: Filtered Odometry
       Position Tolerance: 0.1
       Topic: /odometry/filtered
@@ -279,8 +274,6 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_footprint:
-          Value: true
         base_link:
           Value: true
         body_link:
@@ -329,7 +322,7 @@ Visualization Manager:
           Value: true
         map:
           Value: true
-        odom_combined:
+        odom:
           Value: true
         tarsus_LF:
           Value: true
@@ -362,50 +355,49 @@ Visualization Manager:
       Show Names: false
       Tree:
         map:
-          odom_combined:
-            base_footprint:
-              base_link:
-                body_link:
-                  camera_depth_optical_frame:
-                    {}
-                  camera_rgb_optical_frame:
-                    {}
-                  leg_center_LF:
-                    coxa_LF:
-                      femur_LF:
-                        tibia_LF:
-                          tarsus_LF:
-                            {}
-                  leg_center_LM:
-                    coxa_LM:
-                      femur_LM:
-                        tibia_LM:
-                          tarsus_LM:
-                            {}
-                  leg_center_LR:
-                    coxa_LR:
-                      femur_LR:
-                        tibia_LR:
-                          tarsus_LR:
-                            {}
-                  leg_center_RF:
-                    coxa_RF:
-                      femur_RF:
-                        tibia_RF:
-                          tarsus_RF:
-                            {}
-                  leg_center_RM:
-                    coxa_RM:
-                      femur_RM:
-                        tibia_RM:
-                          tarsus_RM:
-                            {}
-                  leg_center_RR:
-                    coxa_RR:
-                      femur_RR:
-                        tibia_RR:
-                          tarsus_RR:
-                            {}
+          odom:
+            base_link:
+              body_link:
+                camera_depth_optical_frame:
+                  {}
+                camera_rgb_optical_frame:
+                  {}
+                leg_center_LF:
+                  coxa_LF:
+                    femur_LF:
+                      tibia_LF:
+                        tarsus_LF:
+                          {}
+                leg_center_LM:
+                  coxa_LM:
+                    femur_LM:
+                      tibia_LM:
+                        tarsus_LM:
+                          {}
+                leg_center_LR:
+                  coxa_LR:
+                    femur_LR:
+                      tibia_LR:
+                        tarsus_LR:
+                          {}
+                leg_center_RF:
+                  coxa_RF:
+                    femur_RF:
+                      tibia_RF:
+                        tarsus_RF:
+                          {}
+                leg_center_RM:
+                  coxa_RM:
+                    femur_RM:
+                      tibia_RM:
+                        tarsus_RM:
+                          {}
+                leg_center_RR:
+                  coxa_RR:
+                    femur_RR:
+                      tibia_RR:
+                        tarsus_RR:
+                          {}
               imu_link:
                 {}
       Update Interval: 0
@@ -476,22 +468,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.45209
+      Distance: 1.91519
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.726563
-        Y: -0.412725
-        Z: 0.692365
+        X: 0.388473
+        Y: -0.0337783
+        Z: -0.00322038
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.185397
+      Pitch: 0.450397
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.40586
+      Yaw: 3.92086
     Saved:
       - Class: rviz/Orbit
         Distance: 0.775628
@@ -526,5 +518,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1363
-  X: 85
-  Y: 23
+  X: 65
+  Y: 14

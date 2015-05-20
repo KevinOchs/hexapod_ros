@@ -16,12 +16,12 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_link" />
         <child link="body_link" />
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint>
 
     <link name="body_link">
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <geometry>
                     <mesh filename="package://hexapod_description/meshes/body.stl" scale="0.001 0.001 0.001"/>
                 </geometry>
@@ -50,7 +50,7 @@
     <joint name="imu_joint" type="fixed">
         <parent link="base_link" />
         <child link="imu_link" />
-        <origin xyz="0 0 0.034" rpy="${pi} 0 0" />
+        <origin xyz="0.0 0.0 0.034" rpy="${pi} 0.0 0.0" />
     </joint>
     <link name="imu_link" />
 
@@ -65,7 +65,7 @@
 
         <!-- leg position -->
         <joint name="leg_center_joint_${side}${position}" type="fixed">
-            <origin xyz="${x} ${y} 0" rpy="0 0 0" />
+            <origin xyz="${x} ${y} 0.0" rpy="0.0 0.0 0.0" />
             <parent link="body_link" />
             <child link="leg_center_${side}${position}" />
         </joint>
@@ -73,15 +73,15 @@
 
         <!-- coxa -->
         <joint name="coxa_joint_${side}${position}" type="revolute">
-            <origin xyz="0 0 0" rpy="0 0 ${angle}" />
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${angle}" />
             <parent link="leg_center_${side}${position}" />
             <child link="coxa_${side}${position}" />
-            <axis xyz="0 0 ${-axis}" />
+            <axis xyz="0.0 0.0 ${-axis}" />
             <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
         </joint>
         <link name="coxa_${side}${position}">
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <geometry>
                     <mesh filename="package://hexapod_description/meshes/coxa.stl" scale="0.001 0.001 0.001"/>
                 </geometry>
@@ -93,15 +93,15 @@
 
         <!-- femur -->
         <joint name="femur_joint_${side}${position}" type="revolute">
-            <origin xyz="${coxa_length} 0 0" rpy="-${pi/2} 0 0" />
+            <origin xyz="${coxa_length} 0.0 0.0" rpy="-${pi/2} 0.0 0.0" />
             <parent link="coxa_${side}${position}" />
             <child link="femur_${side}${position}" />
-            <axis xyz="0 0 ${axis}" />
+            <axis xyz="0.0 0.0 ${axis}" />
             <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
         </joint>
         <link name="femur_${side}${position}">
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <geometry>
                     <mesh filename="package://hexapod_description/meshes/femur.stl" scale="0.001 0.001 0.001"/>
                 </geometry>
@@ -113,15 +113,15 @@
 
         <!-- tibia -->
         <joint name="tibia_joint_${side}${position}" type="revolute">
-            <origin xyz="0 -${femur_length} 0" rpy="${pi} 0 0" />
+            <origin xyz="0.0 -${femur_length} 0.0" rpy="${pi} 0.0 0.0" />
             <parent link="femur_${side}${position}" />
             <child link="tibia_${side}${position}" />
-            <axis xyz="0 0 ${axis}" />
+            <axis xyz="0.0 0.0 ${axis}" />
             <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
         </joint>
         <link name="tibia_${side}${position}">
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <geometry>
                     <mesh filename="package://hexapod_description/meshes/tibia.stl" scale="0.001 0.001 0.001"/>
                 </geometry>
@@ -133,15 +133,15 @@
 
         <!-- tarsus -->
         <joint name="tarsus_joint_${side}${position}" type="revolute">
-            <origin xyz="${tibia_length} 0 0" rpy="0 0 -${pi/2}" />
+            <origin xyz="${tibia_length} 0.0 0.0" rpy="0.0 0.0 -${pi/2}" />
             <parent link="tibia_${side}${position}" />
             <child link="tarsus_${side}${position}" />
-            <axis xyz="0 0 ${axis}" />
+            <axis xyz="0.0 0.0 ${axis}" />
             <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
         </joint>
         <link name="tarsus_${side}${position}">
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0" />
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <geometry>
                     <mesh filename="package://hexapod_description/meshes/tarsus.stl" scale="0.001 0.001 0.001"/>
                 </geometry>

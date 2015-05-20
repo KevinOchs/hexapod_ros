@@ -117,10 +117,10 @@ int main(int argc, char** argv)
 
         odom.pose.covariance[0] = 0.00001;  // x
         odom.pose.covariance[7] = 0.00001;  // y
-        odom.pose.covariance[14] = 0.00001; // z
-        odom.pose.covariance[21] = 0.00001; // rot x
-        odom.pose.covariance[28] = 0.00001; // rot y
-        odom.pose.covariance[35] = 0.00001; // rot z
+        odom.pose.covariance[14] = 10; // z
+        odom.pose.covariance[21] = 1; // rot x
+        odom.pose.covariance[28] = 1; // rot y
+        odom.pose.covariance[35] = 1; // rot z
 
         //set the velocity
         odom.twist.twist.linear.x = hexapodOdometry.vx;
