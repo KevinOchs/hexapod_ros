@@ -28,11 +28,9 @@ sudo apt-get install ros-indigo-openni2-launch
 sudo apt-get install ros-indigo-depthimage-to-laserscan
 sudo apt-get install ros-indigo-joystick-drivers
 sudo apt-get install ros-indigo-imu-filter-madgwick
-sudo apt-get install ros-indigo-gmapping
 sudo apt-get install ros-indigo-robot-localization
 sudo apt-get install ros-indigo-rtabmap
 sudo apt-get install libusb-1.0-0-dev
-sudo apt-get install libfovis
 ```
 
 **_Joystick_**
