@@ -82,9 +82,9 @@
                                       false, false, false]</rosparam>
 
       <rosparam param="imu0_config">[false, false, false,
+                                     false, false, false,
+                                     false, false, false,
                                      false, false, true,
-                                     false, false, false,
-                                     false, false, false,
                                      true, true, false,]</rosparam>
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
@@ -129,8 +129,8 @@
 
       <!-- By default, the subscription queue size for each message type is 1. If you wish to increase that so as not
            miss any messages (even if your frequency is set to a relatively small value), increase these. -->
-      <param name="odom0_queue_size" value="10"/>
-      <param name="imu0_queue_size" value="10"/>
+      <param name="odom0_queue_size" value="20"/>
+      <param name="imu0_queue_size" value="20"/>
 
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to

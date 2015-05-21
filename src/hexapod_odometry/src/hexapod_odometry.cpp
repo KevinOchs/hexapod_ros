@@ -72,7 +72,7 @@ int main(int argc, char** argv)
     current_time = ros::Time::now();
     last_time = ros::Time::now();
 
-    ros::Rate loop_rate( 1000 ); // 1000 hz
+    ros::Rate loop_rate( 100 ); // 100 hz
     while( ros::ok() )
     {
         current_time = ros::Time::now();
@@ -115,12 +115,12 @@ int main(int argc, char** argv)
         odom.pose.pose.position.z = 0.0;
         odom.pose.pose.orientation = odom_quat;
 
-        odom.pose.covariance[0] = 0.00001;  // x
-        odom.pose.covariance[7] = 0.00001;  // y
-        odom.pose.covariance[14] = 10; // z
+        odom.pose.covariance[0] = 0.001;  // x
+        odom.pose.covariance[7] = 0.001;  // y
+        odom.pose.covariance[14] = 1; // z
         odom.pose.covariance[21] = 1; // rot x
         odom.pose.covariance[28] = 1; // rot y
-        odom.pose.covariance[35] = 1; // rot z
+        odom.pose.covariance[35] = 0.001; // rot z
 
         //set the velocity
         odom.twist.twist.linear.x = hexapodOdometry.vx;
