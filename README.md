@@ -15,7 +15,7 @@ Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity 
 ## 2. Expected Hardware
 
 * Primesense Sensor or Asus Xtion
-* IMU (Current master branch uses a Phidgets 3/3/3 Spatial
+* IMU (Current master branch uses a Phidgets 3/3/3 Spatial. Current PhantomX branch uses CHR-UM7)
 
 ## 3. Dependencies
 
@@ -30,6 +30,8 @@ sudo apt-get install ros-indigo-joystick-drivers
 sudo apt-get install ros-indigo-imu-filter-madgwick
 sudo apt-get install ros-indigo-robot-localization
 sudo apt-get install ros-indigo-rtabmap
+sudo apt-get install ros-indigo-rtabmap-ros
+sudo apt-get install ros-indigo-robot-state-publisher
 sudo apt-get install libusb-1.0-0-dev
 ```
 
