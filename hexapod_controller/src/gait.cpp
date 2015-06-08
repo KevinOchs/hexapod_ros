@@ -54,7 +54,7 @@ Gait::Gait( void )
     cycle_leg_number_[LR] = 1;
     cycle_period_ = 1;
     is_travelling_ = false;
-    in_cycle_ == false;
+    in_cycle_ = false;
     extra_gait_cycle_ = 1;
     smooth_base_.y = 0.0;
     smooth_base_.x = 0.0;
