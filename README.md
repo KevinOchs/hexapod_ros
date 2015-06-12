@@ -33,6 +33,8 @@ sudo apt-get install ros-indigo-rtabmap
 sudo apt-get install ros-indigo-rtabmap-ros
 sudo apt-get install ros-indigo-robot-state-publisher
 sudo apt-get install libusb-1.0-0-dev
+cd ~/ROS_hexapod/src/ && git clone https://github.com/r3n33/cob_people_perception.git
+cd ~/ROS_hexapod/src/ && git clone https://github.com/r3n33/cob_perception_common.git
 ```
 
 **_Joystick_**
