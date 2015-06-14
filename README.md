@@ -68,6 +68,11 @@ For ODROID XU3 please add these compiler optimizations after first build.
 Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=hard
 ```
 
+Dont forget to add! 
+
+```
+source ~/ROS_hexapod/devel/setup.bash
+```
 
 ## Pictures
 
