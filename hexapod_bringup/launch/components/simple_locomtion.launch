@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Locomotion launch file -->
+
+<launch>
+    <node name="Playstation3_Controller" pkg="joy" type="joy_node" />
+    <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" />
+      <rosparam>
+          MAX_METERS_PER_SEC: 0.08
+          MAX_RADIANS_PER_SEC: !degrees 25.7
+      </rosparam>
+    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
+      <rosparam>
+          <!-- Gait Settings -->
+          CYCLE_LENGTH: 50
+          LEG_LIFT_HEIGHT: 40
+
+          <!-- Define Leg Measurements in mm -->
+          COXA_LENGTH:   58.93
+          FEMUR_LENGTH:  107.98
+          TIBIA_LENGTH:  87.74
+          TARSUS_LENGTH: 120.65
+
+          <!-- Define Angle Offsets in Radians - Usually zero -->
+          OFFSET_ANGLE: !degrees 20
+
+          <!-- Define Initial Coxa Offsets in Radians -->
+          FRONT_COXA_ANGLE: !degrees 45
+          MID_COXA_ANGLE: 0
+          REAR_COXA_ANGLE: !degrees -45
+
+          <!-- Define distance in mm from coxa joint to the center -->
+          FRONT_COXA_TO_CENTER_X: 177.80
+          FRONT_COXA_TO_CENTER_Y:  82.50
+
+          MID_COXA_TO_CENTER_X:  0.0
+          MID_COXA_TO_CENTER_Y:  133.35
+
+          REAR_COXA_TO_CENTER_X: -177.80
+          REAR_COXA_TO_CENTER_Y:  82.50
+
+          <!-- Define Start Position Of Feet in mm from the coxa joint -->
+          <!-- Middle Legs is coxa axis to foot -->
+          <!-- math to find positions of front and back legs POS_Y = Middle leg start position * cos(45) -->
+          <!-- math to find positions of front and back legs POS_X = Middle leg start position * sin(45) -->
+          FRONT_INIT_FOOT_POS_X:  134.35
+          FRONT_INIT_FOOT_POS_Y:  134.35
+
+          MID_INIT_FOOT_POS_X:  0.0
+          MID_INIT_FOOT_POS_Y:  190.00
+
+          REAR_INIT_FOOT_POS_X: -134.35
+          REAR_INIT_FOOT_POS_Y:  134.35
+
+          <!-- Distance from ground plane to femur rotation pivot -->
+          ALL_FOOT_INIT_Z: 35.65
+      </rosparam>
+</launch>
+
