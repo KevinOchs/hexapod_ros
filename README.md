@@ -34,7 +34,7 @@ sudo apt-get install ros-indigo-rtabmap-ros
 sudo apt-get install ros-indigo-robot-state-publisher
 sudo apt-get install libusb-1.0-0-dev
 ```
-Optional (may cause compile issues) - still beta
+Optional (may cause compile issues according to some reports) - still beta
 ```
 cd ~/ROS_hexapod/src/ && git clone https://github.com/r3n33/cob_people_perception.git
 cd ~/ROS_hexapod/src/ && git clone https://github.com/r3n33/cob_perception_common.git
