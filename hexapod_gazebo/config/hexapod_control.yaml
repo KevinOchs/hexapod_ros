@@ -1,0 +1,127 @@
+Golem:
+# Publish all joint states -----------------------------------
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 50
+
+# Position Controllers ---------------------------------------
+
+    coxa_joint_RR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_RR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    coxa_joint_RM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_RM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    coxa_joint_RF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_RF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    coxa_joint_LR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_LR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    coxa_joint_LM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_LM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    coxa_joint_LF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: coxa_joint_LF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_RR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_RR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_RM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_RM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_RF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_RF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_LR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_LR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_LM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_LM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    femur_joint_LF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: femur_joint_LF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_RR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_RR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_RM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_RM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_RF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_RF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_LR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_LR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_LM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_LM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tibia_joint_LF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tibia_joint_LF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_RR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_RR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_RM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_RM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_RF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_RF
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_LR_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_LR
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_LM_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_LM
+        pid: {p: 100.0, i: 0.0, d: 0.0}
+
+    tarsus_joint_LF_position_controller:
+        type: effort_controllers/JointPositionController
+        joint: tarsus_joint_LF
+        pid: {p: 100.0, i: 0.0, d: 0.0}

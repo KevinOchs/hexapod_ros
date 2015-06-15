@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Load joint controller configuration file -->
+    <rosparam file="$(find hexapod_gazebo)/config/hexapod_control.yaml" command="load"/>
+
+    <!-- Load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/Golem"
+        args="
+        coxa_joint_LR_position_controller
+        coxa_joint_RR_position_controller
+        coxa_joint_LM_position_controller
+        coxa_joint_RM_position_controller
+        coxa_joint_LF_position_controller
+        coxa_joint_RF_position_controller
+        femur_joint_LR_position_controller
+        femur_joint_RR_position_controller
+        femur_joint_LM_position_controller
+        femur_joint_RM_position_controller
+        femur_joint_LF_position_controller
+        femur_joint_RF_position_controller
+        tibia_joint_LR_position_controller
+        tibia_joint_RR_position_controller
+        tibia_joint_LM_position_controller
+        tibia_joint_RM_position_controller
+        tibia_joint_LF_position_controller
+        tibia_joint_RF_position_controller
+        tarsus_joint_LR_position_controller
+        tarsus_joint_RR_position_controller
+        tarsus_joint_LM_position_controller
+        tarsus_joint_RM_position_controller
+        tarsus_joint_LF_position_controller
+        tarsus_joint_RF_position_controller
+        joint_state_controller"
+    />
+
+    <!-- Convert joint states to TF transforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen">
+        <remap from="/joint_states" to="/Golem/joint_states"/>
+    </node>
+</launch>
