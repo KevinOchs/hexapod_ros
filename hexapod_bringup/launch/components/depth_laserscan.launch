@@ -2,6 +2,9 @@
 <!-- depth sensor and laser scan launch file -->
 
 <launch>
+    <include file="$(find openni2_launch)/launch/openni2.launch" >
+      <arg name="publish_tf" value="false" />
+    </include>
     <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan" args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet camera/camera_nodelet_manager" >
       <param name="scan_height" value="10" />
       <param name="output_frame_id" value="base_link" />

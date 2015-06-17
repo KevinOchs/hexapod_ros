@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Gamepad launch file -->
+
+<launch>
+    <node name="Playstation3_Controller" pkg="joy" type="joy_node" />
+    <node name="Hexapod_Teleop_Joystick" pkg="hexapod_teleop_joystick" type="hexapod_teleop_joystick" />
+</launch>

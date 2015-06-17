@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal bringup - just locomotion and joy teleop no visual nodes launch file ( Normal use, visual ran on remote desktop ) -->
+
+<launch>
+    <rosparam command="load" file="$(find hexapod_description)/params/hexapod.yaml" />
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'" />
+
+    <include file="$(find hexapod_bringup)/launch/components/joy_teleop.launch" />
+    <include file="$(find hexapod_bringup)/launch/components/locomotion.launch" />
+</launch>
+

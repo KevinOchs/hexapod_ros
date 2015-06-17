@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sound launch file -->
+
+<launch>
+    <node name="Sound_Play" pkg="sound_play" type="soundplay_node.py" />
+    <node name="Hexapod_Sounds" pkg="hexapod_sound" type="hexapod_sound" />
+</launch>
