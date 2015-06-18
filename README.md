@@ -32,6 +32,7 @@ sudo apt-get install ros-indigo-robot-localization
 sudo apt-get install ros-indigo-rtabmap
 sudo apt-get install ros-indigo-rtabmap-ros
 sudo apt-get install ros-indigo-robot-state-publisher
+sudo apt-get install ros-indigo-gazebo-ros-control
 sudo apt-get install libusb-1.0-0-dev
 ```
 
