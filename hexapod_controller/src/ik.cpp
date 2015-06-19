@@ -160,6 +160,11 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         // Length between the Root and Foot Position ...Pythagorean theorem
         double femur_to_tarsus = sqrt( pow( feet_pos_x, 2 ) + pow( feet_pos_y, 2 ) ) - COXA_LENGTH;
 
+        if( std::abs( femur_to_tarsus ) > ( FEMUR_LENGTH + TIBIA_LENGTH ) )
+        {
+            ROS_ERROR("IK Solver cannot solve a foot position not within leg reach!!!");
+        }
+
         // Length of the sides of the triangle formed by the femur, tibia and tarsus joints.
         double side_a = FEMUR_LENGTH;
         double side_a_sqr = pow( FEMUR_LENGTH, 2 );
