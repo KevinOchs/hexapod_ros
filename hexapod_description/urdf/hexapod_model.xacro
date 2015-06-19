@@ -136,7 +136,7 @@
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${angle}"/>
             <parent link="leg_center_${side}${position}"/>
             <child link="coxa_${side}${position}"/>
-            <axis xyz="0.0 0.0 ${-axis}"/>
+            <axis xyz="0.0 0.0 1.0"/>
             <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}"/>
         </joint>
         <transmission name="coxa_transmission_${side}${position}">
@@ -183,7 +183,7 @@
 
         <!-- femur -->
         <joint name="femur_joint_${side}${position}" type="revolute">
-            <origin xyz="${coxa_length} 0.0 0.0" rpy="-${pi/2} 0.0 0.0"/>
+            <origin xyz="${coxa_length} 0.0 0.0" rpy="-${pi/2} ${pi/2} 0.0"/>
             <parent link="coxa_${side}${position}"/>
             <child link="femur_${side}${position}"/>
             <axis xyz="0.0 0.0 ${axis}"/>
@@ -280,7 +280,7 @@
 
         <!-- tarsus -->
         <joint name="tarsus_joint_${side}${position}" type="revolute">
-            <origin xyz="${tibia_length} 0.0 0.0" rpy="0.0 0.0 -${pi/2}"/>
+            <origin xyz="${tibia_length} 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <parent link="tibia_${side}${position}"/>
             <child link="tarsus_${side}${position}"/>
             <axis xyz="0.0 0.0 ${axis}"/>

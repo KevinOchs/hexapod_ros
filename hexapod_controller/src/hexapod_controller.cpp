@@ -57,7 +57,6 @@ int main( int argc, char **argv )
     ros::Rate loop_rate( 1000 );  // 1000 hz
     while( ros::ok() )
     {
-        control.publishJointStates( control.legs_, control.body_ );
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
@@ -68,8 +67,9 @@ int main( int argc, char **argv )
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
-                // Commit new positions and broadcast over USB2AX
+                // Commit new positions and broadcast over USB2AX as well as jointStates
                 servoDriver.transmitServoPositions( control.legs_, control.head_ );
+				control.publishJointStates( control.legs_, control.body_ );
             }
             control.setPrevHexActiveState( true );
             ROS_INFO("Hexapod standing up.");
@@ -84,8 +84,9 @@ int main( int argc, char **argv )
             // IK solver for legs and body orientation
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
-            // Commit new positions and broadcast over USB2AX
+            // Commit new positions and broadcast over USB2AX as well as jointStates
             servoDriver.transmitServoPositions( control.legs_, control.head_ );
+			control.publishJointStates( control.legs_, control.body_ );
 
             // Set previous hex state of last loop so we know if we are shutting down on the next loop
             control.setPrevHexActiveState( true );
@@ -104,8 +105,9 @@ int main( int argc, char **argv )
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
-                // Commit new positions and broadcast over USB2AX
+                // Commit new positions and broadcast over USB2AX as well as jointStates
                 servoDriver.transmitServoPositions( control.legs_, control.head_ );
+				control.publishJointStates( control.legs_, control.body_ );
             }
 
             // Release torque
@@ -120,6 +122,7 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
+			control.publishJointStates( control.legs_, control.body_ );
         }
         loop_rate.sleep();
     }
