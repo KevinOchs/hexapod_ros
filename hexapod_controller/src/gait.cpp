@@ -46,12 +46,7 @@ Gait::Gait( void )
 {
     ros::param::get( "CYCLE_LENGTH", CYCLE_LENGTH );
     ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
-    cycle_leg_number_[RF] = 0;
-    cycle_leg_number_[LM] = 0;
-    cycle_leg_number_[RR] = 0;
-    cycle_leg_number_[LF] = 1;
-    cycle_leg_number_[RM] = 1;
-    cycle_leg_number_[LR] = 1;
+    ros::param::get( "LEG_GAIT_ORDER", cycle_leg_number_ );
     cycle_period_ = 1;
     is_travelling_ = false;
     in_cycle_ = false;
