@@ -35,18 +35,12 @@ const static double PI = atan(1.0)*4.0;
 //  Constructor: Initialize gait variables
 //==============================================================================
 
-#define    RR    0
-#define    RM    1
-#define    RF    2
-#define    LR    3
-#define    LM    4
-#define    LF    5
-
 Gait::Gait( void )
 {
     ros::param::get( "CYCLE_LENGTH", CYCLE_LENGTH );
     ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
     ros::param::get( "LEG_GAIT_ORDER", cycle_leg_number_ );
+    NUMBER_OF_LEGS = cycle_leg_number_.size();
     cycle_period_ = 1;
     is_travelling_ = false;
     in_cycle_ = false;
@@ -65,7 +59,7 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetP
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
     double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
 
-    for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         // Lifts the leg and move it forward
         if( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
@@ -107,7 +101,7 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPos
     {
         is_travelling_ = false;
 
-        for( int leg_index = 0; leg_index <= 5; leg_index++ )
+        for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
         {
             if( ( std::abs( feet->foot[leg_index].x ) > 1.0 ) || // 1 mm
                 ( std::abs( feet->foot[leg_index].y ) > 1.0 ) || // 1 mm
@@ -148,11 +142,7 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPos
     if( cycle_period_ == CYCLE_LENGTH )
     {
         cycle_period_ = 1;
-
-        for( int leg_index = 0; leg_index <= 5; leg_index++ )
-        {
-            cycle_leg_number_[leg_index] = cycle_leg_number_[leg_index] * -1 + 1;
-        }
+        std::reverse( cycle_leg_number_.begin(), cycle_leg_number_.end() );
     }
 }
 

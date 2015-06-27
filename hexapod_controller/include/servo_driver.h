@@ -80,10 +80,6 @@
 
 #define HEAD_PAN_ID  25 // Head Pan
 
-#define FIRST_COXA_ID     0
-#define FIRST_FEMUR_ID    6
-#define FIRST_TIBIA_ID    12
-#define FIRST_TARSUS_ID   18
 
 //==============================================================================
 // Define the class(s) for Servo Drivers.
@@ -96,15 +92,17 @@ class ServoDriver
         void transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
         void freeServos( void );
     private:
-        void convertAngles( const hexapod_msgs::LegsJoints  &legs, const hexapod_msgs::HeadJoint &head );
+        void convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
         void makeSureServosAreOn( void );
-        int cur_pos_[SERVO_COUNT];
-        int goal_pos_[SERVO_COUNT];
-        int pose_steps_[SERVO_COUNT];
-        int write_pos_[SERVO_COUNT];
+        std::vector<int> cur_pos_;
+        std::vector<int> goal_pos_;
+        std::vector<int> pose_steps_;
+        std::vector<int> write_pos_;
         bool servos_free_;
         double OFFSET_ANGLE;
+        int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
+        int NUMBER_OF_LEGS;       // Number of legs
 };
 
-#endif // SERVO_DRIVER_H_
+#endif
 

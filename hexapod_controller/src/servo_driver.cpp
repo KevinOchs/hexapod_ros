@@ -45,12 +45,25 @@ static const int servo_id[SERVO_COUNT] =
 };
 
 //==============================================================================
-//  Constructor: Open USB2AX and
+//  Constructor: Open USB2AX and get parameters
 // If servos are not on, no worries we read them later just to be safe
 //==============================================================================
 
 ServoDriver::ServoDriver( void )
 {
+    // Size and fill vector containers with default value
+    cur_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
+    goal_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
+    write_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
+    pose_steps_.assign( SERVO_COUNT, 1 );
+
+    ros::param::get( "OFFSET_ANGLE", OFFSET_ANGLE );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_COXA_ID", FIRST_COXA_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
+
+    // Initialize the USB2AX
     int baudnum = 1;
     int deviceIndex = 0;
 
@@ -63,16 +76,8 @@ ServoDriver::ServoDriver( void )
         ROS_INFO( "Servo Communication Opened!" );
     }
 
+    // Stating servos do not have torque applied
     servos_free_ = true;
-
-    ros::param::get("OFFSET_ANGLE", OFFSET_ANGLE );
-    for( int i = 0; i < SERVO_COUNT; i++ )
-    {
-        cur_pos_[i] = MX_CENTER_VALUE;
-        goal_pos_[i] = MX_CENTER_VALUE;
-        write_pos_[i] = MX_CENTER_VALUE;
-        pose_steps_[i] = 1;
-    }
 }
 
 //==============================================================================

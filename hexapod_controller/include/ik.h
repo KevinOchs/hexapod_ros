@@ -58,6 +58,7 @@ class Ik
         std::vector<double> INIT_COXA_ANGLE;
         std::vector<double> INIT_FOOT_POS_X, INIT_FOOT_POS_Y, INIT_FOOT_POS_Z;
         double COXA_LENGTH, FEMUR_LENGTH, TIBIA_LENGTH, TARSUS_LENGTH;
+        int NUMBER_OF_LEGS;       // Number of legs
 };
 
 #endif // IK_H_

@@ -1,43 +1,46 @@
 # Physical Configuration Settings
 
 # Twist Max Values
-    MAX_METERS_PER_SEC: 0.08
-    MAX_RADIANS_PER_SEC: !degrees 25.7
+MAX_METERS_PER_SEC: 0.08
+MAX_RADIANS_PER_SEC: !degrees 25.7
 
 # Gait Settings
-    CYCLE_LENGTH: 50
-    LEG_LIFT_HEIGHT: 40
+CYCLE_LENGTH: 50
+LEG_LIFT_HEIGHT: 40
 
 # Define Initial Coxa Offsets in Radians ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-    INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
+INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
 
 # Define distance in meters from coxa joint to the center ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-    COXA_TO_CENTER_X: [-177.80, 0.0, 177.80, -177.80, 0.0, 177.80]
-    COXA_TO_CENTER_Y: [82.50, 133.35, 82.50, 82.50, 133.35, 82.50]
+COXA_TO_CENTER_X: [-177.80, 0.0, 177.80, -177.80, 0.0, 177.80]
+COXA_TO_CENTER_Y: [82.50, 133.35, 82.50, 82.50, 133.35, 82.50]
 
 # Define Start Position Of Feet in mm from the coxa joint ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 # Middle Legs is coxa axis to foot in mm
 # math to find positions of front and back legs POS_Y = Middle leg start position * cos(45 degrees) (0.707)
 # math to find positions of front and back legs POS_X = Middle leg start position * sin(45 degrees) (0.707)
-    INIT_FOOT_POS_X: [-134.35, 0.0, 134.35, -134.35, 0.0, 134.35]
-    INIT_FOOT_POS_Y: [134.35, 190.00, 134.35, 134.35, 190.00, 134.35]
-    INIT_FOOT_POS_Z: [35.65, 35.65, 35.65, 35.65, 35.65, 35.65]
+INIT_FOOT_POS_X: [-134.35, 0.0, 134.35, -134.35, 0.0, 134.35]
+INIT_FOOT_POS_Y: [134.35, 190.00, 134.35, 134.35, 190.00, 134.35]
+INIT_FOOT_POS_Z: [35.65, 35.65, 35.65, 35.65, 35.65, 35.65]
 
 # Define Leg Measurements in mm
-    COXA_LENGTH:   58.93
-    FEMUR_LENGTH:  107.98
-    TIBIA_LENGTH:  87.74
-    TARSUS_LENGTH: 120.65
+COXA_LENGTH:   58.93
+FEMUR_LENGTH:  107.98
+TIBIA_LENGTH:  87.74
+TARSUS_LENGTH: 120.65
 
 # Leg order
-    LEG_ORDER: ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
+LEG_ORDER: ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-    LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
+LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
 
 # Gait Settigns
-    CYCLE_LENGTH: 50
-    LEG_LIFT_HEIGHT: 40.0
+CYCLE_LENGTH: 50
+LEG_LIFT_HEIGHT: 40.0
 
 # Define Mechanical Angle Offsets in Radians - Usually zero
-    OFFSET_ANGLE: !degrees 20
+OFFSET_ANGLE: !degrees 20
+
+# First servo ID of each leg segment
+LEG_SEGMENT_FIRST_IDS: {FIRST_COXA_ID: 0 , FIRST_FEMUR_ID: 6, FIRST_TIBIA_ID: 12, FIRST_TARSUS_ID: 18}

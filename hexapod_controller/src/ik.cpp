@@ -51,6 +51,7 @@ Ik::Ik( void )
     ros::param::get( "FEMUR_LENGTH", FEMUR_LENGTH );
     ros::param::get( "TIBIA_LENGTH", TIBIA_LENGTH );
     ros::param::get( "TARSUS_LENGTH", TARSUS_LENGTH );
+    NUMBER_OF_LEGS = INIT_FOOT_POS_X.size();
 }
 
 //=============================================================================
@@ -74,7 +75,7 @@ Trig Ik::getSinCos( double angle_rad )
 void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::BodyJoint &body, hexapod_msgs::LegsJoints *legs )
 {
     double sign = -1.0;
-    for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         if( leg_index <= 2 )
         {

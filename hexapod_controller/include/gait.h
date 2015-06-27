@@ -53,9 +53,10 @@ class Gait
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
         bool in_cycle_;           // True if the robot is in a gait cycle
         int CYCLE_LENGTH;         // Number of steps in cycle
+        int NUMBER_OF_LEGS;       // Leg order in cycle of the leg
+        int LEG_LIFT_HEIGHT;      // Height of a leg cycle
         int cycle_period_;        // Current period in cycle
         std::vector<int> cycle_leg_number_; // Leg order in cycle of the leg
-        int LEG_LIFT_HEIGHT;      // Height of a leg cycle
         int extra_gait_cycle_;    // Forcing some extra timed cycles
 };
 
