@@ -145,48 +145,39 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
     makeSureServosAreOn();
 
     int interpolating = 0;
+    int complete[SERVO_COUNT];
+
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
         // If any of these differ we need to indicate a new packet needs to be sent
         if( cur_pos_[i] != goal_pos_[i] )
         {
             interpolating++;
+            pose_steps_[i] = 1;
+            write_pos_[i] = cur_pos_[i];
+            complete[i] = 0;
+        }
+        else
+        {
+            // Nothing is moving on this particular servo
+            pose_steps_[i] = 0;
+            write_pos_[i] = goal_pos_[i];
+            complete[i] = 1;
         }
     }
 
     // If nothing moved we abort no need to send packet with same positions
     if( interpolating != 0 )
     {
-        int complete[SERVO_COUNT];
-        for( int i = 0; i < SERVO_COUNT; i++ )
-        {
-            if( cur_pos_[i] == goal_pos_[i] )
-            {
-                // Nothing is moving on this particular servo
-                pose_steps_[i] = 0;
-                write_pos_[i] = goal_pos_[i];
-                complete[i] = 1;
-            }
-            else
-            {
-                pose_steps_[i] = 1;
-                write_pos_[i] = cur_pos_[i];
-                complete[i] = 0;
-            }
-        }
-
-        bool finished = false;
         ros::Rate loop_rate( 900 ); // 900 Hz loop
-        while( finished == false )
+        while( interpolating != 0 )
         {
             // Prepare packet for broadcast
             dxl_set_txpacket_id( 254 );
             dxl_set_txpacket_instruction( 131 );
-            dxl_set_txpacket_length( 5 * SERVO_COUNT + 4 );
+            dxl_set_txpacket_length( 3 * SERVO_COUNT + 4 );
             dxl_set_txpacket_parameter( 0, MX_GOAL_POSITION_L );
-            dxl_set_txpacket_parameter( 1, 4 );
-
-            int total_complete = 0;
+            dxl_set_txpacket_parameter( 1, 2 );
             for( int i = 0; i < SERVO_COUNT; i++ )
             {
                 if( pose_steps_[i] == 1 && complete[i] != 1 )
@@ -199,6 +190,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
                         {
                             write_pos_[i] = goal_pos_[i];
                             complete[i] = 1;
+                            interpolating--;
                         }
                     }
 
@@ -210,33 +202,19 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
                         {
                             write_pos_[i] = goal_pos_[i];
                             complete[i] = 1;
+                            interpolating--;
                         }
                     }
                 }
-
-                // Tally up which servos are at their goal position
-                if( complete[i] == 1 )
-                {
-                    total_complete++;
-                }
-
                 // Complete sync_write packet for broadcast
-                dxl_set_txpacket_parameter( 2 + 5 * i, servo_id[i] );
-                dxl_set_txpacket_parameter( 2 + 5 * i + 1, dxl_get_lowbyte( write_pos_[i] ) );
-                dxl_set_txpacket_parameter( 2 + 5 * i + 2, dxl_get_highbyte( write_pos_[i] ) );
+                dxl_set_txpacket_parameter( 2 + 3 * i, servo_id[i] );
+                dxl_set_txpacket_parameter( 2 + 3 * i + 1, dxl_get_lowbyte( write_pos_[i] ) );
+                dxl_set_txpacket_parameter( 2 + 3 * i + 2, dxl_get_highbyte( write_pos_[i] ) );
             }
-
             // Broadcast packet over USB2AX
             dxl_txrx_packet();
-
-            // Since we loop until all servos are finished we check here if complete to stop loop
-            if( total_complete == 25 )
-            {
-                finished = true;
-            }
             loop_rate.sleep();
         }
-
         // Store write pose as current pose (goal) since we are now done
         for( int i = 0; i < SERVO_COUNT; i++ )
         {

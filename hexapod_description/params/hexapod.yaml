@@ -8,6 +8,9 @@ MAX_RADIANS_PER_SEC: !degrees 25.7
 CYCLE_LENGTH: 50
 LEG_LIFT_HEIGHT: 40
 
+# Number of Legs
+NUMBER_OF_LEGS:   6
+
 # Define Initial Coxa Offsets in Radians ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
 
@@ -29,18 +32,23 @@ FEMUR_LENGTH:  107.98
 TIBIA_LENGTH:  87.74
 TARSUS_LENGTH: 120.65
 
+# Gait Settigns
+CYCLE_LENGTH: 50
+LEG_LIFT_HEIGHT: 40.0
+
 # Leg order
 LEG_ORDER: ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
 
-# Gait Settigns
-CYCLE_LENGTH: 50
-LEG_LIFT_HEIGHT: 40.0
-
 # Define Mechanical Angle Offsets in Radians - Usually zero
 OFFSET_ANGLE: !degrees 20
 
 # First servo ID of each leg segment
 LEG_SEGMENT_FIRST_IDS: {FIRST_COXA_ID: 0 , FIRST_FEMUR_ID: 6, FIRST_TIBIA_ID: 12, FIRST_TARSUS_ID: 18}
+
+# First servo ID of each leg segment
+JOINT_SEGMENT_NAMES: ['coxa_joint_' , 'femur_joint_', 'tibia_joint_', 'tarsus_joint_']
+
+

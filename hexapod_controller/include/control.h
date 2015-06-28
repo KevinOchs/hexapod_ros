@@ -61,7 +61,7 @@ class Control
         bool getHexActiveState( void );
         void setPrevHexActiveState( bool state );
         bool getPrevHexActiveState( void );
-        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::BodyJoint &body );
+        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Twist cmd_vel_;
         hexapod_msgs::RootJoint base_;
@@ -86,6 +86,10 @@ class Control
         double TIBIA_LENGTH;
         double STEP_RANGE;
         double STEP_SEGMENT;
+        int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
+        int NUMBER_OF_LEGS;   // Number of legs
+		XmlRpc::XmlRpcValue JOINT_SUFFIX;
+		XmlRpc::XmlRpcValue JOINT_SEGMENT_NAMES;
         hexapod_msgs::State imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state

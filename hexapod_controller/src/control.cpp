@@ -28,7 +28,7 @@
 // Author: Kevin M. Ochs
 
 #include <control.h>
-
+#include <iostream>
 static const double PI = atan(1.0)*4.0;
 //==============================================================================
 // Constructor
@@ -38,7 +38,14 @@ Control::Control( void )
 {
     ros::param::get( "FEMUR_LENGTH", FEMUR_LENGTH );
     ros::param::get( "TIBIA_LENGTH", TIBIA_LENGTH );
-    STEP_RANGE = ( FEMUR_LENGTH + TIBIA_LENGTH ) * 0.75;
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_COXA_ID", FIRST_COXA_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
+    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
+	ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
+	ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
+	ros::param::get( "JOINT_SEGMENT_NAMES", JOINT_SEGMENT_NAMES );
+    STEP_RANGE = ( FEMUR_LENGTH + TIBIA_LENGTH ) * 0.90;
     STEP_SEGMENT = STEP_RANGE / 4.0;
     prev_hex_state_ = false;
     hex_state_ = false;
@@ -65,7 +72,7 @@ Control::Control( void )
     body_.yaw = 0.0;
     body_.roll = 0.0;
     head_.yaw = 0.0;
-    for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         feet_.foot[leg_index].x = 0.0;
         feet_.foot[leg_index].y = 0.0;
@@ -114,19 +121,12 @@ bool Control::getPrevHexActiveState( void )
     return prev_hex_state_;
 }
 
-#define FIRST_COXA_ID     0
-#define FIRST_FEMUR_ID    6
-#define FIRST_TIBIA_ID    12
-#define FIRST_TARSUS_ID   18
-
-const std::string suffix[6] = {"RR", "RM", "RF", "LR", "LM", "LF"};
-
-void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::BodyJoint &body )
+void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head )
 {
     joint_state_.header.stamp = ros::Time::now();
     joint_state_.name.resize( 24 );
     joint_state_.position.resize( 24 );
-    for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         // Update Right Legs
         if( leg_index <= 2 )
@@ -144,11 +144,10 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
             joint_state_.position[FIRST_TIBIA_ID  + leg_index] =  legs.leg[leg_index].tibia;
             joint_state_.position[FIRST_TARSUS_ID + leg_index] = -legs.leg[leg_index].tarsus;
         }
-
-        joint_state_.name[FIRST_COXA_ID   + leg_index] = "coxa_joint_" + suffix[leg_index];
-        joint_state_.name[FIRST_FEMUR_ID  + leg_index] = "femur_joint_" + suffix[leg_index];
-        joint_state_.name[FIRST_TIBIA_ID  + leg_index] = "tibia_joint_" + suffix[leg_index];
-        joint_state_.name[FIRST_TARSUS_ID + leg_index] = "tarsus_joint_" + suffix[leg_index];
+        joint_state_.name[FIRST_COXA_ID   + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[0] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_FEMUR_ID  + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[1] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_TIBIA_ID  + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[2] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_TARSUS_ID + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[3] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
 
     }
     joint_state_pub_.publish( joint_state_ );
