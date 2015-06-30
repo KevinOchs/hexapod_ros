@@ -88,8 +88,8 @@ class Control
         double STEP_SEGMENT;
         int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
         int NUMBER_OF_LEGS;   // Number of legs
-		XmlRpc::XmlRpcValue JOINT_SUFFIX;
-		XmlRpc::XmlRpcValue JOINT_SEGMENT_NAMES;
+        XmlRpc::XmlRpcValue JOINT_SUFFIX;
+        XmlRpc::XmlRpcValue JOINT_SEGMENT_NAMES;
         hexapod_msgs::State imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state
