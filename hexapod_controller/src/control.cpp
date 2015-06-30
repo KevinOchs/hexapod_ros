@@ -42,9 +42,9 @@ Control::Control( void )
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
-	ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
-	ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
-	ros::param::get( "JOINT_SEGMENT_NAMES", JOINT_SEGMENT_NAMES );
+    ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
+    ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
+    ros::param::get( "JOINT_SEGMENT_NAMES", JOINT_SEGMENT_NAMES );
     STEP_RANGE = ( FEMUR_LENGTH + TIBIA_LENGTH ) * 0.90;
     STEP_SEGMENT = STEP_RANGE / 4.0;
     prev_hex_state_ = false;
@@ -92,9 +92,9 @@ Control::Control( void )
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
-	// Ping the imu to re-calibrate
-	imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
-	imu_calibrate_.call( calibrate_ );
+    // Ping the imu to re-calibrate
+    imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
+    imu_calibrate_.call( calibrate_ );
 }
 
 //==============================================================================
