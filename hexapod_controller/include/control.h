@@ -47,6 +47,7 @@
 #include <hexapod_msgs/FeetPositions.h>
 #include <hexapod_msgs/State.h>
 #include <hexapod_msgs/Sounds.h>
+#include <geometry_msgs/AccelStamped.h>
 
 //==============================================================================
 // Define class Control: This is the main structure of data that manipulates
@@ -71,6 +72,7 @@ class Control
         hexapod_msgs::FeetPositions feet_;
         hexapod_msgs::State state_;
         hexapod_msgs::Sounds sounds_;
+        double STANDING_BODY_HEIGHT;
         ros::Publisher sounds_pub_;
         ros::Publisher joint_state_pub_;
         ros::ServiceClient imu_calibrate_;
@@ -87,6 +89,7 @@ class Control
         double STEP_RANGE;
         double STEP_SEGMENT;
         int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
+        double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
         int NUMBER_OF_LEGS;   // Number of legs
         XmlRpc::XmlRpcValue JOINT_SUFFIX;
         XmlRpc::XmlRpcValue JOINT_SEGMENT_NAMES;
@@ -96,12 +99,12 @@ class Control
         bool prev_hex_state_; // Previous loop state
         ros::Subscriber cmd_vel_sub_;
         void cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg );
-        ros::Subscriber base_sub_;
-        void baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg );
-        ros::Subscriber body_sub_;
-        void bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg );
-        ros::Subscriber head_sub_;
-        void headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg );
+        ros::Subscriber base_scalar_sub_;
+        void baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scalar_msg );
+        ros::Subscriber body_scalar_sub_;
+        void bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scalar_msg );
+        ros::Subscriber head_scalar_sub_;
+        void headCallback( const geometry_msgs::AccelStampedConstPtr &head_scalar_msg );
         ros::Subscriber state_sub_;
         void stateCallback( const hexapod_msgs::StateConstPtr &state_msg );
         ros::Subscriber imu_override_sub_;

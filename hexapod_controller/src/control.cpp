@@ -45,6 +45,12 @@ Control::Control( void )
     ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
     ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
     ros::param::get( "JOINT_SEGMENT_NAMES", JOINT_SEGMENT_NAMES );
+    ros::param::get( "BODY_MAX_ROLL", BODY_MAX_ROLL );
+    ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
+    ros::param::get( "HEAD_MAX_PAN", HEAD_MAX_PAN );
+    ros::param::get( "CYCLE_MAX_TRAVEL", CYCLE_MAX_TRAVEL );
+    ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
+    ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
     STEP_RANGE = ( FEMUR_LENGTH + TIBIA_LENGTH ) * 0.90;
     STEP_SEGMENT = STEP_RANGE / 4.0;
     prev_hex_state_ = false;
@@ -84,9 +90,9 @@ Control::Control( void )
         legs_.leg[leg_index].tarsus = 0.0;
     }
     cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 50, &Control::cmd_velCallback, this );
-    base_sub_ = nh_.subscribe<hexapod_msgs::RootJoint>( "base", 50, &Control::baseCallback, this );
-    body_sub_ = nh_.subscribe<hexapod_msgs::BodyJoint>( "body", 50, &Control::bodyCallback, this );
-    head_sub_ = nh_.subscribe<hexapod_msgs::HeadJoint>( "head", 50, &Control::headCallback, this );
+    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 50, &Control::baseCallback, this );
+    body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 50, &Control::bodyCallback, this );
+    head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "head_scalar", 50, &Control::headCallback, this );
     state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this );
     imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
@@ -173,23 +179,33 @@ void Control::cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg )
 // Base link movement callback
 //==============================================================================
 
-void Control::baseCallback( const hexapod_msgs::RootJointConstPtr &base_msg )
+void Control::baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scalar_msg )
 {
-    base_.x = base_msg->x;
-    base_.y = base_msg->y;
-    base_.yaw = base_msg->yaw;
+    ros::Time current_time = ros::Time::now();
+    double time_delta = current_time.toSec() - base_scalar_msg->header.stamp.toSec();
+    if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
+    {
+        base_.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.yaw = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
+    }
 }
 
 //==============================================================================
 // Override IMU and manipulate body orientation callback
 //==============================================================================
 
-void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
+void Control::bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scalar_msg )
 {
-    if( imu_override_.active == true )
+    ros::Time current_time = ros::Time::now();
+    double time_delta = current_time.toSec() - body_scalar_msg->header.stamp.toSec();
+    if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
     {
-        body_.pitch  = body_msg->pitch * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
-        body_.roll = body_msg->roll * 0.01 + ( body_.roll * ( 1.0 - 0.01 ) );
+        if( imu_override_.active == true )
+        {
+            body_.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.roll * ( 1.0 - 0.01 ) );
+            body_.pitch  = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
+        }
     }
 }
 
@@ -197,9 +213,14 @@ void Control::bodyCallback( const hexapod_msgs::BodyJointConstPtr &body_msg )
 // Pan head callback
 //==============================================================================
 
-void Control::headCallback( const hexapod_msgs::HeadJointConstPtr &head_msg )
+void Control::headCallback( const geometry_msgs::AccelStampedConstPtr &head_scalar_msg )
 {
-    head_.yaw = head_msg->yaw; // 25 degrees max
+    ros::Time current_time = ros::Time::now();
+    double time_delta = current_time.toSec() - head_scalar_msg->header.stamp.toSec();
+    if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
+    {
+        head_.yaw = head_scalar_msg->accel.angular.z * HEAD_MAX_PAN;
+    }
 }
 
 //==============================================================================

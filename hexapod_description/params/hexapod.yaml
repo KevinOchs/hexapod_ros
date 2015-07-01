@@ -32,9 +32,21 @@ FEMUR_LENGTH:  107.98
 TIBIA_LENGTH:  87.74
 TARSUS_LENGTH: 120.65
 
-# Gait Settigns
+# Body FK maximum rotations 
+BODY_MAX_ROLL: !degrees 8
+BODY_MAX_PITCH: !degrees 8
+
+# Body Standing Height 
+STANDING_BODY_HEIGHT: 90.0
+
+# Head (pan) FK maximum rotations 
+HEAD_MAX_PAN: !degrees 16
+
+# Gait Settings
 CYCLE_LENGTH: 50
 LEG_LIFT_HEIGHT: 40.0
+CYCLE_MAX_TRAVEL: 80.0
+CYCLE_MAX_YAW: !degrees 8
 
 # Leg order
 LEG_ORDER: ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']

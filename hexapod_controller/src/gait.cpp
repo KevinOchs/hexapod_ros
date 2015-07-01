@@ -40,7 +40,7 @@ Gait::Gait( void )
     ros::param::get( "CYCLE_LENGTH", CYCLE_LENGTH );
     ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
     ros::param::get( "LEG_GAIT_ORDER", cycle_leg_number_ );
-    NUMBER_OF_LEGS = cycle_leg_number_.size();
+    ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
     cycle_period_ = 1;
     is_travelling_ = false;
     in_cycle_ = false;

@@ -4,7 +4,6 @@
 <launch>
     <rosparam command="load" file="$(find hexapod_description)/params/hexapod.yaml" />
     <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'" />
-
     <include file="$(find hexapod_bringup)/launch/components/joy_teleop.launch" />
     <include file="$(find hexapod_bringup)/launch/components/locomotion.launch" />
 </launch>

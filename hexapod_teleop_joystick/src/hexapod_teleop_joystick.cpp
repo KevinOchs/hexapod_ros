@@ -36,16 +36,24 @@
 
 HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 {
-    base_.y = 0.0;
-    base_.x = 0.0;
-    base_.yaw = 0.0;
-    body_.y = 0.0;
-    body_.z = 0.0;
-    body_.x = 0.0;
-    body_.pitch = 0.0;
-    body_.yaw = 0.0;
-    body_.roll = 0.0;
-    head_.yaw = 0.0;
+    base_scalar_.accel.linear.x = 0.0;
+    base_scalar_.accel.linear.y = 0.0;
+    base_scalar_.accel.linear.z = 0.0;
+    base_scalar_.accel.angular.x = 0.0;
+    base_scalar_.accel.angular.y = 0.0;
+    base_scalar_.accel.angular.z = 0.0;
+	body_scalar_.accel.linear.x = 0.0;
+    body_scalar_.accel.linear.y = 0.0;
+    body_scalar_.accel.linear.z = 0.0;
+    body_scalar_.accel.angular.x = 0.0;
+    body_scalar_.accel.angular.y = 0.0;
+    body_scalar_.accel.angular.z = 0.0;
+    head_scalar_.accel.linear.x = 0.0;
+    head_scalar_.accel.linear.y = 0.0;
+    head_scalar_.accel.linear.z = 0.0;
+    head_scalar_.accel.angular.x = 0.0;
+    head_scalar_.accel.angular.y = 0.0;
+    head_scalar_.accel.angular.z = 0.0;
     cmd_vel_.linear.x = 0.0;
     cmd_vel_.linear.y = 0.0;
     cmd_vel_.linear.z = 0.0;
@@ -57,9 +65,9 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
     ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
-    base_pub_ = nh_.advertise<hexapod_msgs::RootJoint>("base", 100);
-    body_pub_ = nh_.advertise<hexapod_msgs::BodyJoint>("body", 100);
-    head_pub_ = nh_.advertise<hexapod_msgs::HeadJoint>("head", 100);
+    base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("base_scalar", 100);
+    body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("body_scalar", 100);
+    head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("head_scalar", 100);
     state_pub_ = nh_.advertise<hexapod_msgs::State>("state", 100);
     cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
     imu_override_pub_ = nh_.advertise<hexapod_msgs::State>("imu_override", 100);
@@ -71,6 +79,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 
 void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
 {
+	ros::Time current_time = ros::Time::now();
     if ( joy->buttons[3] == 1 )
     {
         if ( state_.active == false)
@@ -91,24 +100,27 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     if ( joy->buttons[8] == 1 )
     {
         imu_override_.active = true;
-        body_.pitch = -joy->axes[1] * 0.13962634; // 8 degrees max
-        body_.roll = -joy->axes[0] * 0.13962634; // 8 degrees max
-        head_.yaw = joy->axes[2] * 0.27925268; // 16 degrees max
+		body_scalar_.header.stamp = current_time;
+        body_scalar_.accel.angular.x = -joy->axes[0];
+        body_scalar_.accel.angular.y = -joy->axes[1];
+		head_scalar_.header.stamp = current_time;
+        head_scalar_.accel.angular.z = joy->axes[2];
     }
     else
     {
         imu_override_.active = false;
     }
 
-    // Travelling ( 8cm/s ) 0.078m/s  0.407rad/s
+    // Travelling
     if ( joy->buttons[8] != 1 )
     {
-        base_.x = -joy->axes[1] * 40.0; // 40 mm max
-        base_.y = joy->axes[0] * 40.0; // 40 mm max
-        base_.yaw = -joy->axes[2] * 0.13962634; // 8 degrees max
-        cmd_vel_.linear.x = ( joy->axes[1] * MAX_METERS_PER_SEC ); // 0.04m/s max
-        cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC ); // 0.04m/s max
-        cmd_vel_.angular.z = ( joy->axes[2] * MAX_RADIANS_PER_SEC ); // 0.52359rad/s max
+		base_scalar_.header.stamp = current_time;
+        base_scalar_.accel.linear.x = -joy->axes[1];
+        base_scalar_.accel.linear.y = joy->axes[0];
+        base_scalar_.accel.angular.z = -joy->axes[2];
+        cmd_vel_.linear.x = ( joy->axes[1] * MAX_METERS_PER_SEC );
+        cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC );
+        cmd_vel_.angular.z = ( joy->axes[2] * MAX_RADIANS_PER_SEC );
     }
 }
 
@@ -123,9 +135,9 @@ int main(int argc, char** argv)
     ros::Rate loop_rate( 250 ); // 250 hz
     while ( ros::ok() )
     {
-        hexapodTeleopJoystick.base_pub_.publish( hexapodTeleopJoystick.base_ );
-        hexapodTeleopJoystick.body_pub_.publish( hexapodTeleopJoystick.body_ );
-        hexapodTeleopJoystick.head_pub_.publish( hexapodTeleopJoystick.head_ );
+        hexapodTeleopJoystick.base_scalar_pub_.publish( hexapodTeleopJoystick.base_scalar_ );
+        hexapodTeleopJoystick.body_scalar_pub_.publish( hexapodTeleopJoystick.body_scalar_ );
+        hexapodTeleopJoystick.head_scalar_pub_.publish( hexapodTeleopJoystick.head_scalar_ );
         hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
         hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
         hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );

@@ -31,27 +31,25 @@
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
 #include <geometry_msgs/Twist.h>
-#include <hexapod_msgs/RootJoint.h>
-#include <hexapod_msgs/BodyJoint.h>
-#include <hexapod_msgs/HeadJoint.h>
+#include <geometry_msgs/AccelStamped.h>
 #include <hexapod_msgs/State.h>
 
 class HexapodTeleopJoystick
 {
     public:
         HexapodTeleopJoystick( void );
-        hexapod_msgs::RootJoint base_;
-        hexapod_msgs::BodyJoint body_;
-        hexapod_msgs::HeadJoint head_;
         hexapod_msgs::State state_;
         hexapod_msgs::State imu_override_;
         geometry_msgs::Twist cmd_vel_;
+        geometry_msgs::AccelStamped base_scalar_;
+        geometry_msgs::AccelStamped body_scalar_;
+        geometry_msgs::AccelStamped head_scalar_;
         double MAX_METERS_PER_SEC;
         double MAX_RADIANS_PER_SEC;
         ros::Publisher cmd_vel_pub_;
-        ros::Publisher base_pub_;
-        ros::Publisher body_pub_;
-        ros::Publisher head_pub_;
+        ros::Publisher base_scalar_pub_;
+        ros::Publisher body_scalar_pub_;
+        ros::Publisher head_scalar_pub_;
         ros::Publisher state_pub_;
         ros::Publisher imu_override_pub_;
     private:

@@ -60,7 +60,7 @@ int main( int argc, char **argv )
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
-            while( control.body_.z < 90 )
+            while( control.body_.z < control.STANDING_BODY_HEIGHT )
             {
                 control.body_.z++;
 
