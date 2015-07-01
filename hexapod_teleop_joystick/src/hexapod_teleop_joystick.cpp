@@ -42,7 +42,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     base_scalar_.accel.angular.x = 0.0;
     base_scalar_.accel.angular.y = 0.0;
     base_scalar_.accel.angular.z = 0.0;
-	body_scalar_.accel.linear.x = 0.0;
+    body_scalar_.accel.linear.x = 0.0;
     body_scalar_.accel.linear.y = 0.0;
     body_scalar_.accel.linear.z = 0.0;
     body_scalar_.accel.angular.x = 0.0;
@@ -79,7 +79,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 
 void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
 {
-	ros::Time current_time = ros::Time::now();
+    ros::Time current_time = ros::Time::now();
     if ( joy->buttons[3] == 1 )
     {
         if ( state_.active == false)
@@ -100,10 +100,10 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     if ( joy->buttons[8] == 1 )
     {
         imu_override_.active = true;
-		body_scalar_.header.stamp = current_time;
+        body_scalar_.header.stamp = current_time;
         body_scalar_.accel.angular.x = -joy->axes[0];
         body_scalar_.accel.angular.y = -joy->axes[1];
-		head_scalar_.header.stamp = current_time;
+        head_scalar_.header.stamp = current_time;
         head_scalar_.accel.angular.z = joy->axes[2];
     }
     else
@@ -114,7 +114,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     // Travelling
     if ( joy->buttons[8] != 1 )
     {
-		base_scalar_.header.stamp = current_time;
+        base_scalar_.header.stamp = current_time;
         base_scalar_.accel.linear.x = -joy->axes[1];
         base_scalar_.accel.linear.y = joy->axes[0];
         base_scalar_.accel.angular.z = -joy->axes[2];
