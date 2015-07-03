@@ -39,7 +39,7 @@
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/Pose.h>
-#include <hexapod_msgs/HeadJoint.h>
+#include <hexapod_msgs/RPY.h>
 #include <hexapod_msgs/LegJoints.h>
 #include <hexapod_msgs/LegsJoints.h>
 #include <hexapod_msgs/FeetPositions.h>
@@ -60,12 +60,12 @@ class Control
         bool getHexActiveState( void );
         void setPrevHexActiveState( bool state );
         bool getPrevHexActiveState( void );
-        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
+        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Twist cmd_vel_;
         hexapod_msgs::Pose base_;
         hexapod_msgs::Pose body_;
-        hexapod_msgs::HeadJoint head_;
+        hexapod_msgs::RPY head_;
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
         hexapod_msgs::State state_;

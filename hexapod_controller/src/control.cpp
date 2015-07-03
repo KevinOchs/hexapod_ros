@@ -68,22 +68,22 @@ Control::Control( void )
     cmd_vel_.angular.x = 0.0;
     cmd_vel_.angular.y = 0.0;
     cmd_vel_.angular.z = 0.0;
-    base_.y = 0.0;
-    base_.x = 0.0;
-    base_.yaw = 0.0;
-    body_.y = 0.0;
-    body_.z = 0.0;
-    body_.x = 0.0;
-    body_.pitch = 0.0;
-    body_.yaw = 0.0;
-    body_.roll = 0.0;
+    base_.position.y = 0.0;
+    base_.position.x = 0.0;
+    base_.orientation.yaw = 0.0;
+    body_.position.y = 0.0;
+    body_.position.z = 0.0;
+    body_.position.x = 0.0;
+    body_.orientation.pitch = 0.0;
+    body_.orientation.yaw = 0.0;
+    body_.orientation.roll = 0.0;
     head_.yaw = 0.0;
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
-        feet_.foot[leg_index].x = 0.0;
-        feet_.foot[leg_index].y = 0.0;
-        feet_.foot[leg_index].z = 0.0;
-        feet_.foot[leg_index].yaw = 0.0;
+        feet_.foot[leg_index].position.x = 0.0;
+        feet_.foot[leg_index].position.y = 0.0;
+        feet_.foot[leg_index].position.z = 0.0;
+        feet_.foot[leg_index].orientation.yaw = 0.0;
         legs_.leg[leg_index].coxa = 0.0;
         legs_.leg[leg_index].femur = 0.0;
         legs_.leg[leg_index].tibia = 0.0;
@@ -127,7 +127,7 @@ bool Control::getPrevHexActiveState( void )
     return prev_hex_state_;
 }
 
-void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head )
+void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
 {
     joint_state_.header.stamp = ros::Time::now();
     joint_state_.name.resize( 24 );
@@ -185,9 +185,9 @@ void Control::baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scal
     double time_delta = current_time.toSec() - base_scalar_msg->header.stamp.toSec();
     if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
     {
-        base_.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.yaw = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
+        base_.position.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.position.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.orientation.yaw = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
     }
 }
 
@@ -203,8 +203,8 @@ void Control::bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scal
     {
         if( imu_override_.active == true )
         {
-            body_.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.roll * ( 1.0 - 0.01 ) );
-            body_.pitch  = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.pitch * ( 1.0 - 0.01 ) );
+            body_.orientation.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.orientation.roll * ( 1.0 - 0.01 ) );
+            body_.orientation.pitch  = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.orientation.pitch * ( 1.0 - 0.01 ) );
         }
     }
 }
@@ -234,15 +234,15 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
         if( getHexActiveState() == false )
         {
             // Activating hexapod
-            body_.y = 0.0;
-            body_.z = 0.0;
-            body_.x = 0.0;
-            body_.pitch = 0.0;
-            body_.yaw = 0.0;
-            body_.roll = 0.0;
-            base_.y = 0.0;
-            base_.x = 0.0;
-            base_.yaw = 0.0;
+            body_.position.y = 0.0;
+            body_.position.z = 0.0;
+            body_.position.x = 0.0;
+            body_.orientation.pitch = 0.0;
+            body_.orientation.yaw = 0.0;
+            body_.orientation.roll = 0.0;
+            base_.position.y = 0.0;
+            base_.position.x = 0.0;
+            base_.orientation.yaw = 0.0;
             setHexActiveState( true );
             ROS_INFO("Hexapod locomotion is now active.");
             sounds_.stand = true;
@@ -256,14 +256,14 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
         if( getHexActiveState() == true )
         {
             // Sit down hexapod
-            body_.y = 0.0;
-            body_.x = 0.0;
-            body_.pitch = 0.0;
-            body_.yaw = 0.0;
-            body_.roll = 0.0;
-            base_.y = 0.0;
-            base_.x = 0.0;
-            base_.yaw = 0.0;
+            body_.position.y = 0.0;
+            body_.position.x = 0.0;
+            body_.orientation.pitch = 0.0;
+            body_.orientation.yaw = 0.0;
+            body_.orientation.roll = 0.0;
+            base_.position.y = 0.0;
+            base_.position.x = 0.0;
+            base_.orientation.yaw = 0.0;
             setHexActiveState( false );
             ROS_WARN("Hexapod locomotion shutting down servos.");
             sounds_.shut_down = true;
@@ -320,35 +320,34 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
         if( imu_roll_delta < -0.0174532925 ) // 1 degree
         {
-            if( body_.roll < 0.209 )  // 12 degrees limit
+            if( body_.orientation.roll < 0.209 )  // 12 degrees limit
             {
-                body_.roll = body_.roll + 0.0002; // 0.01 degree increments
+                body_.orientation.roll = body_.orientation.roll + 0.0002; // 0.01 degree increments
             }
         }
 
         if( imu_roll_delta > 0.0174532925 ) // 1 degree
         {
-            if( body_.roll > -0.209 )  // 12 degrees limit
+            if( body_.orientation.roll > -0.209 )  // 12 degrees limit
             {
-                body_.roll = body_.roll - 0.0002;  // 0.01 degree increments
+                body_.orientation.roll = body_.orientation.roll - 0.0002;  // 0.01 degree increments
             }
         }
 
         if( imu_pitch_delta < -0.0174532925 ) // 1 degree
         {
-            if( body_.pitch < 0.209 )  // 12 degrees limit
+            if( body_.orientation.pitch < 0.209 )  // 12 degrees limit
             {
-                body_.pitch = body_.pitch + 0.0002;  // 0.01 degree increments
+                body_.orientation.pitch = body_.orientation.pitch + 0.0002;  // 0.01 degree increments
             }
         }
 
         if( imu_pitch_delta > 0.0174532925 ) // 1 degree
         {
-            if( body_.pitch > -0.209 ) // 12 degrees limit
+            if( body_.orientation.pitch > -0.209 ) // 12 degrees limit
             {
-                body_.pitch = body_.pitch - 0.0002;  // 0.01 degree increments
+                body_.orientation.pitch = body_.orientation.pitch - 0.0002;  // 0.01 degree increments
             }
         }
     }
 }
-

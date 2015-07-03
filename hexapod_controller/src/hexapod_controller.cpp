@@ -60,9 +60,9 @@ int main( int argc, char **argv )
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
-            while( control.body_.z < control.STANDING_BODY_HEIGHT )
+            while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
             {
-                control.body_.z++;
+                control.body_.position.z++;
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -95,9 +95,9 @@ int main( int argc, char **argv )
         // Shutting down hex so let us do a gradual sit down and turn off torque
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == true )
         {
-            while( control.body_.z > 0 )
+            while( control.body_.position.z > 0 )
             {
-                control.body_.z--;
+                control.body_.position.z--;
 
                 // Gait Sequencer called to make sure we are on all six feet
                 gait.gaitCycle( control.base_, &control.feet_ );
@@ -128,4 +128,3 @@ int main( int argc, char **argv )
     }
     return 0;
 }
-

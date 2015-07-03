@@ -7,6 +7,7 @@ project(hexapod_msgs)
 find_package(catkin REQUIRED COMPONENTS
   message_generation
   std_msgs
+  geometry_msgs
 )
 
 
@@ -18,13 +19,14 @@ add_message_files(
    FeetPositions.msg
    HeadJoint.msg
    Pose.msg
+   RPY.msg
    State.msg
    Sounds.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
-   DEPENDENCIES std_msgs
+   DEPENDENCIES std_msgs geometry_msgs
 )
 
 ###################################
