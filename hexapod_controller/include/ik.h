@@ -33,7 +33,7 @@
 
 #include <cmath> // acos atan
 #include <ros/ros.h>
-#include <hexapod_msgs/BodyJoint.h>
+#include <hexapod_msgs/Pose.h>
 #include <hexapod_msgs/LegsJoints.h>
 #include <hexapod_msgs/FeetPositions.h>
 
@@ -51,7 +51,7 @@ class Ik
 {
     public:
         Ik( void );
-        void calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::BodyJoint &body, hexapod_msgs::LegsJoints *legs );
+        void calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::Pose &body, hexapod_msgs::LegsJoints *legs );
     private:
         Trig getSinCos( double angle_rad );
         std::vector<double> COXA_TO_CENTER_X, COXA_TO_CENTER_Y;
@@ -62,4 +62,3 @@ class Ik
 };
 
 #endif // IK_H_
-

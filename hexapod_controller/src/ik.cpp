@@ -72,7 +72,7 @@ Trig Ik::getSinCos( double angle_rad )
 // Inverse Kinematics
 //=============================================================================
 
-void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::BodyJoint &body, hexapod_msgs::LegsJoints *legs )
+void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::Pose &body, hexapod_msgs::LegsJoints *legs )
 {
     double sign = -1.0;
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
@@ -149,4 +149,3 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         legs->leg[leg_index].tarsus = legs->leg[leg_index].femur + legs->leg[leg_index].tibia;
     }
 }
-

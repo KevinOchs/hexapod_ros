@@ -15,11 +15,9 @@ add_message_files(
    FILES
    LegJoints.msg
    LegsJoints.msg
-   FootPosition.msg
    FeetPositions.msg
-   RootJoint.msg
-   BodyJoint.msg
    HeadJoint.msg
+   Pose.msg
    State.msg
    Sounds.msg
 )
@@ -46,5 +44,3 @@ catkin_package(
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
-
-

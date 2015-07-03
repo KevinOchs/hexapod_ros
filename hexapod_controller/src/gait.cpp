@@ -54,7 +54,7 @@ Gait::Gait( void )
 // step calculation
 //=============================================================================
 
-void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
+void Gait::cyclePeriod( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositions *feet )
 {
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
     double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
@@ -84,7 +84,7 @@ void Gait::cyclePeriod( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetP
 // Gait Sequencing
 //=============================================================================
 
-void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPositions *feet )
+void Gait::gaitCycle( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositions *feet )
 {
     smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
     smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
@@ -145,4 +145,3 @@ void Gait::gaitCycle( const hexapod_msgs::RootJoint &base, hexapod_msgs::FeetPos
         std::reverse( cycle_leg_number_.begin(), cycle_leg_number_.end() );
     }
 }
-
