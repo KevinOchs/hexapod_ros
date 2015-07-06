@@ -88,9 +88,9 @@ class Control
         int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
         int NUMBER_OF_LEGS;   // Number of legs
-		int NUMBER_OF_JOINTS; // Number of joints
-		int NUMBER_OF_HEAD_JOINTS; // Number of joints
-		int NUMBER_OF_LEG_JOINTS; // Number of joints
+        int NUMBER_OF_JOINTS; // Number of joints
+        int NUMBER_OF_HEAD_JOINTS; // Number of joints
+        int NUMBER_OF_LEG_JOINTS; // Number of joints
         XmlRpc::XmlRpcValue JOINT_SUFFIX;
         XmlRpc::XmlRpcValue LEG_SEGMENT_NAMES;
         XmlRpc::XmlRpcValue HEAD_SEGMENT_NAMES;

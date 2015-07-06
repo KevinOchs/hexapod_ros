@@ -72,7 +72,7 @@
                 iyy="1.0" iyz="0.0"
                 izz="1.0" />
         </inertial>
-	</link>
+    </link>
 
     <joint name="camera_depth_joint" type="fixed">
         <parent link="body_link"/>
@@ -88,7 +88,7 @@
                 iyy="1.0" iyz="0.0"
                 izz="1.0" />
         </inertial>
-	</link>
+    </link>
     <!-- IMU properties -->
     <joint name="imu_joint" type="fixed">
         <parent link="base_link"/>
@@ -104,7 +104,7 @@
                 iyy="1.0" iyz="0.0"
                 izz="1.0" />
         </inertial>
-	</link>
+    </link>
 
 
     <!-- Joint properties -->
@@ -118,8 +118,8 @@
         <parent link="body_link"/>
         <child link="pan_link"/>
         <origin xyz="0.1 0.0 0.034" rpy="0.0 0.0 0.0"/>
-		<axis xyz="0.0 0.0 1.0"/>
-		<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}"/>
+        <axis xyz="0.0 0.0 1.0"/>
+        <limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}"/>
     </joint>
     <link name="pan_link">
         <inertial>
@@ -130,7 +130,7 @@
                 iyy="1.0" iyz="0.0"
                 izz="1.0" />
         </inertial>
-	</link>
+    </link>
 
     <!-- Leg macro -->
     <xacro:macro name="leg" params="side position x y angle axis">
@@ -142,15 +142,15 @@
             <child link="leg_center_${side}${position}"/>
         </joint>
         <link name="leg_center_${side}${position}">
-			<inertial>
-				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-				<mass value="0.00001"/>
-				<inertia
-					ixx="1.0" ixy="0.0"  ixz="0.0"
-					iyy="1.0" iyz="0.0"
-					izz="1.0" />
-			</inertial>
-		</link>
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <mass value="0.00001"/>
+                <inertia
+                    ixx="1.0" ixy="0.0"  ixz="0.0"
+                    iyy="1.0" iyz="0.0"
+                    izz="1.0" />
+            </inertial>
+        </link>
         <!-- coxa -->
         <joint name="coxa_joint_${side}${position}" type="revolute">
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${angle}"/>
@@ -355,16 +355,16 @@
             <child link="foot_${side}${position}" />
         </joint>
         <link name="foot_${side}${position}">
-	        <inertial>
-				<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
                 <mass value="0.00001"/>
                 <inertia
                     ixx="1.0" ixy="0.0"  ixz="0.0"
                     iyy="1.0" iyz="0.0"
                     izz="1.0" />
             </inertial>
-		</link>
-		<gazebo>
+        </link>
+        <gazebo>
             <plugin name="f3d_controller" filename="libgazebo_ros_f3d.so">
                 <alwaysOn>true</alwaysOn>
                 <updateRate>50</updateRate>
@@ -372,7 +372,7 @@
                 <topicName>${side}${position}_ground_feedback</topicName>
                 <frameName>foot_${side}${position}</frameName>
             </plugin>
-        </gazebo> 
+        </gazebo>
     </xacro:macro>
 
     <!-- Build robot model -->

@@ -40,8 +40,6 @@ Control::Control( void )
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
-    //ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
-    //ros::param::get( "NUMBER_OF_JOINTS", NUMBER_OF_JOINTS );
     ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
     ros::param::get( "LEG_SEGMENT_NAMES", LEG_SEGMENT_NAMES );
     ros::param::get( "HEAD_SEGMENT_NAMES", HEAD_SEGMENT_NAMES );
@@ -76,10 +74,10 @@ Control::Control( void )
     body_.orientation.yaw = 0.0;
     body_.orientation.roll = 0.0;
     head_.yaw = 0.0;
-	NUMBER_OF_LEGS = JOINT_SUFFIX.size();
-	NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
-	NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
-	NUMBER_OF_JOINTS = NUMBER_OF_LEG_JOINTS + NUMBER_OF_HEAD_JOINTS;
+    NUMBER_OF_LEGS = JOINT_SUFFIX.size();
+    NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
+    NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
+    NUMBER_OF_JOINTS = NUMBER_OF_LEG_JOINTS + NUMBER_OF_HEAD_JOINTS;
     joint_state_.name.resize( NUMBER_OF_JOINTS );
     joint_state_.position.resize( NUMBER_OF_JOINTS );
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
@@ -161,11 +159,11 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
         joint_state_.name[FIRST_TARSUS_ID + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[3] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
 
     }
-	for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
-	{
-		joint_state_.name[head_index + NUMBER_OF_LEG_JOINTS] = static_cast<std::string>( HEAD_SEGMENT_NAMES[head_index] );
-		joint_state_.position[head_index + NUMBER_OF_LEG_JOINTS] = head_.yaw;
-	}
+    for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
+    {
+        joint_state_.name[head_index + NUMBER_OF_LEG_JOINTS] = static_cast<std::string>( HEAD_SEGMENT_NAMES[head_index] );
+        joint_state_.position[head_index + NUMBER_OF_LEG_JOINTS] = head_.yaw;
+    }
     joint_state_pub_.publish( joint_state_ );
 }
 
