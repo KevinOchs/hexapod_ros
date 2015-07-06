@@ -84,7 +84,7 @@ ServoDriver::ServoDriver( void )
 // Convert angles to servo ticks each leg and head pan
 //==============================================================================
 
-void ServoDriver::convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head )
+void ServoDriver::convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
 {
     for( int leg_index = 0; leg_index <= 5; leg_index++ )
     {
@@ -138,7 +138,7 @@ void ServoDriver::makeSureServosAreOn( void )
 // Updates the positions of the servos and sends USB2AX broadcast packet
 //==============================================================================
 
-void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head )
+void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
 {
     convertAngles( legs, head );
 
@@ -233,4 +233,3 @@ void ServoDriver::freeServos( void )
     dxl_write_word( 254, MX_TORQUE_ENABLE, 0 );
     servos_free_ = true;
 }
-

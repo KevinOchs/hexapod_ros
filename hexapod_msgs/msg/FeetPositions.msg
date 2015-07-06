@@ -1,1 +1,1 @@
-hexapod_msgs/FootPosition[6] foot
+hexapod_msgs/Pose[6] foot

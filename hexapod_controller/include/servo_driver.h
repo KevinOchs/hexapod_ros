@@ -35,7 +35,7 @@
 #include <ros/ros.h>
 #include <dynamixel.h>
 #include <mx.h>
-#include <hexapod_msgs/HeadJoint.h>
+#include <hexapod_msgs/RPY.h>
 #include <hexapod_msgs/LegsJoints.h>
 
 //====================================================================
@@ -89,10 +89,10 @@ class ServoDriver
 {
     public:
         ServoDriver( void );
-        void transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
+        void transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
         void freeServos( void );
     private:
-        void convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::HeadJoint &head );
+        void convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
         void makeSureServosAreOn( void );
         std::vector<int> cur_pos_;
         std::vector<int> goal_pos_;
@@ -105,4 +105,3 @@ class ServoDriver
 };
 
 #endif
-

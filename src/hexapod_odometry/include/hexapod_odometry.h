@@ -32,7 +32,7 @@
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
-#include <hexapod_msgs/RootJoint.h>
+#include <hexapod_msgs/Pose.h>
 
 class HexapodOdometry
 {
