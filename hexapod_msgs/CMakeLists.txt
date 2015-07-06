@@ -17,7 +17,6 @@ add_message_files(
    LegJoints.msg
    LegsJoints.msg
    FeetPositions.msg
-   HeadJoint.msg
    Pose.msg
    RPY.msg
    State.msg
