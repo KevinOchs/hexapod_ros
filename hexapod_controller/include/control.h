@@ -36,6 +36,7 @@
 #include <std_srvs/Empty.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Pose2D.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/Pose.h>
@@ -63,7 +64,7 @@ class Control
         void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Twist cmd_vel_;
-        hexapod_msgs::Pose base_;
+        geometry_msgs::Pose2D base_;
         hexapod_msgs::Pose body_;
         hexapod_msgs::RPY head_;
         hexapod_msgs::LegsJoints legs_;
@@ -84,13 +85,15 @@ class Control
         double imu_pitch_init_;
         double FEMUR_LENGTH;
         double TIBIA_LENGTH;
-        double STEP_RANGE;
-        double STEP_SEGMENT;
         int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
         int NUMBER_OF_LEGS;   // Number of legs
+		int NUMBER_OF_JOINTS; // Number of joints
+		int NUMBER_OF_HEAD_JOINTS; // Number of joints
+		int NUMBER_OF_LEG_JOINTS; // Number of joints
         XmlRpc::XmlRpcValue JOINT_SUFFIX;
-        XmlRpc::XmlRpcValue JOINT_SEGMENT_NAMES;
+        XmlRpc::XmlRpcValue LEG_SEGMENT_NAMES;
+        XmlRpc::XmlRpcValue HEAD_SEGMENT_NAMES;
         hexapod_msgs::State imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state

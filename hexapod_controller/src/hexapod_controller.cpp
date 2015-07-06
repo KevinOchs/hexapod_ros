@@ -68,8 +68,9 @@ int main( int argc, char **argv )
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
                 // Commit new positions and broadcast over USB2AX as well as jointStates
-                servoDriver.transmitServoPositions( control.legs_, control.head_ );
                 control.publishJointStates( control.legs_, control.head_ );
+                servoDriver.transmitServoPositions( control.legs_, control.head_ );
+
             }
             control.setPrevHexActiveState( true );
             ROS_INFO("Hexapod standing up.");
@@ -85,8 +86,8 @@ int main( int argc, char **argv )
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
             // Commit new positions and broadcast over USB2AX as well as jointStates
-            servoDriver.transmitServoPositions( control.legs_, control.head_ );
             control.publishJointStates( control.legs_, control.head_ );
+            servoDriver.transmitServoPositions( control.legs_, control.head_ );
 
             // Set previous hex state of last loop so we know if we are shutting down on the next loop
             control.setPrevHexActiveState( true );
@@ -106,8 +107,8 @@ int main( int argc, char **argv )
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
                 // Commit new positions and broadcast over USB2AX as well as jointStates
-                servoDriver.transmitServoPositions( control.legs_, control.head_ );
                 control.publishJointStates( control.legs_, control.head_ );
+                servoDriver.transmitServoPositions( control.legs_, control.head_ );
             }
 
             // Release torque

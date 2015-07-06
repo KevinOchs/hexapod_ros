@@ -36,23 +36,21 @@ static const double PI = atan(1.0)*4.0;
 
 Control::Control( void )
 {
-    ros::param::get( "FEMUR_LENGTH", FEMUR_LENGTH );
-    ros::param::get( "TIBIA_LENGTH", TIBIA_LENGTH );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_COXA_ID", FIRST_COXA_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
     ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
-    ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
+    //ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
+    //ros::param::get( "NUMBER_OF_JOINTS", NUMBER_OF_JOINTS );
     ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
-    ros::param::get( "JOINT_SEGMENT_NAMES", JOINT_SEGMENT_NAMES );
+    ros::param::get( "LEG_SEGMENT_NAMES", LEG_SEGMENT_NAMES );
+    ros::param::get( "HEAD_SEGMENT_NAMES", HEAD_SEGMENT_NAMES );
     ros::param::get( "BODY_MAX_ROLL", BODY_MAX_ROLL );
     ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
     ros::param::get( "HEAD_MAX_PAN", HEAD_MAX_PAN );
     ros::param::get( "CYCLE_MAX_TRAVEL", CYCLE_MAX_TRAVEL );
     ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
-    STEP_RANGE = ( FEMUR_LENGTH + TIBIA_LENGTH ) * 0.90;
-    STEP_SEGMENT = STEP_RANGE / 4.0;
     prev_hex_state_ = false;
     hex_state_ = false;
     imu_init_stored_ = false;
@@ -68,9 +66,9 @@ Control::Control( void )
     cmd_vel_.angular.x = 0.0;
     cmd_vel_.angular.y = 0.0;
     cmd_vel_.angular.z = 0.0;
-    base_.position.y = 0.0;
-    base_.position.x = 0.0;
-    base_.orientation.yaw = 0.0;
+    base_.y = 0.0;
+    base_.x = 0.0;
+    base_.theta = 0.0;
     body_.position.y = 0.0;
     body_.position.z = 0.0;
     body_.position.x = 0.0;
@@ -78,6 +76,12 @@ Control::Control( void )
     body_.orientation.yaw = 0.0;
     body_.orientation.roll = 0.0;
     head_.yaw = 0.0;
+	NUMBER_OF_LEGS = JOINT_SUFFIX.size();
+	NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
+	NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
+	NUMBER_OF_JOINTS = NUMBER_OF_LEG_JOINTS + NUMBER_OF_HEAD_JOINTS;
+    joint_state_.name.resize( NUMBER_OF_JOINTS );
+    joint_state_.position.resize( NUMBER_OF_JOINTS );
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         feet_.foot[leg_index].position.x = 0.0;
@@ -127,11 +131,12 @@ bool Control::getPrevHexActiveState( void )
     return prev_hex_state_;
 }
 
+//==============================================================================
+// Joint State Publisher --- Sadly not dynamic yet
+//==============================================================================
 void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
 {
     joint_state_.header.stamp = ros::Time::now();
-    joint_state_.name.resize( 24 );
-    joint_state_.position.resize( 24 );
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         // Update Right Legs
@@ -150,15 +155,18 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
             joint_state_.position[FIRST_TIBIA_ID  + leg_index] =  legs.leg[leg_index].tibia;
             joint_state_.position[FIRST_TARSUS_ID + leg_index] = -legs.leg[leg_index].tarsus;
         }
-        joint_state_.name[FIRST_COXA_ID   + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[0] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state_.name[FIRST_FEMUR_ID  + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[1] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state_.name[FIRST_TIBIA_ID  + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[2] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state_.name[FIRST_TARSUS_ID + leg_index] = static_cast<std::string>( JOINT_SEGMENT_NAMES[3] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_COXA_ID   + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[0] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_FEMUR_ID  + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[1] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_TIBIA_ID  + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[2] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
+        joint_state_.name[FIRST_TARSUS_ID + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[3] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
 
     }
+	for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
+	{
+		joint_state_.name[head_index + NUMBER_OF_LEG_JOINTS] = static_cast<std::string>( HEAD_SEGMENT_NAMES[head_index] );
+		joint_state_.position[head_index + NUMBER_OF_LEG_JOINTS] = head_.yaw;
+	}
     joint_state_pub_.publish( joint_state_ );
-    joint_state_.name.clear();
-    joint_state_.position.clear();
 }
 
 //==============================================================================
@@ -185,9 +193,9 @@ void Control::baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scal
     double time_delta = current_time.toSec() - base_scalar_msg->header.stamp.toSec();
     if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
     {
-        base_.position.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.position.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.orientation.yaw = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
+        base_.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
+        base_.theta = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
     }
 }
 
@@ -240,9 +248,9 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             body_.orientation.pitch = 0.0;
             body_.orientation.yaw = 0.0;
             body_.orientation.roll = 0.0;
-            base_.position.y = 0.0;
-            base_.position.x = 0.0;
-            base_.orientation.yaw = 0.0;
+            base_.y = 0.0;
+            base_.x = 0.0;
+            base_.theta = 0.0;
             setHexActiveState( true );
             ROS_INFO("Hexapod locomotion is now active.");
             sounds_.stand = true;
@@ -261,9 +269,9 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
             body_.orientation.pitch = 0.0;
             body_.orientation.yaw = 0.0;
             body_.orientation.roll = 0.0;
-            base_.position.y = 0.0;
-            base_.position.x = 0.0;
-            base_.orientation.yaw = 0.0;
+            base_.y = 0.0;
+            base_.x = 0.0;
+            base_.theta = 0.0;
             setHexActiveState( false );
             ROS_WARN("Hexapod locomotion shutting down servos.");
             sounds_.shut_down = true;

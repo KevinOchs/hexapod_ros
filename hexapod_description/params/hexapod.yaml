@@ -61,6 +61,10 @@ OFFSET_ANGLE: !degrees 20
 LEG_SEGMENT_FIRST_IDS: {FIRST_COXA_ID: 0 , FIRST_FEMUR_ID: 6, FIRST_TIBIA_ID: 12, FIRST_TARSUS_ID: 18}
 
 # First servo ID of each leg segment
-JOINT_SEGMENT_NAMES: ['coxa_joint_' , 'femur_joint_', 'tibia_joint_', 'tarsus_joint_']
+LEG_SEGMENT_NAMES: ['coxa_joint_' , 'femur_joint_', 'tibia_joint_', 'tarsus_joint_']
 
+# First servo ID of each leg segment
+HEAD_SEGMENT_NAMES: ['pan_joint']
 
+# Number of physical joints on robot !!! THIS IS TEMP !!!
+NUMBER_OF_JOINTS: 25

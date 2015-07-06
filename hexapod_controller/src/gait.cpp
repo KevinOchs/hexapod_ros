@@ -45,16 +45,16 @@ Gait::Gait( void )
     is_travelling_ = false;
     in_cycle_ = false;
     extra_gait_cycle_ = 1;
-    smooth_base_.position.y = 0.0;
-    smooth_base_.position.x = 0.0;
-    smooth_base_.orientation.yaw = 0.0;
+    smooth_base_.y = 0.0;
+    smooth_base_.x = 0.0;
+    smooth_base_.theta = 0.0;
 }
 
 //=============================================================================
 // step calculation
 //=============================================================================
 
-void Gait::cyclePeriod( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositions *feet )
+void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet )
 {
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
     double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
@@ -64,18 +64,18 @@ void Gait::cyclePeriod( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositi
         // Lifts the leg and move it forward
         if( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
         {
-            feet->foot[leg_index].position.x = -base.position.x * period_distance;
-            feet->foot[leg_index].position.y = -base.position.y * period_distance;
+            feet->foot[leg_index].position.x = -base.x * period_distance;
+            feet->foot[leg_index].position.y = -base.y * period_distance;
             feet->foot[leg_index].position.z = LEG_LIFT_HEIGHT * period_height;
-            feet->foot[leg_index].orientation.yaw = -base.orientation.yaw * period_distance;
+            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance;
         }
         // Moves legs backward pushing the body forward
         if( cycle_leg_number_[leg_index] == 1 )
         {
-            feet->foot[leg_index].position.x = base.position.x * period_distance;
-            feet->foot[leg_index].position.y = base.position.y * period_distance;
+            feet->foot[leg_index].position.x = base.x * period_distance;
+            feet->foot[leg_index].position.y = base.y * period_distance;
             feet->foot[leg_index].position.z = 0.0;
-            feet->foot[leg_index].orientation.yaw = base.orientation.yaw * period_distance;
+            feet->foot[leg_index].orientation.yaw = base.theta * period_distance;
         }
     }
 }
@@ -84,16 +84,16 @@ void Gait::cyclePeriod( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositi
 // Gait Sequencing
 //=============================================================================
 
-void Gait::gaitCycle( const hexapod_msgs::Pose &base, hexapod_msgs::FeetPositions *feet )
+void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet )
 {
-    smooth_base_.position.x = base.position.x * 0.05 + ( smooth_base_.position.x * ( 1.0 - 0.05 ) );
-    smooth_base_.position.y = base.position.y * 0.05 + ( smooth_base_.position.y * ( 1.0 - 0.05 ) );
-    smooth_base_.orientation.yaw = base.orientation.yaw * 0.05 + ( smooth_base_.orientation.yaw * ( 1.0 - 0.05 ) );
+    smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
+    smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
+    smooth_base_.theta = base.theta * 0.05 + ( smooth_base_.theta * ( 1.0 - 0.05 ) );
 
     // Check to see if we are actually travelling
-    if( ( std::abs( smooth_base_.position.y ) > 1.0 ) || // 1 mm
-        ( std::abs( smooth_base_.position.x ) > 1.0 ) || // 1 mm
-        ( std::abs( smooth_base_.orientation.yaw ) > 0.00436332313 ) ) // 0.25 degree
+    if( ( std::abs( smooth_base_.y ) > 1.0 ) || // 1 mm
+        ( std::abs( smooth_base_.x ) > 1.0 ) || // 1 mm
+        ( std::abs( smooth_base_.theta ) > 0.00436332313 ) ) // 0.25 degree
     {
         is_travelling_ = true;
     }

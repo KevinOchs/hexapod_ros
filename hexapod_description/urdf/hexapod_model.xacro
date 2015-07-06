@@ -106,11 +106,31 @@
         </inertial>
 	</link>
 
+
     <!-- Joint properties -->
     <xacro:property name="joint_lower_limit" value="-${3.14}"/>
     <xacro:property name="joint_upper_limit" value="${3.14}"/>
     <xacro:property name="joint_effort" value="6.0"/>
     <xacro:property name="joint_velocity" value="0.524"/>
+
+    <!-- Head properties -->
+    <joint name="pan_joint" type="revolute">
+        <parent link="body_link"/>
+        <child link="pan_link"/>
+        <origin xyz="0.1 0.0 0.034" rpy="0.0 0.0 0.0"/>
+		<axis xyz="0.0 0.0 1.0"/>
+		<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}"/>
+    </joint>
+    <link name="pan_link">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <mass value="0.00001"/>
+            <inertia
+                ixx="1.0" ixy="0.0"  ixz="0.0"
+                iyy="1.0" iyz="0.0"
+                izz="1.0" />
+        </inertial>
+	</link>
 
     <!-- Leg macro -->
     <xacro:macro name="leg" params="side position x y angle axis">
