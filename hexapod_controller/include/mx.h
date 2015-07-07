@@ -31,8 +31,6 @@
 #ifndef _MX_H_
 #define _MX_H_
 
-#define MX_CENTER_VALUE  2048
-
 #define MX_MODEL_NUMBER_L          0
 #define MX_MODEL_NUMBER_H          1
 #define MX_VERSION                 2

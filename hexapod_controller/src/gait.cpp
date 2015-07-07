@@ -27,6 +27,7 @@
 
 // Author: Kevin M. Ochs
 
+
 #include <gait.h>
 
 const static double PI = atan(1.0)*4.0;

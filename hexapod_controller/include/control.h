@@ -61,7 +61,7 @@ class Control
         bool getHexActiveState( void );
         void setPrevHexActiveState( bool state );
         bool getPrevHexActiveState( void );
-        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
+        void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Twist cmd_vel_;
         geometry_msgs::Pose2D base_;
@@ -85,7 +85,7 @@ class Control
         double imu_pitch_init_;
         double FEMUR_LENGTH;
         double TIBIA_LENGTH;
-        int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
+        int FIRST_COXA_INDEX, FIRST_FEMUR_INDEX, FIRST_TIBIA_INDEX, FIRST_TARSUS_INDEX;
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
         int NUMBER_OF_LEGS;   // Number of legs
         int NUMBER_OF_JOINTS; // Number of joints

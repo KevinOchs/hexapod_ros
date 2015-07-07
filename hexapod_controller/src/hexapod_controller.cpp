@@ -51,6 +51,10 @@ int main( int argc, char **argv )
 
     // Establish initial leg positions for default pose in robot publisher
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
+    control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+
+    // Size and fill containers used in servo class using joint_state message
+    servoDriver.prepareServoSettings( control.joint_state_ );
 
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
@@ -68,8 +72,8 @@ int main( int argc, char **argv )
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
                 // Commit new positions and broadcast over USB2AX as well as jointStates
-                control.publishJointStates( control.legs_, control.head_ );
-                servoDriver.transmitServoPositions( control.legs_, control.head_ );
+                control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+                servoDriver.transmitServoPositions( control.joint_state_ );
 
             }
             control.setPrevHexActiveState( true );
@@ -86,8 +90,8 @@ int main( int argc, char **argv )
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
             // Commit new positions and broadcast over USB2AX as well as jointStates
-            control.publishJointStates( control.legs_, control.head_ );
-            servoDriver.transmitServoPositions( control.legs_, control.head_ );
+            control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+            servoDriver.transmitServoPositions( control.joint_state_ );
 
             // Set previous hex state of last loop so we know if we are shutting down on the next loop
             control.setPrevHexActiveState( true );
@@ -107,8 +111,8 @@ int main( int argc, char **argv )
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
                 // Commit new positions and broadcast over USB2AX as well as jointStates
-                control.publishJointStates( control.legs_, control.head_ );
-                servoDriver.transmitServoPositions( control.legs_, control.head_ );
+                control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+                servoDriver.transmitServoPositions( control.joint_state_ );
             }
 
             // Release torque
@@ -123,7 +127,7 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
-            control.publishJointStates( control.legs_, control.head_ );
+            control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
         }
         loop_rate.sleep();
     }

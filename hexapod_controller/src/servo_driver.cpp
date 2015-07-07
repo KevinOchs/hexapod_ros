@@ -27,22 +27,8 @@
 
 // Author: Kevin M. Ochs
 
+
 #include <servo_driver.h>
-static const double PI = atan(1.0)*4.0;
-static const double RAD_TO_MX_RESOLUTION = ( MX_CENTER_VALUE*2 ) / ( PI*2 );
-
-//=============================================================================
-// Servo ID array ( Does not change )
-//=============================================================================
-
-static const int servo_id[SERVO_COUNT] =
-{
-    RR_COXA_ID,   RM_COXA_ID,   RF_COXA_ID,   LR_COXA_ID,   LM_COXA_ID,   LF_COXA_ID,
-    RR_FEMUR_ID,  RM_FEMUR_ID,  RF_FEMUR_ID,  LR_FEMUR_ID,  LM_FEMUR_ID,  LF_FEMUR_ID,
-    RR_TIBIA_ID,  RM_TIBIA_ID,  RF_TIBIA_ID,  LR_TIBIA_ID,  LM_TIBIA_ID,  LF_TIBIA_ID,
-    RR_TARSUS_ID, RM_TARSUS_ID, RF_TARSUS_ID, LR_TARSUS_ID, LM_TARSUS_ID, LF_TARSUS_ID,
-    HEAD_PAN_ID
-};
 
 //==============================================================================
 //  Constructor: Open USB2AX and get parameters
@@ -51,18 +37,6 @@ static const int servo_id[SERVO_COUNT] =
 
 ServoDriver::ServoDriver( void )
 {
-    // Size and fill vector containers with default value
-    cur_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
-    goal_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
-    write_pos_.assign( SERVO_COUNT, MX_CENTER_VALUE );
-    pose_steps_.assign( SERVO_COUNT, 1 );
-
-    ros::param::get( "OFFSET_ANGLE", OFFSET_ANGLE );
-    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_COXA_ID", FIRST_COXA_ID );
-    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_FEMUR_ID", FIRST_FEMUR_ID );
-    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TIBIA_ID", FIRST_TIBIA_ID );
-    ros::param::get( "LEG_SEGMENT_FIRST_IDS/FIRST_TARSUS_ID", FIRST_TARSUS_ID );
-
     // Initialize the USB2AX
     int baudnum = 1;
     int deviceIndex = 0;
@@ -80,39 +54,50 @@ ServoDriver::ServoDriver( void )
     servos_free_ = true;
 }
 
+void ServoDriver::prepareServoSettings( const sensor_msgs::JointState &joint_state )
+{
+    SERVO_COUNT = joint_state.name.size();
+    OFFSET.resize( SERVO_COUNT );
+    ID.resize( SERVO_COUNT );
+    TICKS.resize( SERVO_COUNT );
+    MAX_RADIANS.resize( SERVO_COUNT );
+    RAD_TO_SERVO_RESOLUTION.resize( SERVO_COUNT );
+    cur_pos_.resize( SERVO_COUNT );
+    goal_pos_.resize( SERVO_COUNT );
+    write_pos_.resize( SERVO_COUNT );
+    pose_steps_.resize( SERVO_COUNT );
+    for( int i = 0; i < SERVO_COUNT; i++ )
+    {
+        ros::param::get( "SERVOS/" + joint_state.name[i] + "/offset", OFFSET[i] );
+        ros::param::get( "SERVOS/" + joint_state.name[i] + "/id", ID[i] );
+        ros::param::get( "SERVOS/" + joint_state.name[i] + "/ticks", TICKS[i] );
+        ros::param::get( "SERVOS/" + joint_state.name[i] + "/max_radians", MAX_RADIANS[i] );
+        RAD_TO_SERVO_RESOLUTION[i] = TICKS[i] / MAX_RADIANS[i];
+        // Size and fill vector containers with default value
+        cur_pos_[i] = TICKS[i] / 2;
+        goal_pos_[i] = TICKS[i] / 2;
+        write_pos_[i] = TICKS[i] / 2;
+        pose_steps_[i] = 1;
+    }
+}
+
 //==============================================================================
 // Convert angles to servo ticks each leg and head pan
 //==============================================================================
 
-void ServoDriver::convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
+void ServoDriver::convertAngles( const sensor_msgs::JointState &joint_state )
 {
-    for( int leg_index = 0; leg_index <= 5; leg_index++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
-        // Update Right Legs
-        if( leg_index <= 2 )
-        {
-            goal_pos_[FIRST_COXA_ID   + leg_index] = MX_CENTER_VALUE + round( -legs.leg[leg_index].coxa * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_FEMUR_ID  + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].femur - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_TIBIA_ID  + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_TARSUS_ID + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * RAD_TO_MX_RESOLUTION );
-        }
-        else
-        // Update Left Legs
-        {
-            goal_pos_[FIRST_COXA_ID   + leg_index] = MX_CENTER_VALUE + round(  legs.leg[leg_index].coxa * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_FEMUR_ID  + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].femur - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_TIBIA_ID  + leg_index] = MX_CENTER_VALUE + round(  ( legs.leg[leg_index].tibia - OFFSET_ANGLE ) * RAD_TO_MX_RESOLUTION );
-            goal_pos_[FIRST_TARSUS_ID + leg_index] = MX_CENTER_VALUE + round( -( legs.leg[leg_index].tarsus - OFFSET_ANGLE*2 ) * RAD_TO_MX_RESOLUTION );
-        }
+        goal_pos_[i] = ( TICKS[i] / 2 ) + round( ( joint_state.position[i] - OFFSET[i] ) * RAD_TO_SERVO_RESOLUTION[i] );
     }
-    goal_pos_[24] = MX_CENTER_VALUE + round( head.yaw * RAD_TO_MX_RESOLUTION );
 }
 
 //==============================================================================
 // Turn torque on and read current positions
 //==============================================================================
 
-void ServoDriver::makeSureServosAreOn( void )
+void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_state )
 {
     if( !servos_free_ )
     {
@@ -129,7 +114,7 @@ void ServoDriver::makeSureServosAreOn( void )
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
         for( int i = 0; i < SERVO_COUNT; i++ )
         {
-            cur_pos_[i] = dxl_read_word( servo_id[i], MX_PRESENT_POSITION_L );
+            cur_pos_[i] = dxl_read_word( ID[i], MX_PRESENT_POSITION_L );
         }
     }
 }
@@ -138,11 +123,11 @@ void ServoDriver::makeSureServosAreOn( void )
 // Updates the positions of the servos and sends USB2AX broadcast packet
 //==============================================================================
 
-void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head )
+void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_state )
 {
-    convertAngles( legs, head );
+    convertAngles( joint_state );
 
-    makeSureServosAreOn();
+    makeSureServosAreOn( joint_state );
 
     int interpolating = 0;
     int complete[SERVO_COUNT];
@@ -207,7 +192,7 @@ void ServoDriver::transmitServoPositions( const hexapod_msgs::LegsJoints &legs, 
                     }
                 }
                 // Complete sync_write packet for broadcast
-                dxl_set_txpacket_parameter( 2 + 3 * i, servo_id[i] );
+                dxl_set_txpacket_parameter( 2 + 3 * i, ID[i] );
                 dxl_set_txpacket_parameter( 2 + 3 * i + 1, dxl_get_lowbyte( write_pos_[i] ) );
                 dxl_set_txpacket_parameter( 2 + 3 * i + 2, dxl_get_highbyte( write_pos_[i] ) );
             }

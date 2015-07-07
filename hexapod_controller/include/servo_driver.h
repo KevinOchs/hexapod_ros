@@ -35,51 +35,7 @@
 #include <ros/ros.h>
 #include <dynamixel.h>
 #include <mx.h>
-#include <hexapod_msgs/RPY.h>
-#include <hexapod_msgs/LegsJoints.h>
-
-//====================================================================
-// Number servos in system
-//====================================================================
-
-#define SERVO_COUNT 25
-
-//====================================================================
-// Define Servo ID's that go with each joint
-//====================================================================
-
-#define RR_COXA_ID   1  // Rear Right leg Coxa
-#define RR_FEMUR_ID  2  // Rear Right leg Femur
-#define RR_TIBIA_ID  3  // Rear Right leg Tibia
-#define RR_TARSUS_ID 4  // Rear Right leg Tarsus
-
-#define RM_COXA_ID   5  // Middle Right leg Coxa
-#define RM_FEMUR_ID  6  // Middle Right leg Femur
-#define RM_TIBIA_ID  7  // Middle Right leg Tibia
-#define RM_TARSUS_ID 8  // Middle Right leg Tarsus
-
-#define RF_COXA_ID   9  // Front Right leg Coxa
-#define RF_FEMUR_ID  10 // Front Right leg Femur
-#define RF_TIBIA_ID  11 // Front Right leg Tibia
-#define RF_TARSUS_ID 12 // Front Right leg Tarsus
-
-#define LR_COXA_ID   13 // Rear Left leg Coxa
-#define LR_FEMUR_ID  14 // Rear Left leg Femur
-#define LR_TIBIA_ID  15 // Rear Left leg Tibia
-#define LR_TARSUS_ID 16 // Rear Left leg Tarsus
-
-#define LM_COXA_ID   17 // Middle Left leg Coxa
-#define LM_FEMUR_ID  18 // Middle Left leg Femur
-#define LM_TIBIA_ID  19 // Middle Left leg Tibia
-#define LM_TARSUS_ID 20 // Middle Left leg Tarsus
-
-#define LF_COXA_ID   21 // Front Left leg Coxa
-#define LF_FEMUR_ID  22 // Front Left leg Femur
-#define LF_TIBIA_ID  23 // Front Left leg Tibia
-#define LF_TARSUS_ID 24 // Front Left leg Tarsus
-
-#define HEAD_PAN_ID  25 // Head Pan
-
+#include <sensor_msgs/JointState.h>
 
 //==============================================================================
 // Define the class(s) for Servo Drivers.
@@ -89,19 +45,25 @@ class ServoDriver
 {
     public:
         ServoDriver( void );
-        void transmitServoPositions( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
+        void transmitServoPositions( const sensor_msgs::JointState &joint_state );
+        void prepareServoSettings( const sensor_msgs::JointState &joint_state );
         void freeServos( void );
     private:
-        void convertAngles( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head );
-        void makeSureServosAreOn( void );
+        void convertAngles( const sensor_msgs::JointState &joint_state );
+        void makeSureServosAreOn( const sensor_msgs::JointState &joint_state );
         std::vector<int> cur_pos_;
         std::vector<int> goal_pos_;
         std::vector<int> pose_steps_;
         std::vector<int> write_pos_;
+        std::vector<double> OFFSET;
+        std::vector<int> ID;
+        std::vector<int> TICKS;
+        std::vector<double> RAD_TO_SERVO_RESOLUTION;
+        std::vector<double> MAX_RADIANS;
         bool servos_free_;
         double OFFSET_ANGLE;
-        int FIRST_COXA_ID, FIRST_FEMUR_ID, FIRST_TIBIA_ID, FIRST_TARSUS_ID;
-        int NUMBER_OF_LEGS;       // Number of legs
+        int FIRST_COXA_INDEX, FIRST_FEMUR_INDEX, FIRST_TIBIA_INDEX, FIRST_TARSUS_INDEX;
+        int SERVO_COUNT;
 };
 
 #endif
