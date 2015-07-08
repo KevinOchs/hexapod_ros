@@ -2,8 +2,10 @@
 <!-- Full bringup local launch file ( for example if you remote logged into the robot ) -->
 
 <launch>
-    <include file="$(find hexapod_bringup)/launch/hexapod_full.launch" />
+    <arg name="config" default="hexapod"/>
+    <include file="$(find hexapod_bringup)/launch/hexapod_full.launch">
+      <arg name="config" value="$(arg config)"/>
+    </include>
 <!--    <include file="$(find hexapod_bringup)/launch/visualize_rtabmap.launch" /> -->
     <include file="$(find hexapod_bringup)/launch/rviz.launch" />
 </launch>
-
