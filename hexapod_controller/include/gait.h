@@ -34,7 +34,6 @@
 #include <cmath> // std::abs
 #include <algorithm>
 #include <ros/ros.h>
-#include <hexapod_msgs/Pose.h>
 #include <hexapod_msgs/FeetPositions.h>
 #include <geometry_msgs/Pose2D.h>
 

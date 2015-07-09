@@ -60,17 +60,17 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     cmd_vel_.angular.x = 0.0;
     cmd_vel_.angular.y = 0.0;
     cmd_vel_.angular.z = 0.0;
-    state_.active = false;
-    imu_override_.active = false;
+    state_.data = false;
+    imu_override_.data = false;
     ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
     ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("base_scalar", 100);
     body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("body_scalar", 100);
     head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("head_scalar", 100);
-    state_pub_ = nh_.advertise<hexapod_msgs::State>("state", 100);
+    state_pub_ = nh_.advertise<std_msgs::Bool>("state", 100);
     cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
-    imu_override_pub_ = nh_.advertise<hexapod_msgs::State>("imu_override", 100);
+    imu_override_pub_ = nh_.advertise<std_msgs::Bool>("imu_override", 100);
 }
 
 //==============================================================================
@@ -82,24 +82,24 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     ros::Time current_time = ros::Time::now();
     if ( joy->buttons[3] == 1 )
     {
-        if ( state_.active == false)
+        if ( state_.data == false)
         {
-            state_.active = true;
+            state_.data = true;
         }
     }
 
     if ( joy->buttons[0] == 1 )
     {
-        if ( state_.active == true)
+        if ( state_.data == true)
         {
-            state_.active = false;
+            state_.data = false;
         }
     }
 
     // Body shift L1 Button for testing
     if ( joy->buttons[8] == 1 )
     {
-        imu_override_.active = true;
+        imu_override_.data = true;
         body_scalar_.header.stamp = current_time;
         body_scalar_.accel.angular.x = -joy->axes[0];
         body_scalar_.accel.angular.y = -joy->axes[1];
@@ -108,7 +108,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     }
     else
     {
-        imu_override_.active = false;
+        imu_override_.data = false;
     }
 
     // Travelling

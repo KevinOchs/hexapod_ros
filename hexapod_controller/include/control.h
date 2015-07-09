@@ -34,19 +34,18 @@
 #include <math.h>
 #include <ros/ros.h>
 #include <std_srvs/Empty.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/AccelStamped.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/Pose.h>
 #include <hexapod_msgs/RPY.h>
-#include <hexapod_msgs/LegJoints.h>
 #include <hexapod_msgs/LegsJoints.h>
 #include <hexapod_msgs/FeetPositions.h>
-#include <hexapod_msgs/State.h>
 #include <hexapod_msgs/Sounds.h>
-#include <geometry_msgs/AccelStamped.h>
 
 //==============================================================================
 // Define class Control: This is the main structure of data that manipulates
@@ -69,7 +68,7 @@ class Control
         hexapod_msgs::RPY head_;
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
-        hexapod_msgs::State state_;
+        std_msgs::Bool state_;
         hexapod_msgs::Sounds sounds_;
         double STANDING_BODY_HEIGHT;
         ros::Publisher sounds_pub_;
@@ -94,7 +93,7 @@ class Control
         XmlRpc::XmlRpcValue JOINT_SUFFIX;
         XmlRpc::XmlRpcValue LEG_SEGMENT_NAMES;
         XmlRpc::XmlRpcValue HEAD_SEGMENT_NAMES;
-        hexapod_msgs::State imu_override_;
+        std_msgs::Bool imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
@@ -107,9 +106,9 @@ class Control
         ros::Subscriber head_scalar_sub_;
         void headCallback( const geometry_msgs::AccelStampedConstPtr &head_scalar_msg );
         ros::Subscriber state_sub_;
-        void stateCallback( const hexapod_msgs::StateConstPtr &state_msg );
+        void stateCallback( const std_msgs::BoolConstPtr &state_msg );
         ros::Subscriber imu_override_sub_;
-        void imuOverrideCallback( const hexapod_msgs::StateConstPtr &imuOverride_msg );
+        void imuOverrideCallback( const std_msgs::BoolConstPtr &imuOverride_msg );
         ros::Subscriber imu_sub_;
         void imuCallback( const sensor_msgs::ImuConstPtr &imu_msg );
         ros::NodeHandle nh_;

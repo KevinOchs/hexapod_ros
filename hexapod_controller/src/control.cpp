@@ -51,7 +51,7 @@ Control::Control( void )
     prev_hex_state_ = false;
     hex_state_ = false;
     imu_init_stored_ = false;
-    imu_override_.active = false;
+    imu_override_.data = false;
     imu_roll_lowpass_ = 0.0;
     imu_pitch_lowpass_ = 0.0;
     imu_yaw_lowpass_ = 0.0;
@@ -94,8 +94,8 @@ Control::Control( void )
     base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 50, &Control::baseCallback, this );
     body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 50, &Control::bodyCallback, this );
     head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "head_scalar", 50, &Control::headCallback, this );
-    state_sub_ = nh_.subscribe<hexapod_msgs::State>( "state", 5, &Control::stateCallback, this );
-    imu_override_sub_ = nh_.subscribe<hexapod_msgs::State>( "imu_override", 1, &Control::imuOverrideCallback, this );
+    state_sub_ = nh_.subscribe<std_msgs::Bool>( "state", 5, &Control::stateCallback, this );
+    imu_override_sub_ = nh_.subscribe<std_msgs::Bool>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
@@ -206,7 +206,7 @@ void Control::bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scal
     double time_delta = current_time.toSec() - body_scalar_msg->header.stamp.toSec();
     if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
     {
-        if( imu_override_.active == true )
+        if( imu_override_.data == true )
         {
             body_.orientation.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.orientation.roll * ( 1.0 - 0.01 ) );
             body_.orientation.pitch  = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.orientation.pitch * ( 1.0 - 0.01 ) );
@@ -232,9 +232,9 @@ void Control::headCallback( const geometry_msgs::AccelStampedConstPtr &head_scal
 // Active state callback - currently simple on/off - stand/sit
 //==============================================================================
 
-void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
+void Control::stateCallback( const std_msgs::BoolConstPtr &state_msg )
 {
-    if(state_msg->active == true )
+    if(state_msg->data == true )
     {
         if( getHexActiveState() == false )
         {
@@ -256,7 +256,7 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
         }
     }
 
-    if( state_msg->active == false )
+    if( state_msg->data == false )
     {
         if( getHexActiveState() == true )
         {
@@ -282,9 +282,9 @@ void Control::stateCallback( const hexapod_msgs::StateConstPtr &state_msg )
 // IMU override callback
 //==============================================================================
 
-void Control::imuOverrideCallback( const hexapod_msgs::StateConstPtr &imu_override_msg )
+void Control::imuOverrideCallback( const std_msgs::BoolConstPtr &imu_override_msg )
 {
-    imu_override_.active = imu_override_msg->active;
+    imu_override_.data = imu_override_msg->data;
 }
 
 //==============================================================================
@@ -293,7 +293,7 @@ void Control::imuOverrideCallback( const hexapod_msgs::StateConstPtr &imu_overri
 
 void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 {
-    if( imu_override_.active == false )
+    if( imu_override_.data == false )
     {
         const geometry_msgs::Vector3 &lin_acc = imu_msg->linear_acceleration;
 

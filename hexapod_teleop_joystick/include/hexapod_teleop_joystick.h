@@ -30,16 +30,16 @@
 
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
+#include <std_msgs/Bool.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/AccelStamped.h>
-#include <hexapod_msgs/State.h>
 
 class HexapodTeleopJoystick
 {
     public:
         HexapodTeleopJoystick( void );
-        hexapod_msgs::State state_;
-        hexapod_msgs::State imu_override_;
+        std_msgs::Bool state_;
+        std_msgs::Bool imu_override_;
         geometry_msgs::Twist cmd_vel_;
         geometry_msgs::AccelStamped base_scalar_;
         geometry_msgs::AccelStamped body_scalar_;

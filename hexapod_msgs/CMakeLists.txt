@@ -19,7 +19,6 @@ add_message_files(
    FeetPositions.msg
    Pose.msg
    RPY.msg
-   State.msg
    Sounds.msg
 )
 
