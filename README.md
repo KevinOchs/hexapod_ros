@@ -11,6 +11,8 @@ Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity 
 
 * Author: Kevin M. Ochs
 * Contributor: Renée Love
+* Contributor: Konstantinos Chatzilygeroudis
+* Contributor: Kurt Eckhardt
 
 ## 2. Expected Hardware
 
