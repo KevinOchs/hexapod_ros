@@ -39,8 +39,12 @@ class HexapodSound
         sound_play::SoundRequest sound_req_;
         hexapod_msgs::Sounds sounds_;
         ros::Publisher sound_pub_;
+
+        void playSoundFile(std::string sound_file, int delay_time);        
+        
     private:
         ros::NodeHandle nh_;
+        std::string sound_package_path_;
         void soundsCallback( const hexapod_msgs::SoundsConstPtr &sounds_msg );
         ros::Subscriber sounds_sub_;
 };
