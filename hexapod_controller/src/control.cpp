@@ -35,10 +35,6 @@ static const double PI = atan(1.0)*4.0;
 
 Control::Control( void )
 {
-    ros::param::get( "LEG_SEGMENT_FIRST_INDEX/FIRST_COXA_INDEX", FIRST_COXA_INDEX );
-    ros::param::get( "LEG_SEGMENT_FIRST_INDEX/FIRST_FEMUR_INDEX", FIRST_FEMUR_INDEX );
-    ros::param::get( "LEG_SEGMENT_FIRST_INDEX/FIRST_TIBIA_INDEX", FIRST_TIBIA_INDEX );
-    ros::param::get( "LEG_SEGMENT_FIRST_INDEX/FIRST_TARSUS_INDEX", FIRST_TARSUS_INDEX );
     ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
     ros::param::get( "LEG_SEGMENT_NAMES", LEG_SEGMENT_NAMES );
     ros::param::get( "HEAD_SEGMENT_NAMES", HEAD_SEGMENT_NAMES );
@@ -48,6 +44,18 @@ Control::Control( void )
     ros::param::get( "CYCLE_MAX_TRAVEL", CYCLE_MAX_TRAVEL );
     ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
+    ros::param::get( "SERVOS", SERVOS );
+    for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
+    {
+        servo_map_key_.push_back(it->first);
+    }
+    servo_names_.resize(servo_map_key_.size());
+    servo_orientation_.resize(servo_map_key_.size());
+    for( int i = 0; i < servo_map_key_.size(); i++ )
+    {
+        ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/name"), servo_names_[i] );
+        ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign"), servo_orientation_[i] );
+    }
     prev_hex_state_ = false;
     hex_state_ = false;
     imu_init_stored_ = false;
@@ -76,7 +84,7 @@ Control::Control( void )
     NUMBER_OF_LEGS = JOINT_SUFFIX.size();
     NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
     NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
-    NUMBER_OF_JOINTS = NUMBER_OF_LEG_JOINTS + NUMBER_OF_HEAD_JOINTS;
+    NUMBER_OF_JOINTS = servo_map_key_.size();
     joint_state_.name.resize( NUMBER_OF_JOINTS );
     joint_state_.position.resize( NUMBER_OF_JOINTS );
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
@@ -90,15 +98,15 @@ Control::Control( void )
         legs_.leg[leg_index].tibia = 0.0;
         legs_.leg[leg_index].tarsus = 0.0;
     }
-    cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 50, &Control::cmd_velCallback, this );
-    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 50, &Control::baseCallback, this );
-    body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 50, &Control::bodyCallback, this );
-    head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "head_scalar", 50, &Control::headCallback, this );
-    state_sub_ = nh_.subscribe<std_msgs::Bool>( "state", 5, &Control::stateCallback, this );
+    cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 1, &Control::cmd_velCallback, this );
+    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 1, &Control::baseCallback, this );
+    body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 1, &Control::bodyCallback, this );
+    head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "head_scalar", 1, &Control::headCallback, this );
+    state_sub_ = nh_.subscribe<std_msgs::Bool>( "state", 1, &Control::stateCallback, this );
     imu_override_sub_ = nh_.subscribe<std_msgs::Bool>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
-    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 50 );
+    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 1 );
     // Ping the imu to re-calibrate
     imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
     imu_calibrate_.call( calibrate_ );
@@ -134,34 +142,28 @@ bool Control::getPrevHexActiveState( void )
 void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state )
 {
     joint_state->header.stamp = ros::Time::now();
+    int i = 0;
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
-        // Update Right Legs
-        if( leg_index <= 2 )
-        {
-            joint_state->position[FIRST_COXA_INDEX   + leg_index] = -legs.leg[leg_index].coxa;
-            joint_state->position[FIRST_FEMUR_INDEX  + leg_index] =  legs.leg[leg_index].femur;
-            joint_state->position[FIRST_TIBIA_INDEX  + leg_index] = -legs.leg[leg_index].tibia;
-            joint_state->position[FIRST_TARSUS_INDEX + leg_index] =  legs.leg[leg_index].tarsus;
-        }
-        else
-        // Update Left Legs
-        {
-            joint_state->position[FIRST_COXA_INDEX   + leg_index] =  legs.leg[leg_index].coxa;
-            joint_state->position[FIRST_FEMUR_INDEX  + leg_index] = -legs.leg[leg_index].femur;
-            joint_state->position[FIRST_TIBIA_INDEX  + leg_index] =  legs.leg[leg_index].tibia;
-            joint_state->position[FIRST_TARSUS_INDEX + leg_index] = -legs.leg[leg_index].tarsus;
-        }
-        joint_state->name[FIRST_COXA_INDEX   + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[0] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state->name[FIRST_FEMUR_INDEX  + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[1] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state->name[FIRST_TIBIA_INDEX  + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[2] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-        joint_state->name[FIRST_TARSUS_INDEX + leg_index] = static_cast<std::string>( LEG_SEGMENT_NAMES[3] ) + static_cast<std::string>( JOINT_SUFFIX[leg_index] );
-
+        joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
+        joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].coxa;
+        i++;
+        joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
+        joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].femur;
+        i++;
+        joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
+        joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].tibia;
+        i++;
+        joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
+        joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].tarsus;
+        i++;
     }
+
     for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
     {
-        joint_state->name[head_index + NUMBER_OF_LEG_JOINTS] = static_cast<std::string>( HEAD_SEGMENT_NAMES[head_index] );
-        joint_state->position[head_index + NUMBER_OF_LEG_JOINTS] = head_.yaw;
+        joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
+        joint_state->position[i] = head_.yaw;
+        i++;
     }
     joint_state_pub_.publish( *joint_state );
 }

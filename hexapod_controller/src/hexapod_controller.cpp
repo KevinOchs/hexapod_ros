@@ -53,12 +53,9 @@ int main( int argc, char **argv )
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
 
-    // Size and fill containers used in servo class using joint_state message
-    servoDriver.prepareServoSettings( control.joint_state_ );
-
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
-    ros::Rate loop_rate( 1000 );  // 1000 hz
+    ros::Rate loop_rate( 500 );  // 500 hz
     while( ros::ok() )
     {
         // Start button on controller has been pressed stand up

@@ -75,6 +75,8 @@ class Control
         ros::Publisher joint_state_pub_;
         ros::ServiceClient imu_calibrate_;
         std_srvs::Empty calibrate_;
+        std::string temp;
+
     private:
         bool imu_init_stored_;
         double imu_roll_lowpass_;
@@ -84,7 +86,6 @@ class Control
         double imu_pitch_init_;
         double FEMUR_LENGTH;
         double TIBIA_LENGTH;
-        int FIRST_COXA_INDEX, FIRST_FEMUR_INDEX, FIRST_TIBIA_INDEX, FIRST_TARSUS_INDEX;
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
         int NUMBER_OF_LEGS;   // Number of legs
         int NUMBER_OF_JOINTS; // Number of joints
@@ -93,6 +94,11 @@ class Control
         XmlRpc::XmlRpcValue JOINT_SUFFIX;
         XmlRpc::XmlRpcValue LEG_SEGMENT_NAMES;
         XmlRpc::XmlRpcValue HEAD_SEGMENT_NAMES;
+        XmlRpc::XmlRpcValue SERVOS;
+        std::vector<std::string> servo_map_key_;
+        std::vector<std::string> servo_names_;
+        std::vector<int> servo_orientation_;
+        //std::vector<int> servo_index_;
         std_msgs::Bool imu_override_;
         sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state

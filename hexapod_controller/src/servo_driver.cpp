@@ -52,26 +52,30 @@ ServoDriver::ServoDriver( void )
 
     // Stating servos do not have torque applied
     servos_free_ = true;
-}
+    ros::param::get( "SERVOS", SERVOS );
+    for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
+    {
+        servo_map_key_.push_back(it->first);
+    }
 
-void ServoDriver::prepareServoSettings( const sensor_msgs::JointState &joint_state )
-{
-    SERVO_COUNT = joint_state.name.size();
+    SERVO_COUNT = servo_map_key_.size();
     OFFSET.resize( SERVO_COUNT );
     ID.resize( SERVO_COUNT );
     TICKS.resize( SERVO_COUNT );
     MAX_RADIANS.resize( SERVO_COUNT );
     RAD_TO_SERVO_RESOLUTION.resize( SERVO_COUNT );
+    servo_orientation_.resize( SERVO_COUNT );
     cur_pos_.resize( SERVO_COUNT );
     goal_pos_.resize( SERVO_COUNT );
     write_pos_.resize( SERVO_COUNT );
     pose_steps_.resize( SERVO_COUNT );
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
-        ros::param::get( "SERVOS/" + joint_state.name[i] + "/offset", OFFSET[i] );
-        ros::param::get( "SERVOS/" + joint_state.name[i] + "/id", ID[i] );
-        ros::param::get( "SERVOS/" + joint_state.name[i] + "/ticks", TICKS[i] );
-        ros::param::get( "SERVOS/" + joint_state.name[i] + "/max_radians", MAX_RADIANS[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/offset", OFFSET[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/id", ID[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/ticks", TICKS[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/max_radians", MAX_RADIANS[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign", servo_orientation_[i] );
         RAD_TO_SERVO_RESOLUTION[i] = TICKS[i] / MAX_RADIANS[i];
         // Size and fill vector containers with default value
         cur_pos_[i] = TICKS[i] / 2;
@@ -89,7 +93,7 @@ void ServoDriver::convertAngles( const sensor_msgs::JointState &joint_state )
 {
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
-        goal_pos_[i] = ( TICKS[i] / 2 ) + round( ( joint_state.position[i] - OFFSET[i] ) * RAD_TO_SERVO_RESOLUTION[i] );
+        goal_pos_[i] = ( TICKS[i] / 2 ) + round( ( joint_state.position[i] - ( servo_orientation_[i] * OFFSET[i] ) ) * RAD_TO_SERVO_RESOLUTION[i] );
     }
 }
 
@@ -151,10 +155,10 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
         }
     }
 
+    ros::Rate loop_rate( 900 ); // 900 Hz loop
     // If nothing moved we abort no need to send packet with same positions
     if( interpolating != 0 )
     {
-        ros::Rate loop_rate( 900 ); // 900 Hz loop
         while( interpolating != 0 )
         {
             // Prepare packet for broadcast
@@ -206,6 +210,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
             cur_pos_[i] = write_pos_[i];
         }
     }
+    loop_rate.sleep();
 }
 
 //==============================================================================

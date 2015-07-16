@@ -46,7 +46,6 @@ class ServoDriver
     public:
         ServoDriver( void );
         void transmitServoPositions( const sensor_msgs::JointState &joint_state );
-        void prepareServoSettings( const sensor_msgs::JointState &joint_state );
         void freeServos( void );
     private:
         void convertAngles( const sensor_msgs::JointState &joint_state );
@@ -60,9 +59,10 @@ class ServoDriver
         std::vector<int> TICKS;
         std::vector<double> RAD_TO_SERVO_RESOLUTION;
         std::vector<double> MAX_RADIANS;
+        XmlRpc::XmlRpcValue SERVOS;
+        std::vector<int> servo_orientation_;
+        std::vector<std::string> servo_map_key_;
         bool servos_free_;
-        double OFFSET_ANGLE;
-        int FIRST_COXA_INDEX, FIRST_FEMUR_INDEX, FIRST_TIBIA_INDEX, FIRST_TARSUS_INDEX;
         int SERVO_COUNT;
 };
 
