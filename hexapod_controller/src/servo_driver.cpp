@@ -52,6 +52,9 @@ ServoDriver::ServoDriver( void )
 
     // Stating servos do not have torque applied
     servos_free_ = true;
+    ros::param::get( "TORQUE_ENABLE", TORQUE_ENABLE );
+    ros::param::get( "PRESENT_POSITION_L", PRESENT_POSITION_L );
+    ros::param::get( "GOAL_POSITION_L", GOAL_POSITION_L );
     ros::param::get( "SERVOS", SERVOS );
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
     {
@@ -111,14 +114,14 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
     else
     {
         // Turn torque on
-        dxl_write_word( 254, MX_TORQUE_ENABLE, 1 );
+        dxl_write_word( 254, TORQUE_ENABLE, 1 );
         servos_free_ = false;
         ros::Duration( 0.5 ).sleep();
 
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
         for( int i = 0; i < SERVO_COUNT; i++ )
         {
-            cur_pos_[i] = dxl_read_word( ID[i], MX_PRESENT_POSITION_L );
+            cur_pos_[i] = dxl_read_word( ID[i], PRESENT_POSITION_L );
         }
     }
 }
@@ -165,7 +168,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
             dxl_set_txpacket_id( 254 );
             dxl_set_txpacket_instruction( 131 );
             dxl_set_txpacket_length( 3 * SERVO_COUNT + 4 );
-            dxl_set_txpacket_parameter( 0, MX_GOAL_POSITION_L );
+            dxl_set_txpacket_parameter( 0, GOAL_POSITION_L );
             dxl_set_txpacket_parameter( 1, 2 );
             for( int i = 0; i < SERVO_COUNT; i++ )
             {
@@ -220,6 +223,6 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
 void ServoDriver::freeServos( void )
 {
     // Turn off torque
-    dxl_write_word( 254, MX_TORQUE_ENABLE, 0 );
+    dxl_write_word( 254, TORQUE_ENABLE, 0 );
     servos_free_ = true;
 }

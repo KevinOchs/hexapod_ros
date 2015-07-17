@@ -34,7 +34,6 @@
 #include <cmath>
 #include <ros/ros.h>
 #include <dynamixel.h>
-#include <mx.h>
 #include <sensor_msgs/JointState.h>
 
 //==============================================================================
@@ -64,6 +63,7 @@ class ServoDriver
         std::vector<std::string> servo_map_key_;
         bool servos_free_;
         int SERVO_COUNT;
+        int TORQUE_ENABLE, PRESENT_POSITION_L, GOAL_POSITION_L;
 };
 
 #endif
