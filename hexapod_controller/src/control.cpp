@@ -65,39 +65,12 @@ Control::Control( void )
     imu_yaw_lowpass_ = 0.0;
     imu_roll_init_ = 0.0;
     imu_pitch_init_ = 0.0;
-    cmd_vel_.linear.x = 0.0;
-    cmd_vel_.linear.y = 0.0;
-    cmd_vel_.linear.z = 0.0;
-    cmd_vel_.angular.x = 0.0;
-    cmd_vel_.angular.y = 0.0;
-    cmd_vel_.angular.z = 0.0;
-    base_.y = 0.0;
-    base_.x = 0.0;
-    base_.theta = 0.0;
-    body_.position.y = 0.0;
-    body_.position.z = 0.0;
-    body_.position.x = 0.0;
-    body_.orientation.pitch = 0.0;
-    body_.orientation.yaw = 0.0;
-    body_.orientation.roll = 0.0;
-    head_.yaw = 0.0;
     NUMBER_OF_LEGS = JOINT_SUFFIX.size();
     NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
     NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
     NUMBER_OF_JOINTS = servo_map_key_.size();
     joint_state_.name.resize( NUMBER_OF_JOINTS );
     joint_state_.position.resize( NUMBER_OF_JOINTS );
-    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
-    {
-        feet_.foot[leg_index].position.x = 0.0;
-        feet_.foot[leg_index].position.y = 0.0;
-        feet_.foot[leg_index].position.z = 0.0;
-        feet_.foot[leg_index].orientation.yaw = 0.0;
-        legs_.leg[leg_index].coxa = 0.0;
-        legs_.leg[leg_index].femur = 0.0;
-        legs_.leg[leg_index].tibia = 0.0;
-        legs_.leg[leg_index].tarsus = 0.0;
-    }
     cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 1, &Control::cmd_velCallback, this );
     base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 1, &Control::baseCallback, this );
     body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 1, &Control::bodyCallback, this );

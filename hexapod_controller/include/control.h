@@ -75,8 +75,6 @@ class Control
         ros::Publisher joint_state_pub_;
         ros::ServiceClient imu_calibrate_;
         std_srvs::Empty calibrate_;
-        std::string temp;
-
     private:
         bool imu_init_stored_;
         double imu_roll_lowpass_;
