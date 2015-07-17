@@ -36,30 +36,6 @@
 
 HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 {
-    base_scalar_.accel.linear.x = 0.0;
-    base_scalar_.accel.linear.y = 0.0;
-    base_scalar_.accel.linear.z = 0.0;
-    base_scalar_.accel.angular.x = 0.0;
-    base_scalar_.accel.angular.y = 0.0;
-    base_scalar_.accel.angular.z = 0.0;
-    body_scalar_.accel.linear.x = 0.0;
-    body_scalar_.accel.linear.y = 0.0;
-    body_scalar_.accel.linear.z = 0.0;
-    body_scalar_.accel.angular.x = 0.0;
-    body_scalar_.accel.angular.y = 0.0;
-    body_scalar_.accel.angular.z = 0.0;
-    head_scalar_.accel.linear.x = 0.0;
-    head_scalar_.accel.linear.y = 0.0;
-    head_scalar_.accel.linear.z = 0.0;
-    head_scalar_.accel.angular.x = 0.0;
-    head_scalar_.accel.angular.y = 0.0;
-    head_scalar_.accel.angular.z = 0.0;
-    cmd_vel_.linear.x = 0.0;
-    cmd_vel_.linear.y = 0.0;
-    cmd_vel_.linear.z = 0.0;
-    cmd_vel_.angular.x = 0.0;
-    cmd_vel_.angular.y = 0.0;
-    cmd_vel_.angular.z = 0.0;
     state_.data = false;
     imu_override_.data = false;
     ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
