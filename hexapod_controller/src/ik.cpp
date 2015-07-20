@@ -96,9 +96,9 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         double cpr_x = feet.foot[leg_index].position.x + body.position.x - INIT_FOOT_POS_X[leg_index] - COXA_TO_CENTER_X[leg_index];
         double cpr_y = feet.foot[leg_index].position.y + sign*( body.position.y + INIT_FOOT_POS_Y[leg_index] + COXA_TO_CENTER_Y[leg_index] );
         double cpr_z = feet.foot[leg_index].position.z + body.position.z + TARSUS_LENGTH - INIT_FOOT_POS_Z[leg_index];
+
         // Calculation of angular matrix of body (Tait-Bryan angles Z, Y, X)
         // http://en.wikipedia.org/wiki/Euler_angles
-
         double body_pos_x = cpr_x - ( ( cpr_x * A.cosine * B.cosine ) +
                                       ( cpr_y * A.cosine * B.sine * G.sine - cpr_y * G.cosine * A.sine ) +
                                       ( cpr_z * A.sine * G.sine + cpr_z * A.cosine * G.cosine * B.sine  )
