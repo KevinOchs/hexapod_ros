@@ -41,7 +41,7 @@ ServoDriver::ServoDriver( void )
     int baudnum = 1;
     int deviceIndex = 0;
 
-    if( dxl_initialize(deviceIndex, baudnum) == 0 )
+    if( dxl_initialize( deviceIndex, baudnum ) == 0 )
     {
         ROS_ERROR("Servo Communication Failed!");
     }
@@ -49,7 +49,6 @@ ServoDriver::ServoDriver( void )
     {
         ROS_INFO( "Servo Communication Opened!" );
     }
-
     // Stating servos do not have torque applied
     servos_free_ = true;
     ros::param::get( "TORQUE_ENABLE", TORQUE_ENABLE );
@@ -58,7 +57,7 @@ ServoDriver::ServoDriver( void )
     ros::param::get( "SERVOS", SERVOS );
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
     {
-        servo_map_key_.push_back(it->first);
+        servo_map_key_.push_back( it->first );
     }
 
     SERVO_COUNT = servo_map_key_.size();
@@ -80,7 +79,7 @@ ServoDriver::ServoDriver( void )
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/max_radians", MAX_RADIANS[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign", servo_orientation_[i] );
         RAD_TO_SERVO_RESOLUTION[i] = TICKS[i] / MAX_RADIANS[i];
-        // Size and fill vector containers with default value
+        // Fill vector containers with default value
         cur_pos_[i] = TICKS[i] / 2;
         goal_pos_[i] = TICKS[i] / 2;
         write_pos_[i] = TICKS[i] / 2;
@@ -89,7 +88,7 @@ ServoDriver::ServoDriver( void )
 }
 
 //==============================================================================
-// Convert angles to servo ticks each leg and head pan
+// Convert angles to servo resolution each leg and head pan
 //==============================================================================
 
 void ServoDriver::convertAngles( const sensor_msgs::JointState &joint_state )
@@ -121,6 +120,7 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
         for( int i = 0; i < SERVO_COUNT; i++ )
         {
+            // dxl_write_word( ID[i], 5, 0 ); // Set return delay time to zero ( 1 usec delay actually ) EPROM register
             cur_pos_[i] = dxl_read_word( ID[i], PRESENT_POSITION_L );
         }
     }
@@ -132,7 +132,7 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
 
 void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_state )
 {
-    convertAngles( joint_state );
+    convertAngles( joint_state ); // Convert angles to servo resolution
 
     makeSureServosAreOn( joint_state );
 

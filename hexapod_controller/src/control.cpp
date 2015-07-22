@@ -35,9 +35,9 @@ static const double PI = atan(1.0)*4.0;
 
 Control::Control( void )
 {
-    ros::param::get( "LEG_ORDER", JOINT_SUFFIX );
-    ros::param::get( "LEG_SEGMENT_NAMES", LEG_SEGMENT_NAMES );
-    ros::param::get( "HEAD_SEGMENT_NAMES", HEAD_SEGMENT_NAMES );
+    ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
+    ros::param::get( "NUMBER_OF_LEG_SEGMENTS", NUMBER_OF_LEG_JOINTS );
+    ros::param::get( "NUMBER_OF_HEAD_SEGMENTS", NUMBER_OF_HEAD_JOINTS );
     ros::param::get( "BODY_MAX_ROLL", BODY_MAX_ROLL );
     ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
     ros::param::get( "HEAD_MAX_PAN", HEAD_MAX_PAN );
@@ -45,12 +45,20 @@ Control::Control( void )
     ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
     ros::param::get( "SERVOS", SERVOS );
+    ros::param::get( "MAX_BODY_ROLL_COMP", MAX_BODY_ROLL_COMP );
+    ros::param::get( "MAX_BODY_PITCH_COMP", MAX_BODY_PITCH_COMP );
+    ros::param::get( "COMPENSATE_INCREMENT", COMPENSATE_INCREMENT );
+    ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
+
+    // Find out how many servos/joints we have
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
     {
-        servo_map_key_.push_back(it->first);
+        servo_map_key_.push_back( it->first );
     }
-    servo_names_.resize(servo_map_key_.size());
-    servo_orientation_.resize(servo_map_key_.size());
+    joint_state_.name.resize( servo_map_key_.size() );
+    joint_state_.position.resize( servo_map_key_.size() );
+    servo_names_.resize( servo_map_key_.size() );
+    servo_orientation_.resize( servo_map_key_.size() );
     for( int i = 0; i < servo_map_key_.size(); i++ )
     {
         ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/name"), servo_names_[i] );
@@ -65,12 +73,8 @@ Control::Control( void )
     imu_yaw_lowpass_ = 0.0;
     imu_roll_init_ = 0.0;
     imu_pitch_init_ = 0.0;
-    NUMBER_OF_LEGS = JOINT_SUFFIX.size();
-    NUMBER_OF_LEG_JOINTS = NUMBER_OF_LEGS * LEG_SEGMENT_NAMES.size();
-    NUMBER_OF_HEAD_JOINTS = HEAD_SEGMENT_NAMES.size();
-    NUMBER_OF_JOINTS = servo_map_key_.size();
-    joint_state_.name.resize( NUMBER_OF_JOINTS );
-    joint_state_.position.resize( NUMBER_OF_JOINTS );
+
+    // Topics we are subscribing
     cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 1, &Control::cmd_velCallback, this );
     base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 1, &Control::baseCallback, this );
     body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 1, &Control::bodyCallback, this );
@@ -78,9 +82,12 @@ Control::Control( void )
     state_sub_ = nh_.subscribe<std_msgs::Bool>( "state", 1, &Control::stateCallback, this );
     imu_override_sub_ = nh_.subscribe<std_msgs::Bool>( "imu_override", 1, &Control::imuOverrideCallback, this );
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
+
+    // Topics we are publishing
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 1 );
-    // Ping the imu to re-calibrate
+
+    // Send service request to the imu to re-calibrate
     imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
     imu_calibrate_.call( calibrate_ );
 }
@@ -263,7 +270,7 @@ void Control::imuOverrideCallback( const std_msgs::BoolConstPtr &imu_override_ms
 }
 
 //==============================================================================
-// IMU callback to autolevel body if on angled ground
+// IMU callback to auto-level body if on non level ground
 //==============================================================================
 
 void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
@@ -280,53 +287,54 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
             imu_init_stored_ = true;
         }
 
+        // low-pass filter to smooth out noise
         imu_roll_lowpass_ = lin_acc.x * 0.01 + ( imu_roll_lowpass_ * ( 1.0 - 0.01 ) );
         imu_pitch_lowpass_ = lin_acc.y * 0.01 + ( imu_pitch_lowpass_ * ( 1.0 - 0.01 ) );
         imu_yaw_lowpass_ = lin_acc.z * 0.01 + ( imu_yaw_lowpass_ * ( 1.0 - 0.01 ) );
 
-        double imu_roll = -atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) );
+        double imu_roll = -atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) ); // flipped due to orientation of sensor
         double imu_pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
         imu_pitch = ( imu_pitch >= 0.0 ) ? ( PI - imu_pitch ) : ( -imu_pitch - PI );
 
         double imu_roll_delta = imu_roll_init_ - imu_roll;
         double imu_pitch_delta = imu_pitch_init_ - imu_pitch;
 
-        if( ( std::abs( imu_roll_delta ) > 0.0872664626 ) || ( std::abs( imu_pitch_delta ) > 0.0872664626 ) )
+        if( ( std::abs( imu_roll_delta ) > MAX_BODY_ROLL_COMP ) || ( std::abs( imu_pitch_delta ) > MAX_BODY_PITCH_COMP ) )
         {
             sounds_.auto_level = true;
             sounds_pub_.publish( sounds_ );
             sounds_.auto_level = false;
         }
 
-        if( imu_roll_delta < -0.0174532925 ) // 1 degree
+        if( imu_roll_delta < -COMPENSATE_TO_WITHIN )
         {
-            if( body_.orientation.roll < 0.209 )  // 12 degrees limit
+            if( body_.orientation.roll < MAX_BODY_ROLL_COMP )
             {
-                body_.orientation.roll = body_.orientation.roll + 0.0002; // 0.01 degree increments
+                body_.orientation.roll = body_.orientation.roll + COMPENSATE_INCREMENT;
             }
         }
 
-        if( imu_roll_delta > 0.0174532925 ) // 1 degree
+        if( imu_roll_delta > COMPENSATE_TO_WITHIN )
         {
-            if( body_.orientation.roll > -0.209 )  // 12 degrees limit
+            if( body_.orientation.roll > -MAX_BODY_ROLL_COMP )
             {
-                body_.orientation.roll = body_.orientation.roll - 0.0002;  // 0.01 degree increments
+                body_.orientation.roll = body_.orientation.roll - COMPENSATE_INCREMENT;
             }
         }
 
-        if( imu_pitch_delta < -0.0174532925 ) // 1 degree
+        if( imu_pitch_delta < -COMPENSATE_TO_WITHIN )
         {
-            if( body_.orientation.pitch < 0.209 )  // 12 degrees limit
+            if( body_.orientation.pitch < MAX_BODY_PITCH_COMP )
             {
-                body_.orientation.pitch = body_.orientation.pitch + 0.0002;  // 0.01 degree increments
+                body_.orientation.pitch = body_.orientation.pitch + COMPENSATE_INCREMENT;
             }
         }
 
-        if( imu_pitch_delta > 0.0174532925 ) // 1 degree
+        if( imu_pitch_delta > COMPENSATE_TO_WITHIN )
         {
-            if( body_.orientation.pitch > -0.209 ) // 12 degrees limit
+            if( body_.orientation.pitch > -MAX_BODY_PITCH_COMP )
             {
-                body_.orientation.pitch = body_.orientation.pitch - 0.0002;  // 0.01 degree increments
+                body_.orientation.pitch = body_.orientation.pitch - COMPENSATE_INCREMENT;
             }
         }
     }

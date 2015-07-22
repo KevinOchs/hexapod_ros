@@ -49,17 +49,17 @@ class ServoDriver
     private:
         void convertAngles( const sensor_msgs::JointState &joint_state );
         void makeSureServosAreOn( const sensor_msgs::JointState &joint_state );
-        std::vector<int> cur_pos_;
-        std::vector<int> goal_pos_;
-        std::vector<int> pose_steps_;
-        std::vector<int> write_pos_;
-        std::vector<double> OFFSET;
-        std::vector<int> ID;
-        std::vector<int> TICKS;
-        std::vector<double> RAD_TO_SERVO_RESOLUTION;
-        std::vector<double> MAX_RADIANS;
-        XmlRpc::XmlRpcValue SERVOS;
-        std::vector<int> servo_orientation_;
+        std::vector<int> cur_pos_; // Current position of servos
+        std::vector<int> goal_pos_; // Goal position of servos
+        std::vector<int> pose_steps_; // Increment to use going from current position to goal position
+        std::vector<int> write_pos_; // Position of each servo for sync_write packet
+        std::vector<double> OFFSET; // Physical hardware offset of servo horn
+        std::vector<int> ID; // Servo IDs
+        std::vector<int> TICKS; // Total number of ticks, meaning resolution of dynamixel servo
+        std::vector<double> RAD_TO_SERVO_RESOLUTION; // Radians to servo conversion
+        std::vector<double> MAX_RADIANS; // Max rotation your servo is manufactured to do. i.e. 360 degrees for MX etc.
+        XmlRpc::XmlRpcValue SERVOS; // Servo map from yaml config file
+        std::vector<int> servo_orientation_; // If the servo is physically mounted backwards this sign is flipped
         std::vector<std::string> servo_map_key_;
         bool servos_free_;
         int SERVO_COUNT;

@@ -52,7 +52,7 @@ Ik::Ik( void )
     ros::param::get( "FEMUR_LENGTH", FEMUR_LENGTH );
     ros::param::get( "TIBIA_LENGTH", TIBIA_LENGTH );
     ros::param::get( "TARSUS_LENGTH", TARSUS_LENGTH );
-    NUMBER_OF_LEGS = INIT_FOOT_POS_X.size();
+    ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
 }
 
 //=============================================================================

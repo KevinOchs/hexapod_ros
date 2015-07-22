@@ -1,15 +1,21 @@
-# Physical Configuration Settings
+# Configuration Settings
 
 # Twist Max Values
-MAX_METERS_PER_SEC: 0.08
-MAX_RADIANS_PER_SEC: !degrees 25.7
+MAX_METERS_PER_SEC: 0.092
+MAX_RADIANS_PER_SEC: !degrees 33.0
+
+# Number of head segments
+NUMBER_OF_HEAD_SEGMENTS: 1
 
 # Gait Settings
 CYCLE_LENGTH: 50
 LEG_LIFT_HEIGHT: 40
 
 # Number of Legs
-NUMBER_OF_LEGS:   6
+NUMBER_OF_LEGS: 6
+
+# Number of leg segments ( 3dof or 4dof )
+NUMBER_OF_LEG_SEGMENTS: 4
 
 # Define Initial Coxa Offsets in Radians ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
@@ -42,26 +48,22 @@ STANDING_BODY_HEIGHT: 90.0
 # Head (pan) FK maximum rotations
 HEAD_MAX_PAN: !degrees 16
 
+# Body auto levelling parameters
+MAX_BODY_ROLL_COMP: !degrees 12
+MAX_BODY_PITCH_COMP: !degrees 12
+COMPENSATE_INCREMENT: !degrees 0.01
+COMPENSATE_TO_WITHIN: !degrees 1
+
 # Gait Settings
 CYCLE_LENGTH: 50
 LEG_LIFT_HEIGHT: 40.0
 CYCLE_MAX_TRAVEL: 80.0
 CYCLE_MAX_YAW: !degrees 8
 
-# Leg order
-LEG_ORDER: ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
 
-# Define Mechanical Angle Offsets in Radians - Usually zero
-OFFSET_ANGLE: !degrees 20
 
-# First servo ID of each leg segment
-LEG_SEGMENT_NAMES: ['coxa_joint_' , 'femur_joint_', 'tibia_joint_', 'tarsus_joint_']
-
-# First servo ID of each leg segment
-HEAD_SEGMENT_NAMES: ['pan_joint']
 
 # Servo descriptions
 SERVOS: {

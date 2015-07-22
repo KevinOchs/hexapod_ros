@@ -62,45 +62,31 @@ class Control
         bool getPrevHexActiveState( void );
         void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state );
         sensor_msgs::JointState joint_state_;
-        geometry_msgs::Twist cmd_vel_;
-        geometry_msgs::Pose2D base_;
-        hexapod_msgs::Pose body_;
+        geometry_msgs::Pose2D base_; // Base link movement
+        hexapod_msgs::Pose body_; // Body link rotation
         hexapod_msgs::RPY head_;
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
-        std_msgs::Bool state_;
-        hexapod_msgs::Sounds sounds_;
         double STANDING_BODY_HEIGHT;
-        ros::Publisher sounds_pub_;
-        ros::Publisher joint_state_pub_;
-        ros::ServiceClient imu_calibrate_;
-        std_srvs::Empty calibrate_;
     private:
-        bool imu_init_stored_;
-        double imu_roll_lowpass_;
-        double imu_pitch_lowpass_;
-        double imu_yaw_lowpass_;
-        double imu_roll_init_;
-        double imu_pitch_init_;
-        double FEMUR_LENGTH;
-        double TIBIA_LENGTH;
-        double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW;
-        int NUMBER_OF_LEGS;   // Number of legs
-        int NUMBER_OF_JOINTS; // Number of joints
-        int NUMBER_OF_HEAD_JOINTS; // Number of joints
-        int NUMBER_OF_LEG_JOINTS; // Number of joints
-        XmlRpc::XmlRpcValue JOINT_SUFFIX;
-        XmlRpc::XmlRpcValue LEG_SEGMENT_NAMES;
-        XmlRpc::XmlRpcValue HEAD_SEGMENT_NAMES;
+        geometry_msgs::Twist cmd_vel_;
+        hexapod_msgs::Sounds sounds_; // Sound bool array
+        std_msgs::Bool imu_override_; // Override body levelling for body manipulation
+        bool imu_init_stored_; // Auto-levelling
+        double imu_roll_lowpass_, imu_pitch_lowpass_, imu_yaw_lowpass_, imu_roll_init_, imu_pitch_init_; // Auto-levelling
+        double MAX_BODY_ROLL_COMP, MAX_BODY_PITCH_COMP, COMPENSATE_INCREMENT, COMPENSATE_TO_WITHIN; // Auto-levelling yaml config
+        double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW; // Mechanical limits
+        int NUMBER_OF_LEGS;        // Number of legs
+        int NUMBER_OF_HEAD_JOINTS; // Number of head segments
+        int NUMBER_OF_LEG_JOINTS;  // Number of leg segments
         XmlRpc::XmlRpcValue SERVOS;
         std::vector<std::string> servo_map_key_;
         std::vector<std::string> servo_names_;
         std::vector<int> servo_orientation_;
-        //std::vector<int> servo_index_;
-        std_msgs::Bool imu_override_;
-        sensor_msgs::Imu imu_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
+
+        // Topics we are subscribing
         ros::Subscriber cmd_vel_sub_;
         void cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg );
         ros::Subscriber base_scalar_sub_;
@@ -115,6 +101,16 @@ class Control
         void imuOverrideCallback( const std_msgs::BoolConstPtr &imuOverride_msg );
         ros::Subscriber imu_sub_;
         void imuCallback( const sensor_msgs::ImuConstPtr &imu_msg );
+
+        // Topics we are publishing
+        ros::Publisher sounds_pub_;
+        ros::Publisher joint_state_pub_;
+
+        // Services we call
+        ros::ServiceClient imu_calibrate_;
+        std_srvs::Empty calibrate_;
+
+        // Node Handle
         ros::NodeHandle nh_;
 };
 
