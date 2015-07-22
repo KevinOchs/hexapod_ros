@@ -7,10 +7,6 @@ MAX_RADIANS_PER_SEC: !degrees 33.0
 # Number of head segments
 NUMBER_OF_HEAD_SEGMENTS: 1
 
-# Gait Settings
-CYCLE_LENGTH: 50
-LEG_LIFT_HEIGHT: 40
-
 # Number of Legs
 NUMBER_OF_LEGS: 6
 
@@ -21,31 +17,31 @@ NUMBER_OF_LEG_SEGMENTS: 4
 INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
 
 # Define distance in meters from coxa joint to the center ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-COXA_TO_CENTER_X: [-177.80, 0.0, 177.80, -177.80, 0.0, 177.80]
-COXA_TO_CENTER_Y: [82.50, 133.35, 82.50, 82.50, 133.35, 82.50]
+COXA_TO_CENTER_X: [-0.1778, 0.0, 0.1778, -0.1778, 0.0, 0.1778]
+COXA_TO_CENTER_Y: [0.0825, 0.13335, 0.0825, 0.0825, 0.13335, 0.0825]
 
-# Define Start Position Of Feet in mm from the coxa joint ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-# Middle Legs is coxa axis to foot in mm
+# Define Start Position Of Feet in meters from the coxa joint ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
+# Middle Legs is coxa axis to foot in meters
 # math to find positions of front and back legs POS_Y = Middle leg start position * cos(45 degrees) (0.707)
 # math to find positions of front and back legs POS_X = Middle leg start position * sin(45 degrees) (0.707)
-INIT_FOOT_POS_X: [-134.35, 0.0, 134.35, -134.35, 0.0, 134.35]
-INIT_FOOT_POS_Y: [134.35, 190.00, 134.35, 134.35, 190.00, 134.35]
-INIT_FOOT_POS_Z: [35.65, 35.65, 35.65, 35.65, 35.65, 35.65]
+INIT_FOOT_POS_X: [-0.13435, 0.0, 0.13435, -0.13435, 0.0, 0.13435]
+INIT_FOOT_POS_Y: [0.13435, 0.19, 0.13435, 0.13435, 0.19, 0.13435]
+INIT_FOOT_POS_Z: [0.03565, 0.03565, 0.03565, 0.03565, 0.03565, 0.03565]
 
-# Define Leg Measurements in mm
-COXA_LENGTH:   58.93
-FEMUR_LENGTH:  107.98
-TIBIA_LENGTH:  87.74
-TARSUS_LENGTH: 120.65
+# Define Leg Measurements in meters
+COXA_LENGTH:   0.05893
+FEMUR_LENGTH:  0.10798
+TIBIA_LENGTH:  0.08774
+TARSUS_LENGTH: 0.12065
 
-# Body FK maximum rotations
+# Body FK maximum rotation
 BODY_MAX_ROLL: !degrees 8
 BODY_MAX_PITCH: !degrees 8
 
 # Body Standing Height
-STANDING_BODY_HEIGHT: 90.0
+STANDING_BODY_HEIGHT: 0.09
 
-# Head (pan) FK maximum rotations
+# Head (pan) FK maximum rotation
 HEAD_MAX_PAN: !degrees 16
 
 # Body auto levelling parameters
@@ -56,14 +52,12 @@ COMPENSATE_TO_WITHIN: !degrees 1
 
 # Gait Settings
 CYCLE_LENGTH: 50
-LEG_LIFT_HEIGHT: 40.0
-CYCLE_MAX_TRAVEL: 80.0
+LEG_LIFT_HEIGHT: 0.04
+CYCLE_MAX_TRAVEL: 0.08
 CYCLE_MAX_YAW: !degrees 8
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
-
-
 
 # Servo descriptions
 SERVOS: {

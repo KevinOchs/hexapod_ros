@@ -89,8 +89,8 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
     smooth_base_.theta = base.theta * 0.05 + ( smooth_base_.theta * ( 1.0 - 0.05 ) );
 
     // Check to see if we are actually travelling
-    if( ( std::abs( smooth_base_.y ) > 1.0 ) || // 1 mm
-        ( std::abs( smooth_base_.x ) > 1.0 ) || // 1 mm
+    if( ( std::abs( smooth_base_.y ) > 0.001 ) || // 1 mm
+        ( std::abs( smooth_base_.x ) > 0.001 ) || // 1 mm
         ( std::abs( smooth_base_.theta ) > 0.00436332313 ) ) // 0.25 degree
     {
         is_travelling_ = true;
@@ -101,10 +101,10 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
 
         for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
         {
-            if( ( std::abs( feet->foot[leg_index].position.x ) > 1.0 ) || // 1 mm
-                ( std::abs( feet->foot[leg_index].position.y ) > 1.0 ) || // 1 mm
+            if( ( std::abs( feet->foot[leg_index].position.x ) > 0.001 ) || // 1 mm
+                ( std::abs( feet->foot[leg_index].position.y ) > 0.001 ) || // 1 mm
                 ( std::abs( feet->foot[leg_index].orientation.yaw ) > 0.034906585 ) || // 2 degrees
-                  std::abs( feet->foot[leg_index].position.z) > 1.0 ) // 1 mm
+                  std::abs( feet->foot[leg_index].position.z) > 0.001 ) // 1 mm
             {
                 // This forces another cycle to allow all legs to set down after travel is stopped
                 extra_gait_cycle_ = CYCLE_LENGTH - cycle_period_ + CYCLE_LENGTH;

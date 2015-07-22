@@ -63,7 +63,7 @@ int main( int argc, char **argv )
         {
             while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
             {
-                control.body_.position.z++;
+                control.body_.position.z = control.body_.position.z + 0.001;
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -99,7 +99,7 @@ int main( int argc, char **argv )
         {
             while( control.body_.position.z > 0 )
             {
-                control.body_.position.z--;
+                control.body_.position.z = control.body_.position.z - 0.001;
 
                 // Gait Sequencer called to make sure we are on all six feet
                 gait.gaitCycle( control.base_, &control.feet_ );
