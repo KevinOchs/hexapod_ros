@@ -13,10 +13,6 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_library( dxl_hal src/usb2ax/dxl_hal.cpp )
-add_library( dynamixel src/usb2ax/dynamixel.cpp )
-target_link_libraries( dynamixel dxl_hal )
-
 add_library( control src/control.cpp )
 add_dependencies( control hexapod_msgs_generate_messages_cpp )
 

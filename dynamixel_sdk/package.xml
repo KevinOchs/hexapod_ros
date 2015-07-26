@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>dynamixel_sdk</name>
+  <version>0.2.0</version>
+  <description>dynamixel_sdk</description>
+  <author email="kevin.ochs@gmail.com">Kevin Ochs</author>
+  <maintainer email="kevin.ochs@gmail.com">Kevin Ochs</maintainer>
+  <license>BSD</license>
+  
+  <url type="website">http://ros.org</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib"/>
+  </export>
+</package>
