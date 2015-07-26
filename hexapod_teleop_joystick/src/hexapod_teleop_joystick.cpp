@@ -91,9 +91,9 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     if ( joy->buttons[8] != 1 )
     {
         base_scalar_.header.stamp = current_time;
-        base_scalar_.accel.linear.x = -joy->axes[1];
-        base_scalar_.accel.linear.y = joy->axes[0];
-        base_scalar_.accel.angular.z = -joy->axes[2];
+        base_scalar_.accel.linear.x = joy->axes[1];
+        base_scalar_.accel.linear.y = -joy->axes[0];
+        base_scalar_.accel.angular.z = joy->axes[2];
         cmd_vel_.linear.x = ( joy->axes[1] * MAX_METERS_PER_SEC );
         cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC );
         cmd_vel_.angular.z = ( joy->axes[2] * MAX_RADIANS_PER_SEC );
