@@ -31,7 +31,7 @@
 #ifndef CONTROL_H_
 #define CONTROL_H_
 
-#include <math.h>
+#include <cmath>
 #include <ros/ros.h>
 #include <std_srvs/Empty.h>
 #include <std_msgs/Bool.h>

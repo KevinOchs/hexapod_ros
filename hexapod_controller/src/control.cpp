@@ -59,7 +59,7 @@ Control::Control( void )
     joint_state_.position.resize( servo_map_key_.size() );
     servo_names_.resize( servo_map_key_.size() );
     servo_orientation_.resize( servo_map_key_.size() );
-    for( int i = 0; i < servo_map_key_.size(); i++ )
+    for( size_t i = 0; i < servo_map_key_.size(); i++ )
     {
         ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/name"), servo_names_[i] );
         ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign"), servo_orientation_[i] );
