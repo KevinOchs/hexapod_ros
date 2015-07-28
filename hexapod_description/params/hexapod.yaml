@@ -2,7 +2,7 @@
 
 # Twist Max Values
 MAX_METERS_PER_SEC: 0.092
-MAX_RADIANS_PER_SEC: !degrees 33.0
+MAX_RADIANS_PER_SEC: !degrees 19.6292257
 
 # Number of head segments
 NUMBER_OF_HEAD_SEGMENTS: 1

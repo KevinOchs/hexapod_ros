@@ -59,7 +59,7 @@ Control::Control( void )
     joint_state_.position.resize( servo_map_key_.size() );
     servo_names_.resize( servo_map_key_.size() );
     servo_orientation_.resize( servo_map_key_.size() );
-    for( size_t i = 0; i < servo_map_key_.size(); i++ )
+    for( std::size_t i = 0; i < servo_map_key_.size(); i++ )
     {
         ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/name"), servo_names_[i] );
         ros::param::get( ("/SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign"), servo_orientation_[i] );
@@ -123,7 +123,7 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
 {
     joint_state->header.stamp = ros::Time::now();
     int i = 0;
-    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
+    for( std::size_t leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
         joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].coxa;
@@ -139,7 +139,7 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
         i++;
     }
 
-    for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
+    for( std::size_t head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
     {
         joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
         joint_state->position[i] = head_.yaw;

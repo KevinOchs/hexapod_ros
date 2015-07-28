@@ -56,7 +56,7 @@ Ik::Ik( void )
 }
 
 //=============================================================================
-// getSinCos:  Get the sinus and cosinus from the angle +/- multiple circles
+// getSinCos:  Get the sinus and cosinus from the angle
 //=============================================================================
 
 Trig Ik::getSinCos( double angle_rad )
@@ -76,7 +76,7 @@ Trig Ik::getSinCos( double angle_rad )
 void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msgs::Pose &body, hexapod_msgs::LegsJoints *legs )
 {
     double sign = -1.0;
-    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
+    for( std::size_t leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         if( leg_index <= 2 )
         {
