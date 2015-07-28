@@ -71,7 +71,7 @@ ServoDriver::ServoDriver( void )
     goal_pos_.resize( SERVO_COUNT );
     write_pos_.resize( SERVO_COUNT );
     pose_steps_.resize( SERVO_COUNT );
-    for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/offset", OFFSET[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/id", ID[i] );
@@ -93,7 +93,7 @@ ServoDriver::ServoDriver( void )
 
 void ServoDriver::convertAngles( const sensor_msgs::JointState &joint_state )
 {
-    for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
         goal_pos_[i] = ( TICKS[i] / 2 ) + round( ( joint_state.position[i] - ( servo_orientation_[i] * OFFSET[i] ) ) * RAD_TO_SERVO_RESOLUTION[i] );
     }
@@ -118,7 +118,7 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
         ros::Duration( 0.5 ).sleep();
 
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
-        for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+        for( int i = 0; i < SERVO_COUNT; i++ )
         {
             // dxl_write_word( ID[i], 5, 0 ); // Set return delay time to zero ( 1 usec delay actually ) EPROM register
             cur_pos_[i] = dxl_read_word( ID[i], PRESENT_POSITION_L );
@@ -139,7 +139,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
     int interpolating = 0;
     int complete[SERVO_COUNT];
 
-    for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+    for( int i = 0; i < SERVO_COUNT; i++ )
     {
         // If any of these differ we need to indicate a new packet needs to be sent
         if( cur_pos_[i] != goal_pos_[i] )
@@ -170,7 +170,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
             dxl_set_txpacket_length( 3 * SERVO_COUNT + 4 );
             dxl_set_txpacket_parameter( 0, GOAL_POSITION_L );
             dxl_set_txpacket_parameter( 1, 2 );
-            for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+            for( int i = 0; i < SERVO_COUNT; i++ )
             {
                 if( pose_steps_[i] == 1 && complete[i] != 1 )
                 {
@@ -208,7 +208,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
             loop_rate.sleep();
         }
         // Store write pose as current pose (goal) since we are now done
-        for( std::size_t i = 0; i < SERVO_COUNT; i++ )
+        for( int i = 0; i < SERVO_COUNT; i++ )
         {
             cur_pos_[i] = write_pos_[i];
         }

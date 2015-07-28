@@ -123,7 +123,7 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
 {
     joint_state->header.stamp = ros::Time::now();
     int i = 0;
-    for( std::size_t leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
+    for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
         joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
         joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].coxa;
