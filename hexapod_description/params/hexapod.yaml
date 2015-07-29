@@ -1,10 +1,13 @@
 # Configuration Settings
 
 # Twist Max Values
+# Currently these are measured and calculated at full spped manually.
+# It is very difficult to find these values automatically due to voltage, leg length and servos used.
 MAX_METERS_PER_SEC: 0.092
 MAX_RADIANS_PER_SEC: !degrees 19.6292257
 
 # Number of head segments
+# First segment would be yaw, second would be pitch
 NUMBER_OF_HEAD_SEGMENTS: 1
 
 # Number of Legs
@@ -13,10 +16,13 @@ NUMBER_OF_LEGS: 6
 # Number of leg segments ( 3dof or 4dof )
 NUMBER_OF_LEG_SEGMENTS: 4
 
+
 # Define Initial Coxa Offsets in Radians ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
+# IK is solved in local space currently, hence the reason right and left have same angle offsets.
 INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
 
 # Define distance in meters from coxa joint to the center ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
+# IK is solved in local space currently, hence the reason right and left have same distance values
 COXA_TO_CENTER_X: [-0.1778, 0.0, 0.1778, -0.1778, 0.0, 0.1778]
 COXA_TO_CENTER_Y: [0.0825, 0.13335, 0.0825, 0.0825, 0.13335, 0.0825]
 
@@ -24,6 +30,7 @@ COXA_TO_CENTER_Y: [0.0825, 0.13335, 0.0825, 0.0825, 0.13335, 0.0825]
 # Middle Legs is coxa axis to foot in meters
 # math to find positions of front and back legs POS_Y = Middle leg start position * cos(45 degrees) (0.707)
 # math to find positions of front and back legs POS_X = Middle leg start position * sin(45 degrees) (0.707)
+# IK is solved in local space currently, hence the reason right and left have same distance values
 INIT_FOOT_POS_X: [-0.13435, 0.0, 0.13435, -0.13435, 0.0, 0.13435]
 INIT_FOOT_POS_Y: [0.13435, 0.19, 0.13435, 0.13435, 0.19, 0.13435]
 INIT_FOOT_POS_Z: [0.03565, 0.03565, 0.03565, 0.03565, 0.03565, 0.03565]
