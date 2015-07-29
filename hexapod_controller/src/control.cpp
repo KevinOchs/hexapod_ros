@@ -191,7 +191,7 @@ void Control::bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scal
         if( imu_override_.data == true )
         {
             body_.orientation.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.orientation.roll * ( 1.0 - 0.01 ) );
-            body_.orientation.pitch  = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.orientation.pitch * ( 1.0 - 0.01 ) );
+            body_.orientation.pitch = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.orientation.pitch * ( 1.0 - 0.01 ) );
         }
     }
 }
