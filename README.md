@@ -13,11 +13,12 @@ Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity 
 * Contributor: Renée Love
 * Contributor: Konstantinos Chatzilygeroudis
 * Contributor: Kurt Eckhardt
+* Contributor: Romain Reignier
 
 ## 2. Expected Hardware
 
 * Primesense Sensor or Asus Xtion
-* IMU (Current master branch uses a Phidgets 3/3/3 Spatial. Current PhantomX branch uses CHR-UM7)
+* IMU (Current master branch uses a Phidgets 3/3/3 Spatial.)
 
 ## 3. Dependencies
 
@@ -51,12 +52,6 @@ https://help.ubuntu.com/community/Sixaxis
 git clone https://github.com/KevinOchs/ROS_hexapod.git
 ```
 
-For PhantomX branch created by Renée Love:
-
-```
-git checkout PhantomX
-```
-
 For Raspberry Pi2 please add these compiler optimizations after first build.
 ```
 [workspace]/build/CMakeCache.txt
@@ -69,7 +64,7 @@ For ODROID XU3 please add these compiler optimizations after first build.
 Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=hard
 ```
 
-Dont forget to add the below after you run catkin_make
+Dont forget to add the below after you run catkin_make to your bashrc
 
 ```
 source ~/ROS_hexapod/devel/setup.bash
