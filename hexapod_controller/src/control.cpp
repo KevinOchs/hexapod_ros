@@ -139,7 +139,7 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
         i++;
     }
 
-    for( std::size_t head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
+    for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
     {
         joint_state->name[i] = static_cast<std::string>( servo_names_[i] );
         joint_state->position[i] = head_.yaw;

@@ -98,7 +98,7 @@ class Control
         ros::Subscriber state_sub_;
         void stateCallback( const std_msgs::BoolConstPtr &state_msg );
         ros::Subscriber imu_override_sub_;
-        void imuOverrideCallback( const std_msgs::BoolConstPtr &imuOverride_msg );
+        void imuOverrideCallback( const std_msgs::BoolConstPtr &imu_override_msg );
         ros::Subscriber imu_sub_;
         void imuCallback( const sensor_msgs::ImuConstPtr &imu_msg );
 
