@@ -98,7 +98,7 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
     else
     {
         is_travelling_ = false;
-
+        // Check to see if the legs are in a non rest state
         for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
         {
             if( ( std::abs( feet->foot[leg_index].position.x ) > 0.001 ) || // 1 mm
@@ -106,6 +106,7 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
                 ( std::abs( feet->foot[leg_index].orientation.yaw ) > 0.034906585 ) || // 2 degrees
                   std::abs( feet->foot[leg_index].position.z) > 0.001 ) // 1 mm
             {
+                // If so calculate the rest of the cycle and add another complete cycle
                 // This forces another cycle to allow all legs to set down after travel is stopped
                 extra_gait_cycle_ = CYCLE_LENGTH - cycle_period_ + CYCLE_LENGTH;
                 break;
