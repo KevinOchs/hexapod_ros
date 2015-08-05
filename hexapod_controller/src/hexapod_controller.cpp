@@ -120,7 +120,7 @@ int main( int argc, char **argv )
             // Locomotion is now shut off
             control.setPrevHexActiveState( false );
         }
-
+        // Sitting down with servo torque off. Publish jointState message every half second
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
