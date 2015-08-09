@@ -40,6 +40,12 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     imu_override_.data = false;
     ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
     ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
+    ros::param::get( "STANDUP_BUTTON", STANDUP_BUTTON );
+    ros::param::get( "SITDOWN_BUTTON", SITDOWN_BUTTON );
+    ros::param::get( "BODY_ROTATION_BUTTON", BODY_ROTATION_BUTTON );
+    ros::param::get( "FORWARD_BACKWARD_AXES", FORWARD_BACKWARD_AXES );
+    ros::param::get( "LEFT_RIGHT_AXES", LEFT_RIGHT_AXES );
+    ros::param::get( "YAW_ROTATION_AXES", YAW_ROTATION_AXES );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("base_scalar", 100);
     body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("body_scalar", 100);
@@ -56,7 +62,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
 {
     ros::Time current_time = ros::Time::now();
-    if ( joy->buttons[3] == 1 )
+    if ( joy->buttons[STANDUP_BUTTON] == 1 )
     {
         if ( state_.data == false)
         {
@@ -64,7 +70,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         }
     }
 
-    if ( joy->buttons[0] == 1 )
+    if ( joy->buttons[SITDOWN_BUTTON] == 1 )
     {
         if ( state_.data == true)
         {
@@ -72,15 +78,15 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         }
     }
 
-    // Body shift L1 Button for testing
-    if ( joy->buttons[8] == 1 )
+    // Body rotation L1 Button for testing
+    if ( joy->buttons[BODY_ROTATION_BUTTON] == 1 )
     {
         imu_override_.data = true;
         body_scalar_.header.stamp = current_time;
-        body_scalar_.accel.angular.x = -joy->axes[0];
-        body_scalar_.accel.angular.y = -joy->axes[1];
+        body_scalar_.accel.angular.x = -joy->axes[LEFT_RIGHT_AXES];
+        body_scalar_.accel.angular.y = -joy->axes[FORWARD_BACKWARD_AXES];
         head_scalar_.header.stamp = current_time;
-        head_scalar_.accel.angular.z = joy->axes[2];
+        head_scalar_.accel.angular.z = joy->axes[YAW_ROTATION_AXES];
     }
     else
     {
@@ -88,15 +94,15 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     }
 
     // Travelling
-    if ( joy->buttons[8] != 1 )
+    if ( joy->buttons[BODY_ROTATION_BUTTON] != 1 )
     {
         base_scalar_.header.stamp = current_time;
-        base_scalar_.accel.linear.x = joy->axes[1];
-        base_scalar_.accel.linear.y = -joy->axes[0];
-        base_scalar_.accel.angular.z = joy->axes[2];
-        cmd_vel_.linear.x = ( joy->axes[1] * MAX_METERS_PER_SEC );
-        cmd_vel_.linear.y = ( joy->axes[0] * MAX_METERS_PER_SEC );
-        cmd_vel_.angular.z = ( joy->axes[2] * MAX_RADIANS_PER_SEC );
+        base_scalar_.accel.linear.x = joy->axes[FORWARD_BACKWARD_AXES];
+        base_scalar_.accel.linear.y = -joy->axes[LEFT_RIGHT_AXES];
+        base_scalar_.accel.angular.z = joy->axes[YAW_ROTATION_AXES];
+        cmd_vel_.linear.x = ( joy->axes[FORWARD_BACKWARD_AXES] * MAX_METERS_PER_SEC );
+        cmd_vel_.linear.y = ( joy->axes[LEFT_RIGHT_AXES] * MAX_METERS_PER_SEC );
+        cmd_vel_.angular.z = ( joy->axes[YAW_ROTATION_AXES] * MAX_RADIANS_PER_SEC );
     }
 }
 

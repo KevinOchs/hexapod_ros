@@ -88,6 +88,16 @@ ServoDriver::ServoDriver( void )
 }
 
 //==============================================================================
+// Destructor: Turn off the torque of the servos then close the serial port
+//==============================================================================
+
+ServoDriver::~ServoDriver( void )
+{
+    freeServos();
+    dxl_terminate();
+}
+
+//==============================================================================
 // Convert angles to servo resolution each leg and head pan
 //==============================================================================
 

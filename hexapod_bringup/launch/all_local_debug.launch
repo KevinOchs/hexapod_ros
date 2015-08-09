@@ -3,8 +3,10 @@
 
 <launch>
     <arg name="config" default="hexapod"/>
+    <arg name="joy_mapping" default="joystick"/>
     <include file="$(find hexapod_bringup)/launch/hexapod_full.launch">
       <arg name="config" value="$(arg config)"/>
+      <arg name="joy_mapping" default="$(arg joy_mapping)"/>
     </include>
 <!--    <include file="$(find hexapod_bringup)/launch/visualize_rtabmap.launch" /> -->
     <include file="$(find hexapod_bringup)/launch/rviz.launch" />

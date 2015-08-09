@@ -44,6 +44,7 @@ class ServoDriver
 {
     public:
         ServoDriver( void );
+        ~ServoDriver( void );
         void transmitServoPositions( const sensor_msgs::JointState &joint_state );
         void freeServos( void );
     private:
