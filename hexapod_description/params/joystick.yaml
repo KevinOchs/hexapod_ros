@@ -20,3 +20,6 @@ LEFT_RIGHT_AXES: 0
 
 # Right joystick right/left
 YAW_ROTATION_AXES: 2
+
+# Right joystick up/down
+PITCH_ROTATION_AXES: 3

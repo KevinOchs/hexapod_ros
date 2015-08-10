@@ -46,6 +46,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     ros::param::get( "FORWARD_BACKWARD_AXES", FORWARD_BACKWARD_AXES );
     ros::param::get( "LEFT_RIGHT_AXES", LEFT_RIGHT_AXES );
     ros::param::get( "YAW_ROTATION_AXES", YAW_ROTATION_AXES );
+    ros::param::get( "PITCH_ROTATION_AXES", PITCH_ROTATION_AXES );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("base_scalar", 100);
     body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("body_scalar", 100);
@@ -87,6 +88,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         body_scalar_.accel.angular.y = -joy->axes[FORWARD_BACKWARD_AXES];
         head_scalar_.header.stamp = current_time;
         head_scalar_.accel.angular.z = joy->axes[YAW_ROTATION_AXES];
+        head_scalar_.accel.angular.y = joy->axes[PITCH_ROTATION_AXES];
     }
     else
     {

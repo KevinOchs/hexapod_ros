@@ -64,6 +64,7 @@ ServoDriver::ServoDriver( void )
     OFFSET.resize( SERVO_COUNT );
     ID.resize( SERVO_COUNT );
     TICKS.resize( SERVO_COUNT );
+    CENTER.resize( SERVO_COUNT );
     MAX_RADIANS.resize( SERVO_COUNT );
     RAD_TO_SERVO_RESOLUTION.resize( SERVO_COUNT );
     servo_orientation_.resize( SERVO_COUNT );
@@ -76,13 +77,14 @@ ServoDriver::ServoDriver( void )
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/offset", OFFSET[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/id", ID[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/ticks", TICKS[i] );
+        ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/center", CENTER[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/max_radians", MAX_RADIANS[i] );
         ros::param::get( "SERVOS/" + static_cast<std::string>( servo_map_key_[i] ) + "/sign", servo_orientation_[i] );
         RAD_TO_SERVO_RESOLUTION[i] = TICKS[i] / MAX_RADIANS[i];
         // Fill vector containers with default value
-        cur_pos_[i] = TICKS[i] / 2;
-        goal_pos_[i] = TICKS[i] / 2;
-        write_pos_[i] = TICKS[i] / 2;
+        cur_pos_[i] = CENTER[i];
+        goal_pos_[i] = CENTER[i];
+        write_pos_[i] = CENTER[i];
         pose_steps_[i] = 1;
     }
 }
@@ -105,7 +107,7 @@ void ServoDriver::convertAngles( const sensor_msgs::JointState &joint_state )
 {
     for( int i = 0; i < SERVO_COUNT; i++ )
     {
-        goal_pos_[i] = ( TICKS[i] / 2 ) + round( ( joint_state.position[i] - ( servo_orientation_[i] * OFFSET[i] ) ) * RAD_TO_SERVO_RESOLUTION[i] );
+        goal_pos_[i] = CENTER[i] + round( ( joint_state.position[i] - ( servo_orientation_[i] * OFFSET[i] ) ) * RAD_TO_SERVO_RESOLUTION[i] );
     }
 }
 

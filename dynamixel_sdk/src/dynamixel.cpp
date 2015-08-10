@@ -86,11 +86,11 @@ void dxl_tx_packet()
 	}
 
 	if( gbInstructionPacket[INSTRUCTION] == INST_READ )
-		dxl_hal_set_timeout( gbInstructionPacket[PARAMETER+1] + 6 );
+		dxl_hal_set_timeout( gbInstructionPacket[PARAMETER+1] + 24 );
 	else if ( gbInstructionPacket[INSTRUCTION] == INST_SYNC_READ )
-        dxl_hal_set_timeout( gbInstructionPacket[PARAMETER+1] + 6 );
+        dxl_hal_set_timeout( gbInstructionPacket[PARAMETER+1] + 200 );
     else
-		dxl_hal_set_timeout( 6 );
+		dxl_hal_set_timeout( 24 );
 
 	gbCommStatus = COMM_TXSUCCESS;
 }

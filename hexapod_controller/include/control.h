@@ -75,7 +75,7 @@ class Control
         bool imu_init_stored_; // Auto-levelling
         double imu_roll_lowpass_, imu_pitch_lowpass_, imu_yaw_lowpass_, imu_roll_init_, imu_pitch_init_; // Auto-levelling
         double MAX_BODY_ROLL_COMP, MAX_BODY_PITCH_COMP, COMPENSATE_INCREMENT, COMPENSATE_TO_WITHIN; // Auto-levelling yaml config
-        double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_PAN, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW; // Mechanical limits
+        double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_YAW, HEAD_MAX_PITCH, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW; // Mechanical limits
         int NUMBER_OF_LEGS;        // Number of legs
         int NUMBER_OF_HEAD_JOINTS; // Number of head segments
         int NUMBER_OF_LEG_JOINTS;  // Number of leg segments

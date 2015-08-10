@@ -57,6 +57,7 @@ class ServoDriver
         std::vector<double> OFFSET; // Physical hardware offset of servo horn
         std::vector<int> ID; // Servo IDs
         std::vector<int> TICKS; // Total number of ticks, meaning resolution of dynamixel servo
+        std::vector<int> CENTER; // Center value of dynamixel servo
         std::vector<double> RAD_TO_SERVO_RESOLUTION; // Radians to servo conversion
         std::vector<double> MAX_RADIANS; // Max rotation your servo is manufactured to do. i.e. 360 degrees for MX etc.
         XmlRpc::XmlRpcValue SERVOS; // Servo map from yaml config file

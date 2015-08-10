@@ -40,7 +40,8 @@ Control::Control( void )
     ros::param::get( "NUMBER_OF_HEAD_SEGMENTS", NUMBER_OF_HEAD_JOINTS );
     ros::param::get( "BODY_MAX_ROLL", BODY_MAX_ROLL );
     ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
-    ros::param::get( "HEAD_MAX_PAN", HEAD_MAX_PAN );
+    ros::param::get( "HEAD_MAX_YAW", HEAD_MAX_YAW );
+    ros::param::get( "HEAD_MAX_PITCH", HEAD_MAX_PITCH );
     ros::param::get( "CYCLE_MAX_TRAVEL", CYCLE_MAX_TRAVEL );
     ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
@@ -134,16 +135,30 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
         joint_state->name[i] = servo_names_[i];
         joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].tibia;
         i++;
-        joint_state->name[i] = servo_names_[i];
-        joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].tarsus;
-        i++;
+        if ( NUMBER_OF_LEG_JOINTS == 4 )
+        {
+            joint_state->name[i] = servo_names_[i];
+            joint_state->position[i] = servo_orientation_[i] * legs.leg[leg_index].tarsus;
+            i++;
+        }
     }
-
-    for( int head_index = 0; head_index < NUMBER_OF_HEAD_JOINTS; head_index++ )
+    switch( NUMBER_OF_HEAD_JOINTS )
     {
-        joint_state->name[i] = servo_names_[i];
-        joint_state->position[i] = head_.yaw;
-        i++;
+        case 1:
+            joint_state->name[i] = servo_names_[i];
+            joint_state->position[i] = head_.yaw;
+            i++;
+            break;
+        case 2:
+            joint_state->name[i] = servo_names_[i];
+            joint_state->position[i] = head_.yaw;
+            i++;
+            joint_state->name[i] = servo_names_[i];
+            joint_state->position[i] = head_.pitch;
+            i++;
+            break;
+        default:
+            break;
     }
     joint_state_pub_.publish( *joint_state );
 }
@@ -206,7 +221,8 @@ void Control::headCallback( const geometry_msgs::AccelStampedConstPtr &head_scal
     double time_delta = current_time.toSec() - head_scalar_msg->header.stamp.toSec();
     if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
     {
-        head_.yaw = head_scalar_msg->accel.angular.z * HEAD_MAX_PAN;
+        head_.yaw = head_scalar_msg->accel.angular.z * HEAD_MAX_YAW;
+        head_.pitch = head_scalar_msg->accel.angular.y * HEAD_MAX_PITCH;
     }
 }
 
