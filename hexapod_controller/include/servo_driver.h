@@ -65,7 +65,7 @@ class ServoDriver
         std::vector<std::string> servo_map_key_;
         bool servos_free_;
         int SERVO_COUNT;
-        int TORQUE_ENABLE, PRESENT_POSITION_L, GOAL_POSITION_L;
+        int TORQUE_ENABLE, PRESENT_POSITION_L, GOAL_POSITION_L, INTERPOLATION_LOOP_RATE;
 };
 
 #endif

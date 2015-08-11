@@ -55,6 +55,7 @@ ServoDriver::ServoDriver( void )
     ros::param::get( "PRESENT_POSITION_L", PRESENT_POSITION_L );
     ros::param::get( "GOAL_POSITION_L", GOAL_POSITION_L );
     ros::param::get( "SERVOS", SERVOS );
+    ros::param::get( "INTERPOLATION_LOOP_RATE", INTERPOLATION_LOOP_RATE );
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
     {
         servo_map_key_.push_back( it->first );
@@ -170,7 +171,7 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
         }
     }
 
-    ros::Rate loop_rate( 900 ); // 900 Hz loop
+    ros::Rate loop_rate( INTERPOLATION_LOOP_RATE ); // 900 Hz loop
     // If nothing moved we abort no need to send packet with same positions
     if( interpolating != 0 )
     {

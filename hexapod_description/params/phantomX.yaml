@@ -16,7 +16,6 @@ NUMBER_OF_LEGS: 6
 # Number of leg segments ( 3dof or 4dof )
 NUMBER_OF_LEG_SEGMENTS: 3
 
-
 # Define Initial Coxa Offsets in Radians ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 # IK is solved in local space currently, hence the reason right and left have same angle offsets.
 INIT_COXA_ANGLE: [!degrees -45, !degrees 0, !degrees 45, !degrees -45.0, !degrees 0.0, !degrees 45.0]
@@ -67,6 +66,9 @@ CYCLE_MAX_YAW: !degrees 8
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
+
+# Speed in Hz that the servos interpolate between gait poses
+INTERPOLATION_LOOP_RATE: 550
 
 # Servo descriptions
 SERVOS: {
