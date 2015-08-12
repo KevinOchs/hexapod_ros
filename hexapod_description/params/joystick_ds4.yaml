@@ -1,0 +1,25 @@
+# Joystick Configuration Settings
+# This setup is a Sony DualShock4 controller
+# Use a program such as jstest-gtk to find out your preferred mappings
+# If you create a new one you can pass to the launch file with the joy_mapping arg.
+
+# "triangle" button
+STANDUP_BUTTON: 3
+
+# "square" button
+SITDOWN_BUTTON: 0
+
+# "L1" button
+BODY_ROTATION_BUTTON: 4
+
+# Left joystick up/down
+FORWARD_BACKWARD_AXES: 1
+
+# Left joystick right/left
+LEFT_RIGHT_AXES: 0
+
+# Right joystick right/left
+YAW_ROTATION_AXES: 2
+
+# Right joystick up/down
+PITCH_ROTATION_AXES: 5
