@@ -124,6 +124,7 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
             ROS_FATAL("IK Solver cannot solve a foot position that is not within leg reach!!!");
             ROS_FATAL("Shutting down so configuration can be fixed!!!");
             ros::shutdown();
+			break;
         }
 
         // Length of the sides of the triangle formed by the femur, tibia and tarsus joints.

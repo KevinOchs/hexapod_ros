@@ -3,7 +3,8 @@
 # Twist Max Values
 # Currently these are measured and calculated at full spped manually.
 # It is very difficult to find these values automatically due to voltage, leg length and servos used.
-MAX_METERS_PER_SEC: 0.092
+USE_TWIST: true
+MAX_METERS_PER_SEC: 0.0723589
 MAX_RADIANS_PER_SEC: !degrees 19.6292257
 
 # Number of head segments

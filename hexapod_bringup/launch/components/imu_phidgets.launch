@@ -26,7 +26,7 @@
       <param name="cc_t5" value="0.03376"/>
     </node>
     <node pkg="nodelet" type="nodelet" name="ImuFilterNodelet" args="load imu_filter_madgwick/ImuFilterNodelet imu_manager" >
-      <param name="use_mag" value="true" />
+      <param name="use_mag" value="false" />
       <param name="fixed_frame" value="base_link" />
       <param name="publish_tf" value="true" />
       <param name="angular_velocity_stdev " value="0.000226892803" />
