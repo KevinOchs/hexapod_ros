@@ -147,7 +147,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
-    odom_trans.transform.translation.x = pose_th_;
+    odom_trans.transform.translation.x = pose_x_;
     odom_trans.transform.translation.y = pose_y_;
     odom_trans.transform.translation.z = 0.0;
     odom_trans.transform.rotation = odom_quat;
