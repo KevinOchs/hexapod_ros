@@ -36,6 +36,7 @@
 #include <ros/ros.h>
 #include <hexapod_msgs/FeetPositions.h>
 #include <geometry_msgs/Pose2D.h>
+#include <geometry_msgs/Twist.h>
 
 //=============================================================================
 // Define structs and classes for gait system
@@ -47,13 +48,14 @@ class Gait
         Gait( void );
         void gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet );
     private:
-        void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet );
+        void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gail_vel );
         geometry_msgs::Pose2D smooth_base_;
+        ros::Time current_time, last_time;
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
         bool in_cycle_;           // True if the robot is in a gait cycle
         int CYCLE_LENGTH;         // Number of steps in cycle
         int NUMBER_OF_LEGS;       // Leg order in cycle of the leg
-        double LEG_LIFT_HEIGHT;      // Height of a leg cycle
+        double LEG_LIFT_HEIGHT;   // Height of a leg cycle
         int cycle_period_;        // Current period in cycle
         std::vector<int> cycle_leg_number_; // Leg order in cycle of the leg
         int extra_gait_cycle_;    // Forcing some extra timed cycles

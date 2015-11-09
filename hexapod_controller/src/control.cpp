@@ -118,7 +118,76 @@ bool Control::getPrevHexActiveState( void )
 }
 
 //==============================================================================
-// Joint State Publisher --- Sadly not dynamic yet
+// Odometry Publisher
+//==============================================================================
+void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
+{
+    current_time = ros::Time::now();
+
+    // compute odometry in a typical way given the velocities of the robot
+    double dt = ( current_time - last_time ).toSec();
+
+    double vth = gait_vel.angular.z;
+    double delta_th = vth * dt;
+    pose_th_ += delta_th;
+
+    double vx = gait_vel.linear.x;
+    double vy = gait_vel.linear.y;
+    double delta_x = ( vx * cos( pose_th_ ) - vy * sin( pose_th_ ) ) * dt;
+    double delta_y = ( vx * sin( pose_th_ ) + vy * cos( pose_th_ ) ) * dt;
+    pose_x_ += delta_x;
+    pose_y_ += delta_y;
+
+    // since all odometry is 6DOF we'll need a quaternion created from yaw
+    geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw( pose_th_ );
+
+    // first, we'll publish the transform over tf
+    geometry_msgs::TransformStamped odom_trans;
+    odom_trans.header.stamp = current_time;
+    odom_trans.header.frame_id = "odom";
+    odom_trans.child_frame_id = "base_link";
+
+    odom_trans.transform.translation.x = pose_th_;
+    odom_trans.transform.translation.y = pose_y_;
+    odom_trans.transform.translation.z = 0.0;
+    odom_trans.transform.rotation = odom_quat;
+
+    // send the transform only in debug state
+    odom_broadcaster.sendTransform( odom_trans );
+
+    // next, we'll publish the odometry message over ROS
+    nav_msgs::Odometry odom;
+    odom.header.stamp = current_time;
+    odom.header.frame_id = "odom";
+    odom.child_frame_id = "base_link";
+
+    // set the position
+    odom.pose.pose.position.x = x;
+    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.z = 0.0;
+    odom.pose.pose.orientation = odom_quat;
+
+    odom.pose.covariance[0] = 0.00001;  // x
+    odom.pose.covariance[7] = 0.00001;  // y
+    odom.pose.covariance[14] = 1; // z
+    odom.pose.covariance[21] = 1; // rot x
+    odom.pose.covariance[28] = 1; // rot y
+    odom.pose.covariance[35] = 0.001; // rot z
+
+    // set the velocity
+    odom.twist.twist.linear.x = vx;
+    odom.twist.twist.linear.y = vy;
+    odom.twist.twist.angular.z = vth;
+    // odom.twist.covariance = odom.pose.covariance; // needed?
+
+    odom_pub_.publish( odom );
+    last_time = current_time;
+}
+
+
+
+//==============================================================================
+// Joint State Publisher
 //==============================================================================
 void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state )
 {
@@ -297,7 +366,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
         if( imu_init_stored_ == false )
         {
-            imu_roll_init_ = -atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) ); // flipped due to orientation of sensor
+            imu_roll_init_ = atan2( lin_acc.x, sqrt( lin_acc.y * lin_acc.y + lin_acc.z * lin_acc.z ) );
             imu_pitch_init_ = -atan2( lin_acc.y, lin_acc.z );
             imu_pitch_init_ = ( imu_pitch_init_ >= 0.0 ) ? ( PI - imu_pitch_init_ ) : ( -imu_pitch_init_ - PI );
             imu_init_stored_ = true;
@@ -308,7 +377,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         imu_pitch_lowpass_ = lin_acc.y * 0.01 + ( imu_pitch_lowpass_ * ( 1.0 - 0.01 ) );
         imu_yaw_lowpass_ = lin_acc.z * 0.01 + ( imu_yaw_lowpass_ * ( 1.0 - 0.01 ) );
 
-        double imu_roll = -atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) ); // flipped due to orientation of sensor
+        double imu_roll = atan2( imu_roll_lowpass_, sqrt( imu_pitch_lowpass_ * imu_pitch_lowpass_ + imu_yaw_lowpass_ * imu_yaw_lowpass_ ) );
         double imu_pitch = -atan2( imu_pitch_lowpass_, imu_yaw_lowpass_ );
         imu_pitch = ( imu_pitch >= 0.0 ) ? ( PI - imu_pitch ) : ( -imu_pitch - PI );
 
@@ -326,7 +395,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         {
             if( body_.orientation.roll < MAX_BODY_ROLL_COMP )
             {
-                body_.orientation.roll = body_.orientation.roll + COMPENSATE_INCREMENT;
+                //body_.orientation.roll = body_.orientation.roll + COMPENSATE_INCREMENT;
             }
         }
 
@@ -334,7 +403,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         {
             if( body_.orientation.roll > -MAX_BODY_ROLL_COMP )
             {
-                body_.orientation.roll = body_.orientation.roll - COMPENSATE_INCREMENT;
+                //body_.orientation.roll = body_.orientation.roll - COMPENSATE_INCREMENT;
             }
         }
 
@@ -342,7 +411,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         {
             if( body_.orientation.pitch < MAX_BODY_PITCH_COMP )
             {
-                body_.orientation.pitch = body_.orientation.pitch + COMPENSATE_INCREMENT;
+                //body_.orientation.pitch = body_.orientation.pitch + COMPENSATE_INCREMENT;
             }
         }
 
@@ -350,7 +419,7 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         {
             if( body_.orientation.pitch > -MAX_BODY_PITCH_COMP )
             {
-                body_.orientation.pitch = body_.orientation.pitch - COMPENSATE_INCREMENT;
+                //body_.orientation.pitch = body_.orientation.pitch - COMPENSATE_INCREMENT;
             }
         }
     }

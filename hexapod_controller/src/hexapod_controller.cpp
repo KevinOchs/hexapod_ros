@@ -53,6 +53,10 @@ int main( int argc, char **argv )
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
 
+    ros::Time current_time, last_time;
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
+
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
     ros::Rate loop_rate( 500 );  // 500 hz
@@ -81,7 +85,7 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == true )
         {
             // Gait Sequencer
-            gait.gaitCycle( control.base_, &control.feet_ );
+            gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
 
             // IK solver for legs and body orientation
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -89,6 +93,7 @@ int main( int argc, char **argv )
             // Commit new positions and broadcast over USB2AX as well as jointStates
             control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
             servoDriver.transmitServoPositions( control.joint_state_ );
+            control.publishOdometry( control.gait_vel_ );
 
             // Set previous hex state of last loop so we know if we are shutting down on the next loop
             control.setPrevHexActiveState( true );
@@ -102,7 +107,7 @@ int main( int argc, char **argv )
                 control.body_.position.z = control.body_.position.z - 0.001;
 
                 // Gait Sequencer called to make sure we are on all six feet
-                gait.gaitCycle( control.base_, &control.feet_ );
+                gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -110,6 +115,7 @@ int main( int argc, char **argv )
                 // Commit new positions and broadcast over USB2AX as well as jointStates
                 control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
                 servoDriver.transmitServoPositions( control.joint_state_ );
+                control.publishOdometry( control.gait_vel_ );
             }
 
             // Release torque

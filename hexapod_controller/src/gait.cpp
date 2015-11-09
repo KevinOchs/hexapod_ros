@@ -46,6 +46,8 @@ Gait::Gait( void )
     is_travelling_ = false;
     in_cycle_ = false;
     extra_gait_cycle_ = 1;
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
 }
 
 //=============================================================================
@@ -82,7 +84,7 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
 // Gait Sequencing
 //=============================================================================
 
-void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet )
+void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
 {
     smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
     smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
@@ -129,6 +131,15 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
     if( is_travelling_ == true || in_cycle_ == true  )
     {
         cyclePeriod( smooth_base_, feet );
+
+        // Calculate current velocities for this tick of the gait
+        current_time = ros::Time::now();
+        double dt = ( current_time - last_time ).toSec();
+        gait_vel->.linear.x = ( ( 2*smooth_base_.x ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        gait_vel->.linear.y = ( ( 2*smooth_base_.y ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        gait_vel->.angular.z = ( smooth_base_.theta /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        last_time = current_time;
+
         cycle_period_++;
     }
     else

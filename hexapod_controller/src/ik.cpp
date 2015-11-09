@@ -94,8 +94,11 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
 
         // Calculating totals from the feet to center of the body
         double cpr_x = feet.foot[leg_index].position.x + body.position.x - INIT_FOOT_POS_X[leg_index] - COXA_TO_CENTER_X[leg_index];
+
         double cpr_y = feet.foot[leg_index].position.y + sign*( body.position.y + INIT_FOOT_POS_Y[leg_index] + COXA_TO_CENTER_Y[leg_index] );
+
         double cpr_z = feet.foot[leg_index].position.z + body.position.z + TARSUS_LENGTH - INIT_FOOT_POS_Z[leg_index];
+
 
         // Calculation of angular matrix of body (Tait-Bryan angles Z, Y, X)
         // http://en.wikipedia.org/wiki/Euler_angles
@@ -124,7 +127,7 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
             ROS_FATAL("IK Solver cannot solve a foot position that is not within leg reach!!!");
             ROS_FATAL("Shutting down so configuration can be fixed!!!");
             ros::shutdown();
-			break;
+            break;
         }
 
         // Length of the sides of the triangle formed by the femur, tibia and tarsus joints.
