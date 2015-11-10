@@ -50,6 +50,8 @@ Control::Control( void )
     ros::param::get( "MAX_BODY_PITCH_COMP", MAX_BODY_PITCH_COMP );
     ros::param::get( "COMPENSATE_INCREMENT", COMPENSATE_INCREMENT );
     ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
+    current_time = ros::Time::now();
+    last_time = ros::Time::now();
 
     // Find out how many servos/joints we have
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
@@ -85,8 +87,9 @@ Control::Control( void )
     imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
 
     // Topics we are publishing
-    sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 1 );
-    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 1 );
+    sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 10 );
+    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 10 );
+    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odom", 50 );
 
     // Send service request to the imu to re-calibrate
     imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
@@ -149,7 +152,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
 
     odom_trans.transform.translation.x = pose_x_;
     odom_trans.transform.translation.y = pose_y_;
-    odom_trans.transform.translation.z = 0.0;
+    odom_trans.transform.translation.z = body_.position.z;
     odom_trans.transform.rotation = odom_quat;
 
     // send the transform only in debug state
@@ -162,14 +165,14 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom.child_frame_id = "base_link";
 
     // set the position
-    odom.pose.pose.position.x = x;
-    odom.pose.pose.position.y = y;
-    odom.pose.pose.position.z = 0.0;
+    odom.pose.pose.position.x = pose_x_;
+    odom.pose.pose.position.y = pose_y_;
+    odom.pose.pose.position.z = body_.position.z;
     odom.pose.pose.orientation = odom_quat;
 
     odom.pose.covariance[0] = 0.00001;  // x
     odom.pose.covariance[7] = 0.00001;  // y
-    odom.pose.covariance[14] = 1; // z
+    odom.pose.covariance[14] = 0.00001; // z
     odom.pose.covariance[21] = 1; // rot x
     odom.pose.covariance[28] = 1; // rot y
     odom.pose.covariance[35] = 0.001; // rot z
@@ -178,7 +181,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom.twist.twist.linear.x = vx;
     odom.twist.twist.linear.y = vy;
     odom.twist.twist.angular.z = vth;
-    // odom.twist.covariance = odom.pose.covariance; // needed?
+    //odom.twist.covariance = odom.pose.covariance; // needed?
 
     odom_pub_.publish( odom );
     last_time = current_time;

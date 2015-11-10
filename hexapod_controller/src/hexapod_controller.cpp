@@ -50,12 +50,10 @@ int main( int argc, char **argv )
     ServoDriver servoDriver;
 
     // Establish initial leg positions for default pose in robot publisher
+    gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
+    control.publishOdometry( control.gait_vel_ );
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
-
-    ros::Time current_time, last_time;
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
 
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
@@ -75,7 +73,7 @@ int main( int argc, char **argv )
                 // Commit new positions and broadcast over USB2AX as well as jointStates
                 control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
                 servoDriver.transmitServoPositions( control.joint_state_ );
-
+                control.publishOdometry( control.gait_vel_ );
             }
             control.setPrevHexActiveState( true );
             ROS_INFO("Hexapod standing up.");
@@ -130,6 +128,7 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
+            control.publishOdometry( control.gait_vel_ );
             control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
         }
         loop_rate.sleep();

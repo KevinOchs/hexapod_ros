@@ -33,12 +33,14 @@
 
 #include <cmath>
 #include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
 #include <std_srvs/Empty.h>
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/AccelStamped.h>
+#include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <hexapod_msgs/Pose.h>
@@ -69,6 +71,8 @@ class Control
         hexapod_msgs::LegsJoints legs_;
         hexapod_msgs::FeetPositions feet_;
         double STANDING_BODY_HEIGHT;
+        geometry_msgs::Twist gait_vel_;
+
     private:
         geometry_msgs::Twist cmd_vel_;
         hexapod_msgs::Sounds sounds_; // Sound bool array
@@ -89,6 +93,8 @@ class Control
         std::vector<int> servo_orientation_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
+        ros::Time current_time, last_time;
+        tf::TransformBroadcaster odom_broadcaster;
 
         // Topics we are subscribing
         ros::Subscriber cmd_vel_sub_;

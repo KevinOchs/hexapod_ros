@@ -46,9 +46,9 @@ class Gait
 {
     public:
         Gait( void );
-        void gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet );
+        void gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel );
     private:
-        void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gail_vel );
+        void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet );
         geometry_msgs::Pose2D smooth_base_;
         ros::Time current_time, last_time;
         bool is_travelling_;      // True if the robot is moving, not just in a cycle

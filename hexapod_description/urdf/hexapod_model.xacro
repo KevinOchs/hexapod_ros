@@ -22,7 +22,7 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_link"/>
         <child link="body_link"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 0.064" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <link name="body_link">
@@ -91,7 +91,7 @@
     </link>
     <!-- IMU properties -->
     <joint name="imu_joint" type="fixed">
-        <parent link="base_link"/>
+        <parent link="body_link"/>
         <child link="imu_link"/>
         <origin xyz="0.0 0.0 0.034" rpy="0.0 0.0 0.0"/>
     </joint>

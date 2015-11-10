@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
 project( hexapod_locomotion )
 
-find_package( catkin REQUIRED COMPONENTS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs )
+find_package( catkin REQUIRED COMPONENTS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf )
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES hexapod_locomotion 
-  CATKIN_DEPENDS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs
+  CATKIN_DEPENDS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS})

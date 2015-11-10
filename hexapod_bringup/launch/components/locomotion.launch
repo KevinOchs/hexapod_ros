@@ -2,7 +2,6 @@
 <!-- Locomotion launch file -->
 
 <launch>
-    <node name="Hexapod_Odometry" pkg="hexapod_odometry" type="hexapod_odometry" output="screen" />
     <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 </launch>

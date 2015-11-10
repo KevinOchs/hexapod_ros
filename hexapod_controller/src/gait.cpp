@@ -135,9 +135,9 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
         // Calculate current velocities for this tick of the gait
         current_time = ros::Time::now();
         double dt = ( current_time - last_time ).toSec();
-        gait_vel->.linear.x = ( ( 2*smooth_base_.x ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
-        gait_vel->.linear.y = ( ( 2*smooth_base_.y ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
-        gait_vel->.angular.z = ( smooth_base_.theta /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        gait_vel->linear.x = ( ( 2*smooth_base_.x ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        gait_vel->linear.y = ( ( -2*smooth_base_.y ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
+        gait_vel->angular.z = ( 2*smooth_base_.theta /  CYCLE_LENGTH ) * ( 1.0 / dt );
         last_time = current_time;
 
         cycle_period_++;
