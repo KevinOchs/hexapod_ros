@@ -15,7 +15,7 @@
            the filter will not begin computation until it receives at least one message from
            one of the inputs. It will then run continuously at the frequency specified here,
            regardless of whether it receives more measurements. Defaults to 30 if unspecified. -->
-      <param name="frequency" value="30"/>
+      <param name="frequency" value="500"/>
 
       <!-- The period, in seconds, after which we consider a sensor to have timed out. In this event, we
            carry out a predict cycle on the EKF without correcting it. This parameter can be thought of
@@ -27,7 +27,7 @@
            are operating in a planar environment and want to ignore the effect of small variations in the
            ground plane that might otherwise be detected by, for example, an IMU. Defaults to false if
            unspecified. -->
-      <param name="two_d_mode" value="true"/>
+      <param name="two_d_mode" value="false"/>
 
       <!-- REP-105 (http://www.ros.org/reps/rep-0105.html) specifies three principal coordinate frames: map,
            odom, and base_link. base_link is the coordinate frame that is affixed to the robot. The robot's
@@ -67,6 +67,7 @@
            parameters obviously have no default values, and must be specified. -->
       <param name="odom0" value="/odom"/>
       <param name="imu0" value="/imu/data"/>
+      <param name="twist0" value="/twist"/>
 
       <!-- Each sensor reading updates some or all of the filter's state. These options give you greater control over
            which values from each measurement are fed to the filter. For example, if you have an odometry message as input,
@@ -75,7 +76,7 @@
            message types lack certain variables. For example, a TwistWithCovarianceStamped message has no pose information, so
            the first six values would be meaningless in that case. Each vector defaults to all false if unspecified, effectively
            making this parameter required for each sensor. -->
-      <rosparam param="odom0_config">[true, true, false,
+      <rosparam param="odom0_config">[true, true, true,
                                       false, false, false,
                                       true, true, false,
                                       false, false, true,
@@ -86,6 +87,12 @@
                                      false,  false,  false,
                                      true,  true,  true,
                                      true, true, true]</rosparam>
+
+      <rosparam param="twist0_config">[false, false, false,
+                                       false, false, false,
+                                       true,  true,  false,
+                                       false, false,  true,
+                                       false, false, false]</rosparam>
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
            measurements and let the nodes integrate them. However, this isn't always feasible, and so the state estimation
@@ -105,17 +112,19 @@
            variables have at least one source of absolute measurement. -->
       <param name="odom0_differential" value="false"/>
       <param name="imu0_differential" value="false"/>
+      <param name="twist0_differential" value="false"/>
 
       <!-- When the node starts, if this parameter is true, then the first measurement is treated as a "zero point" for all
            future measurements. While you can achieve the same effect with the differential paremeter, the key difference is
            that the relative parameter doesn't cause the measurement to be converted to a velocity before integrating it. If
            you simply want your measurements to start at 0 for a given sensor, set this to true. -->
-      <param name="odom0_relative" value="false"/>
-      <param name="imu0_relative" value="false"/>
+      <param name="odom0_relative" value="true"/>
+      <param name="imu0_relative" value="true"/>
+      <param name="twist0_relative" value="true"/>
 
       <!-- If we're including accelerations in our state estimate, then we'll probably want to remove any acceleration that
            is due to gravity for each IMU. If you don't want to, then set this to false. Defaults to false if unspecified. -->
-      <param name="imu0_remove_gravitational_acceleration" value="true"/>
+      <param name="imu0_remove_gravitational_acceleration" value="false"/>
 
       <!-- If you're having trouble, try setting this to true, and then echo the /diagnostics_agg topic to see
            if the node is unhappy with any settings or data. -->
@@ -131,13 +140,16 @@
            miss any messages (even if your frequency is set to a relatively small value), increase these. -->
       <param name="odom0_queue_size" value="10"/>
       <param name="imu0_queue_size" value="10"/>
+      <param name="twist0_queue_size" value="3"/>
 
       <!-- If your data is subject to outliers, use these threshold settings, expressed as Mahalanobis distances, to control
            how far away from the current vehicle state a sensor measurement is permitted to be. Each defaults to
            numeric_limits<double>::max() if unspecified. -->	  
+
       <param name="imu0_pose_rejection_threshold" value="0.3"/>
       <param name="imu0_twist_rejection_threshold" value="0.1"/>
       <param name="imu0_linear_acceleration_rejection_threshold" value="0.1"/>
+
 
       <!-- Debug settings. Not for the faint of heart. Outputs a ludicrous amount of information to the file
            specified by debug_out_file. I hope you like matrices! Defaults to false if unspecified. -->

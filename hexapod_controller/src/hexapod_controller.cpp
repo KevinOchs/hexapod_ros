@@ -52,6 +52,7 @@ int main( int argc, char **argv )
     // Establish initial leg positions for default pose in robot publisher
     gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
     control.publishOdometry( control.gait_vel_ );
+    control.publishTwist( control.gait_vel_ );
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
 
@@ -84,7 +85,7 @@ int main( int argc, char **argv )
         {
             // Gait Sequencer
             gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
-
+            control.publishTwist( control.gait_vel_ );
             // IK solver for legs and body orientation
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
@@ -129,6 +130,7 @@ int main( int argc, char **argv )
         {
             ros::Duration( 0.5 ).sleep();
             control.publishOdometry( control.gait_vel_ );
+            control.publishTwist( control.gait_vel_ );
             control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
         }
         loop_rate.sleep();

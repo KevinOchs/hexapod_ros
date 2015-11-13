@@ -90,6 +90,7 @@ Control::Control( void )
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 10 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 10 );
     odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odom", 50 );
+    twist_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>( "twist", 50 );
 
     // Send service request to the imu to re-calibrate
     imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
@@ -173,21 +174,43 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom.pose.covariance[0] = 0.00001;  // x
     odom.pose.covariance[7] = 0.00001;  // y
     odom.pose.covariance[14] = 0.00001; // z
-    odom.pose.covariance[21] = 1; // rot x
-    odom.pose.covariance[28] = 1; // rot y
+    odom.pose.covariance[21] = 1000000000000.0; // rot x
+    odom.pose.covariance[28] = 1000000000000.0; // rot y
     odom.pose.covariance[35] = 0.001; // rot z
 
     // set the velocity
     odom.twist.twist.linear.x = vx;
     odom.twist.twist.linear.y = vy;
     odom.twist.twist.angular.z = vth;
-    //odom.twist.covariance = odom.pose.covariance; // needed?
+    odom.twist.covariance = odom.pose.covariance; // needed?
 
     odom_pub_.publish( odom );
     last_time = current_time;
 }
 
+//==============================================================================
+// Twist Publisher
+//==============================================================================
+void Control::publishTwist( const geometry_msgs::Twist &gait_vel )
+{
+    geometry_msgs::TwistWithCovarianceStamped twistStamped;
+    current_time_twist = ros::Time::now();
+    twistStamped.header.stamp = current_time_twist;
+    twistStamped.header.frame_id = "odom";
 
+    twistStamped.twist.twist.linear.x = gait_vel.linear.x;
+    twistStamped.twist.twist.linear.y = gait_vel.linear.y;
+    twistStamped.twist.twist.angular.z = gait_vel.angular.z;
+
+    twistStamped.twist.covariance[0] = 0.00001;  // x
+    twistStamped.twist.covariance[7] = 0.00001;  // y
+    twistStamped.twist.covariance[14] = 0.00001; // z
+    twistStamped.twist.covariance[21] = 1000000000000.0; // rot x
+    twistStamped.twist.covariance[28] = 1000000000000.0; // rot y
+    twistStamped.twist.covariance[35] = 0.001; // rot z
+
+    twist_pub_.publish( twistStamped );
+}
 
 //==============================================================================
 // Joint State Publisher

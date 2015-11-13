@@ -38,6 +38,7 @@
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TwistWithCovarianceStamped.h>
 #include <geometry_msgs/Pose2D.h>
 #include <geometry_msgs/AccelStamped.h>
 #include <nav_msgs/Odometry.h>
@@ -64,6 +65,7 @@ class Control
         bool getPrevHexActiveState( void );
         void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state );
         void publishOdometry( const geometry_msgs::Twist &gait_vel );
+        void publishTwist( const geometry_msgs::Twist &gait_vel );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Pose2D base_; // Base link movement
         hexapod_msgs::Pose body_;    // Body link rotation
@@ -93,7 +95,7 @@ class Control
         std::vector<int> servo_orientation_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
-        ros::Time current_time, last_time;
+        ros::Time current_time, last_time, current_time_twist, last_time_twist;
         tf::TransformBroadcaster odom_broadcaster;
 
         // Topics we are subscribing
@@ -116,6 +118,7 @@ class Control
         ros::Publisher sounds_pub_;
         ros::Publisher joint_state_pub_;
         ros::Publisher odom_pub_;
+        ros::Publisher twist_pub_;
 
         // Services we call
         ros::ServiceClient imu_calibrate_;
