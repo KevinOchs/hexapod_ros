@@ -54,10 +54,18 @@ Gait::Gait( void )
 // step calculation
 //=============================================================================
 
-void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet )
+void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
 {
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
-    double period_height = 3*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 2 ) - 2*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 3 );
+    double period_height = 3.0*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 2 ) - 2.0*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 3 );
+
+    // Calculate current velocities for this period of the gait
+    current_time = ros::Time::now();
+    double dt = ( current_time - last_time ).toSec();
+    gait_vel->linear.x = ( ( 3.0*base.x ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->linear.y = ( ( -3.0*base.y ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->angular.z = ( ( 3.0*base.theta ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    last_time = current_time;
 
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {
@@ -130,16 +138,7 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
     // If either is true we consider the gait active
     if( is_travelling_ == true || in_cycle_ == true  )
     {
-        cyclePeriod( smooth_base_, feet );
-
-        // Calculate current velocities for this tick of the gait
-        current_time = ros::Time::now();
-        double dt = ( current_time - last_time ).toSec();
-        gait_vel->linear.x = ( ( 2.0*smooth_base_.x ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
-        gait_vel->linear.y = ( ( -2.0*smooth_base_.y ) /  CYCLE_LENGTH ) * ( 1.0 / dt );
-        gait_vel->angular.z = ( 1.9*smooth_base_.theta /  CYCLE_LENGTH ) * ( 1.0 / dt );
-        last_time = current_time;
-
+        cyclePeriod( smooth_base_, feet, gait_vel );
         cycle_period_++;
     }
     else

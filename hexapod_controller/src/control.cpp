@@ -156,8 +156,8 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom_trans.transform.translation.z = body_.position.z;
     odom_trans.transform.rotation = odom_quat;
 
-    // send the transform only in debug state
-    odom_broadcaster.sendTransform( odom_trans );
+    // Uncomment odom_broadcaster to send the transform. Only used if debugging calculated odometry.
+    // odom_broadcaster.sendTransform( odom_trans );
 
     // next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
@@ -342,7 +342,6 @@ void Control::stateCallback( const std_msgs::BoolConstPtr &state_msg )
             base_.x = 0.0;
             base_.theta = 0.0;
             setHexActiveState( true );
-            ROS_INFO("Hexapod locomotion is now active.");
             sounds_.stand = true;
             sounds_pub_.publish( sounds_ );
             sounds_.stand = false;
@@ -363,7 +362,6 @@ void Control::stateCallback( const std_msgs::BoolConstPtr &state_msg )
             base_.x = 0.0;
             base_.theta = 0.0;
             setHexActiveState( false );
-            ROS_WARN("Hexapod locomotion shutting down servos.");
             sounds_.shut_down = true;
             sounds_pub_.publish( sounds_ );
             sounds_.shut_down = false;

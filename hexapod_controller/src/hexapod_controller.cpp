@@ -51,10 +51,10 @@ int main( int argc, char **argv )
 
     // Establish initial leg positions for default pose in robot publisher
     gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
-    control.publishOdometry( control.gait_vel_ );
-    control.publishTwist( control.gait_vel_ );
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+    control.publishOdometry( control.gait_vel_ );
+    control.publishTwist( control.gait_vel_ );
 
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
@@ -64,7 +64,8 @@ int main( int argc, char **argv )
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
-            while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
+        ROS_INFO("Hexapod standing up.");
+        while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
             {
                 control.body_.position.z = control.body_.position.z + 0.001;
 
@@ -75,9 +76,9 @@ int main( int argc, char **argv )
                 control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
                 servoDriver.transmitServoPositions( control.joint_state_ );
                 control.publishOdometry( control.gait_vel_ );
+                control.publishTwist( control.gait_vel_ );
             }
             control.setPrevHexActiveState( true );
-            ROS_INFO("Hexapod standing up.");
         }
 
         // We are live and standing up
@@ -93,6 +94,7 @@ int main( int argc, char **argv )
             control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
             servoDriver.transmitServoPositions( control.joint_state_ );
             control.publishOdometry( control.gait_vel_ );
+            control.publishTwist( control.gait_vel_ );
 
             // Set previous hex state of last loop so we know if we are shutting down on the next loop
             control.setPrevHexActiveState( true );
@@ -101,6 +103,7 @@ int main( int argc, char **argv )
         // Shutting down hex so let us do a gradual sit down and turn off torque
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == true )
         {
+            ROS_INFO("Hexapod sitting down.");
             while( control.body_.position.z > 0 )
             {
                 control.body_.position.z = control.body_.position.z - 0.001;
@@ -115,6 +118,7 @@ int main( int argc, char **argv )
                 control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
                 servoDriver.transmitServoPositions( control.joint_state_ );
                 control.publishOdometry( control.gait_vel_ );
+                control.publishTwist( control.gait_vel_ );
             }
 
             // Release torque
@@ -129,9 +133,9 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == false && control.getPrevHexActiveState() == false )
         {
             ros::Duration( 0.5 ).sleep();
+            control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
             control.publishOdometry( control.gait_vel_ );
             control.publishTwist( control.gait_vel_ );
-            control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
         }
         loop_rate.sleep();
     }
