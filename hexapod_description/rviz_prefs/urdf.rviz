@@ -4,6 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Global Options1
         - /Imu1/Box properties1
         - /2D Map1/Position1
         - /2D Map1/Orientation1
@@ -86,6 +87,18 @@ Visualization Manager:
           Value: true
         femur_RR:
           Value: true
+        foot_LF:
+          Value: true
+        foot_LM:
+          Value: true
+        foot_LR:
+          Value: true
+        foot_RF:
+          Value: true
+        foot_RM:
+          Value: true
+        foot_RR:
+          Value: true
         imu_link:
           Value: true
         leg_center_LF:
@@ -103,6 +116,8 @@ Visualization Manager:
         map:
           Value: true
         odom:
+          Value: true
+        pan_link:
           Value: true
         tarsus_LF:
           Value: true
@@ -142,44 +157,52 @@ Visualization Manager:
                   {}
                 camera_rgb_optical_frame:
                   {}
+                imu_link:
+                  {}
                 leg_center_LF:
                   coxa_LF:
                     femur_LF:
                       tibia_LF:
                         tarsus_LF:
-                          {}
+                          foot_LF:
+                            {}
                 leg_center_LM:
                   coxa_LM:
                     femur_LM:
                       tibia_LM:
                         tarsus_LM:
-                          {}
+                          foot_LM:
+                            {}
                 leg_center_LR:
                   coxa_LR:
                     femur_LR:
                       tibia_LR:
                         tarsus_LR:
-                          {}
+                          foot_LR:
+                            {}
                 leg_center_RF:
                   coxa_RF:
                     femur_RF:
                       tibia_RF:
                         tarsus_RF:
-                          {}
+                          foot_RF:
+                            {}
                 leg_center_RM:
                   coxa_RM:
                     femur_RM:
                       tibia_RM:
                         tarsus_RM:
-                          {}
+                          foot_RM:
+                            {}
                 leg_center_RR:
                   coxa_RR:
                     femur_RR:
                       tibia_RR:
                         tarsus_RR:
-                          {}
-              imu_link:
-                {}
+                          foot_RR:
+                            {}
+                pan_link:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 0.75
@@ -269,6 +292,30 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        foot_LF:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        foot_LM:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        foot_LR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        foot_RF:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        foot_RM:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        foot_RR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         imu_link:
           Alpha: 1
           Show Axes: false
@@ -294,6 +341,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
         leg_center_RR:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        pan_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -400,7 +451,7 @@ Visualization Manager:
       Draw Behind: true
       Enabled: true
       Name: 2D Map
-      Topic: /rtabmap/grid_projection_map
+      Topic: /rtabmap/grid_map
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -443,14 +494,14 @@ Visualization Manager:
       Local loop closure: 255; 255; 0
       Name: Path
       Neighbor: 0; 0; 255
-      Topic: /rtabmap/mapData
+      Topic: /rtabmap/mapGraph
       User: 255; 0; 0
       Value: true
       Virtual: 255; 0; 255
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: map
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -471,22 +522,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.91974
+      Distance: 6.52548
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.66447
-        Y: 0.351969
-        Z: 0.20178
+        X: 0.143498
+        Y: 0.000986889
+        Z: -0.0840518
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.235398
+      Pitch: 0.445398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.5104
+      Yaw: 3.2904
     Saved:
       - Class: rviz/Orbit
         Distance: 0.775628
@@ -521,5 +572,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1363
-  X: 106
-  Y: 32
+  X: 90
+  Y: 63

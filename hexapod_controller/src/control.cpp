@@ -89,7 +89,7 @@ Control::Control( void )
     // Topics we are publishing
     sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 10 );
     joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 10 );
-    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odom", 50 );
+    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odometry/calculated", 50 );
     twist_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>( "twist", 50 );
 
     // Send service request to the imu to re-calibrate

@@ -92,9 +92,9 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "hexapod_sound");
     HexapodSound hexapodSound;
 
-    hexapodSound.playSoundFile( "empty.ogg", 3 ); 
-    hexapodSound.playSoundFile( "intelChime.ogg", 3 ); 
-    hexapodSound.playSoundFile( "activeAwaitingCommands.ogg", 3 ); 
+    hexapodSound.playSoundFile( "empty.ogg", 3 );
+    hexapodSound.playSoundFile( "intelChime.ogg", 3 );
+    hexapodSound.playSoundFile( "activeAwaitingCommands.ogg", 3 );
 
     ros::AsyncSpinner spinner( 1 ); // Using 1 threads
     spinner.start();
@@ -103,25 +103,25 @@ int main(int argc, char** argv)
     {
         if( hexapodSound.sounds_.stand == true )
         {
-            hexapodSound.playSoundFile( "standingUp.ogg", 3 ); 
+            hexapodSound.playSoundFile( "standingUp.ogg", 3 );
             hexapodSound.sounds_.stand = false;
         }
 
         if( hexapodSound.sounds_.auto_level == true )
         {
-            hexapodSound.playSoundFile( "autoLevelingBody.ogg", 6 ); 
+            hexapodSound.playSoundFile( "autoLevelingBody.ogg", 6 );
             hexapodSound.sounds_.auto_level = false;
         }
 
         if( hexapodSound.sounds_.waiting == true )
         {
-            hexapodSound.playSoundFile( "activeAwaitingCommands.ogg", 3 ); 
+            hexapodSound.playSoundFile( "activeAwaitingCommands.ogg", 3 );
             hexapodSound.sounds_.waiting = false;
         }
 
         if( hexapodSound.sounds_.shut_down == true )
         {
-            hexapodSound.playSoundFile( "shuttingDown.ogg", 3); 
+            hexapodSound.playSoundFile( "shuttingDown.ogg", 3);
             hexapodSound.sounds_.shut_down = false;
         }
 
