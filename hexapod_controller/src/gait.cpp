@@ -62,9 +62,9 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
     // Calculate current velocities for this period of the gait
     current_time = ros::Time::now();
     double dt = ( current_time - last_time ).toSec();
-    gait_vel->linear.x = ( ( 3.0*base.x ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
-    gait_vel->linear.y = ( ( -3.0*base.y ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
-    gait_vel->angular.z = ( ( 3.0*base.theta ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->linear.x = ( ( PI*base.x ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->linear.y = ( ( -PI*base.y ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->angular.z = ( ( PI*base.theta ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
     last_time = current_time;
 
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
