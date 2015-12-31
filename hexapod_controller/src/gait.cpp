@@ -30,7 +30,7 @@
 
 #include <gait.h>
 
-const static double PI = atan(1.0)*4.0;
+static const double PI = atan(1.0)*4.0;
 
 //==============================================================================
 //  Constructor: Initialize gait variables
@@ -46,8 +46,8 @@ Gait::Gait( void )
     is_travelling_ = false;
     in_cycle_ = false;
     extra_gait_cycle_ = 1;
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
+    current_time_ = ros::Time::now();
+    last_time_ = ros::Time::now();
 }
 
 //=============================================================================
@@ -57,15 +57,15 @@ Gait::Gait( void )
 void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
 {
     double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
-    double period_height = 3.0*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 2 ) - 2.0*pow( sin( cycle_period_ * PI / CYCLE_LENGTH ), 3 );
+    double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
 
     // Calculate current velocities for this period of the gait
-    current_time = ros::Time::now();
-    double dt = ( current_time - last_time ).toSec();
+    current_time_ = ros::Time::now();
+    double dt = ( current_time_ - last_time_ ).toSec();
     gait_vel->linear.x = ( ( PI*base.x ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
     gait_vel->linear.y = ( ( -PI*base.y ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
     gait_vel->angular.z = ( ( PI*base.theta ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
-    last_time = current_time;
+    last_time_ = current_time_;
 
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
     {

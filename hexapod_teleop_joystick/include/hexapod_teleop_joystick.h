@@ -28,6 +28,9 @@
 // Author: Kevin M. Ochs
 
 
+#ifndef HEXAPOD_TELEOP_H_
+#define HEXAPOD_TELEOP_H_
+
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
 #include <std_msgs/Bool.h>
@@ -48,9 +51,12 @@ class HexapodTeleopJoystick
         ros::Publisher head_scalar_pub_;
         ros::Publisher state_pub_;
         ros::Publisher imu_override_pub_;
+
     private:
         void joyCallback( const sensor_msgs::Joy::ConstPtr &joy );
         ros::NodeHandle nh_;
         ros::Subscriber joy_sub_;
         int STANDUP_BUTTON, SITDOWN_BUTTON, BODY_ROTATION_BUTTON, FORWARD_BACKWARD_AXES, LEFT_RIGHT_AXES, YAW_ROTATION_AXES, PITCH_ROTATION_AXES;
 };
+
+#endif // HEXAPOD_TELEOP_H_

@@ -50,7 +50,7 @@ class Gait
     private:
         void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel );
         geometry_msgs::Pose2D smooth_base_;
-        ros::Time current_time, last_time;
+        ros::Time current_time_, last_time_;
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
         bool in_cycle_;           // True if the robot is in a gait cycle
         int CYCLE_LENGTH;         // Number of steps in cycle

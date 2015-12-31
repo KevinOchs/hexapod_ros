@@ -67,7 +67,7 @@ int main( int argc, char **argv )
         ROS_INFO("Hexapod standing up.");
         while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
             {
-                control.body_.position.z = control.body_.position.z + 0.001;
+                control.body_.position.z = control.body_.position.z + 0.001; // 1 mm increment
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -87,6 +87,7 @@ int main( int argc, char **argv )
             // Gait Sequencer
             gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
             control.publishTwist( control.gait_vel_ );
+
             // IK solver for legs and body orientation
             ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
@@ -106,7 +107,7 @@ int main( int argc, char **argv )
             ROS_INFO("Hexapod sitting down.");
             while( control.body_.position.z > 0 )
             {
-                control.body_.position.z = control.body_.position.z - 0.001;
+                control.body_.position.z = control.body_.position.z - 0.001; // 1 mm increment
 
                 // Gait Sequencer called to make sure we are on all six feet
                 gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );

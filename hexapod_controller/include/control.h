@@ -83,8 +83,8 @@ class Control
         double imu_roll_lowpass_, imu_pitch_lowpass_, imu_yaw_lowpass_, imu_roll_init_, imu_pitch_init_; // Auto-levelling
         double MAX_BODY_ROLL_COMP, MAX_BODY_PITCH_COMP, COMPENSATE_INCREMENT, COMPENSATE_TO_WITHIN; // Auto-levelling yaml config
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_YAW, HEAD_MAX_PITCH, CYCLE_MAX_TRAVEL, CYCLE_MAX_YAW; // Mechanical limits
-        double pose_x_; // pose/odometry
-        double pose_y_; // pose/odometry
+        double pose_x_;  // pose/odometry
+        double pose_y_;  // pose/odometry
         double pose_th_; // pose/odometry
         int NUMBER_OF_LEGS;        // Number of legs
         int NUMBER_OF_HEAD_JOINTS; // Number of head segments
@@ -95,7 +95,7 @@ class Control
         std::vector<int> servo_orientation_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
-        ros::Time current_time, last_time, current_time_twist, last_time_twist;
+        ros::Time current_time_odometry_, last_time_odometry_;
         tf::TransformBroadcaster odom_broadcaster;
 
         // Topics we are subscribing

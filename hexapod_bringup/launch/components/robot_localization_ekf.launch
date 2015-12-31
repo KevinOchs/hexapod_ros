@@ -83,9 +83,9 @@
 
       <rosparam param="imu0_config">[false, false, false,
                                      false, false, false,
-                                     false,  false,  false,
+                                     true, true,  false,
                                      false,  false,  true,
-                                     true, true, true]</rosparam>
+                                     true, true, false]</rosparam>
 
       <!-- The best practice for including new sensors in robot_localization's state estimation nodes is to pass in velocity
            measurements and let the nodes integrate them. However, this isn't always feasible, and so the state estimation

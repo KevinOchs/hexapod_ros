@@ -27,8 +27,11 @@
 
 // Author: Kevin M. Ochs
 
+
 #include <control.h>
+
 static const double PI = atan(1.0)*4.0;
+
 //==============================================================================
 // Constructor
 //==============================================================================
@@ -50,8 +53,8 @@ Control::Control( void )
     ros::param::get( "MAX_BODY_PITCH_COMP", MAX_BODY_PITCH_COMP );
     ros::param::get( "COMPENSATE_INCREMENT", COMPENSATE_INCREMENT );
     ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
-    current_time = ros::Time::now();
-    last_time = ros::Time::now();
+    current_time_odometry_ = ros::Time::now();
+    last_time_odometry_ = ros::Time::now();
 
     // Find out how many servos/joints we have
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
@@ -78,22 +81,22 @@ Control::Control( void )
     imu_pitch_init_ = 0.0;
 
     // Topics we are subscribing
-    cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "cmd_vel", 1, &Control::cmd_velCallback, this );
-    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "base_scalar", 1, &Control::baseCallback, this );
-    body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "body_scalar", 1, &Control::bodyCallback, this );
-    head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "head_scalar", 1, &Control::headCallback, this );
-    state_sub_ = nh_.subscribe<std_msgs::Bool>( "state", 1, &Control::stateCallback, this );
-    imu_override_sub_ = nh_.subscribe<std_msgs::Bool>( "imu_override", 1, &Control::imuOverrideCallback, this );
-    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "imu/data", 1, &Control::imuCallback, this );
+    cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "/cmd_vel", 1, &Control::cmd_velCallback, this );
+    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/base_scalar", 1, &Control::baseCallback, this );
+    body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/body_scalar", 1, &Control::bodyCallback, this );
+    head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/head_scalar", 1, &Control::headCallback, this );
+    state_sub_ = nh_.subscribe<std_msgs::Bool>( "/state", 1, &Control::stateCallback, this );
+    imu_override_sub_ = nh_.subscribe<std_msgs::Bool>( "/imu/imu_override", 1, &Control::imuOverrideCallback, this );
+    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>( "/imu/data", 1, &Control::imuCallback, this );
 
     // Topics we are publishing
-    sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "sounds", 10 );
-    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "joint_states", 10 );
-    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "odometry/calculated", 50 );
-    twist_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>( "twist", 50 );
+    sounds_pub_ = nh_.advertise<hexapod_msgs::Sounds>( "/sounds", 10 );
+    joint_state_pub_ = nh_.advertise<sensor_msgs::JointState>( "/joint_states", 10 );
+    odom_pub_ = nh_.advertise<nav_msgs::Odometry>( "/odometry/calculated", 50 );
+    twist_pub_ = nh_.advertise<geometry_msgs::TwistWithCovarianceStamped>( "/twist", 50 );
 
     // Send service request to the imu to re-calibrate
-    imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("imu/calibrate");
+    imu_calibrate_ = nh_.serviceClient<std_srvs::Empty>("/imu/calibrate");
     imu_calibrate_.call( calibrate_ );
 }
 
@@ -126,10 +129,11 @@ bool Control::getPrevHexActiveState( void )
 //==============================================================================
 void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
 {
-    current_time = ros::Time::now();
-
     // compute odometry in a typical way given the velocities of the robot
-    double dt = ( current_time - last_time ).toSec();
+
+    // calculate time elapsed
+    current_time_odometry_ = ros::Time::now();
+    double dt = ( current_time_odometry_ - last_time_odometry_ ).toSec();
 
     double vth = gait_vel.angular.z;
     double delta_th = vth * dt;
@@ -147,7 +151,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
 
     // first, we'll publish the transform over tf
     geometry_msgs::TransformStamped odom_trans;
-    odom_trans.header.stamp = current_time;
+    odom_trans.header.stamp = current_time_odometry_;
     odom_trans.header.frame_id = "odom";
     odom_trans.child_frame_id = "base_link";
 
@@ -161,7 +165,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
 
     // next, we'll publish the odometry message over ROS
     nav_msgs::Odometry odom;
-    odom.header.stamp = current_time;
+    odom.header.stamp = current_time_odometry_;
     odom.header.frame_id = "odom";
     odom.child_frame_id = "base_link";
 
@@ -185,7 +189,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
     odom.twist.covariance = odom.pose.covariance; // needed?
 
     odom_pub_.publish( odom );
-    last_time = current_time;
+    last_time_odometry_ = current_time_odometry_;
 }
 
 //==============================================================================
@@ -194,8 +198,7 @@ void Control::publishOdometry( const geometry_msgs::Twist &gait_vel )
 void Control::publishTwist( const geometry_msgs::Twist &gait_vel )
 {
     geometry_msgs::TwistWithCovarianceStamped twistStamped;
-    current_time_twist = ros::Time::now();
-    twistStamped.header.stamp = current_time_twist;
+    twistStamped.header.stamp = ros::Time::now();
     twistStamped.header.frame_id = "odom";
 
     twistStamped.twist.twist.linear.x = gait_vel.linear.x;

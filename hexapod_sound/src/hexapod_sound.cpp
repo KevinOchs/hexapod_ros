@@ -38,7 +38,7 @@
 HexapodSound::HexapodSound( void )
 {
     sound_pub_ = nh_.advertise<sound_play::SoundRequest>("/robotsound", 1, 0);
-    sounds_sub_ = nh_.subscribe<hexapod_msgs::Sounds>( "sounds", 1, &HexapodSound::soundsCallback, this);
+    sounds_sub_ = nh_.subscribe<hexapod_msgs::Sounds>( "/sounds", 1, &HexapodSound::soundsCallback, this);
     sound_package_path_ = ros::package::getPath("hexapod_sound");
 }
 

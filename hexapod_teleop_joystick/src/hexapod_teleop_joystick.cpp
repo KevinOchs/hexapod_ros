@@ -45,12 +45,12 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     ros::param::get( "LEFT_RIGHT_AXES", LEFT_RIGHT_AXES );
     ros::param::get( "YAW_ROTATION_AXES", YAW_ROTATION_AXES );
     ros::param::get( "PITCH_ROTATION_AXES", PITCH_ROTATION_AXES );
-    joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 5, &HexapodTeleopJoystick::joyCallback, this);
-    base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("base_scalar", 100);
-    body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("body_scalar", 100);
-    head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("head_scalar", 100);
-    state_pub_ = nh_.advertise<std_msgs::Bool>("state", 100);
-    imu_override_pub_ = nh_.advertise<std_msgs::Bool>("imu_override", 100);
+    joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("/joy", 5, &HexapodTeleopJoystick::joyCallback, this);
+    base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/base_scalar", 100);
+    body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/body_scalar", 100);
+    head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/head_scalar", 100);
+    state_pub_ = nh_.advertise<std_msgs::Bool>("/state", 100);
+    imu_override_pub_ = nh_.advertise<std_msgs::Bool>("/imu/imu_override", 100);
 }
 
 //==============================================================================
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
     ros::AsyncSpinner spinner(1); // Using 1 threads
     spinner.start();
 
-    ros::Rate loop_rate( 250 ); // 250 hz
+    ros::Rate loop_rate( 100 ); // 100 hz
     while ( ros::ok() )
     {
         hexapodTeleopJoystick.base_scalar_pub_.publish( hexapodTeleopJoystick.base_scalar_ );
