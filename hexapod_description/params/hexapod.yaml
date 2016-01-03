@@ -57,10 +57,19 @@ MAX_BODY_PITCH_COMP: !degrees 12
 COMPENSATE_INCREMENT: !degrees 0.01
 COMPENSATE_TO_WITHIN: !degrees 1
 
-# Gait Settings
+# Cycle length is the number of periods the travel is divided into ( Gait Settings )
 CYCLE_LENGTH: 50
+
+# Leg lift height is the max distance in meters the foot is lifted off the ground in a full step ( Gait Settings )
+# If you set this to close to the total measurement of your femur and tibia the leg IK calculation might fail
 LEG_LIFT_HEIGHT: 0.04
+
+# Max travel is the diameter distance in meters the body can travel in a full step ( Gait Settings )
+# If you set this to close to the total measurement of your femur and tibia the leg IK calculation might fail
 CYCLE_MAX_TRAVEL: 0.08
+
+# Max yaw is the max radians the body can rotate in a full step ( Gait Settings )
+# Setting this higher could cause the legs to hit each other, depends of your physical body measurements
 CYCLE_MAX_YAW: !degrees 8
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
