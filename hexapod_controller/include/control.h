@@ -66,6 +66,7 @@ class Control
         void publishJointStates( const hexapod_msgs::LegsJoints &legs, const hexapod_msgs::RPY &head, sensor_msgs::JointState *joint_state );
         void publishOdometry( const geometry_msgs::Twist &gait_vel );
         void publishTwist( const geometry_msgs::Twist &gait_vel );
+        void partitionCmd_vel( geometry_msgs::Twist *cmd_vel );
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Pose2D base_; // Base link movement
         hexapod_msgs::Pose body_;    // Body link rotation
@@ -74,9 +75,9 @@ class Control
         hexapod_msgs::FeetPositions feet_;
         double STANDING_BODY_HEIGHT;
         geometry_msgs::Twist gait_vel_;
+        geometry_msgs::Twist cmd_vel_;
 
     private:
-        geometry_msgs::Twist cmd_vel_;
         hexapod_msgs::Sounds sounds_; // Sound bool array
         std_msgs::Bool imu_override_; // Override body levelling for body manipulation
         bool imu_init_stored_; // Auto-levelling
@@ -95,8 +96,9 @@ class Control
         std::vector<int> servo_orientation_;
         bool hex_state_;      // Current loop state
         bool prev_hex_state_; // Previous loop state
-        ros::Time current_time_odometry_, last_time_odometry_;
+        ros::Time current_time_odometry_, last_time_odometry_, current_time_cmd_vel_, last_time_cmd_vel_;
         tf::TransformBroadcaster odom_broadcaster;
+        geometry_msgs::Twist cmd_vel_incoming_;
 
         // Topics we are subscribing
         ros::Subscriber cmd_vel_sub_;

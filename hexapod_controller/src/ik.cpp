@@ -154,3 +154,4 @@ void Ik::calculateIK( const hexapod_msgs::FeetPositions &feet, const hexapod_msg
         legs->leg[leg_index].tarsus = legs->leg[leg_index].femur + legs->leg[leg_index].tibia;
     }
 }
+

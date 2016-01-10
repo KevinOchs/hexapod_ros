@@ -239,3 +239,4 @@ void ServoDriver::freeServos( void )
     dxl_write_word( 254, TORQUE_ENABLE, 0 );
     servos_free_ = true;
 }
+

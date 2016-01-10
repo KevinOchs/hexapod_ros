@@ -50,7 +50,7 @@ int main( int argc, char **argv )
     ServoDriver servoDriver;
 
     // Establish initial leg positions for default pose in robot publisher
-    gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
+    gait.gaitCycle( control.cmd_vel_, &control.feet_, &control.gait_vel_ );
     ik.calculateIK( control.feet_, control.body_, &control.legs_ );
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
     control.publishOdometry( control.gait_vel_ );
@@ -61,6 +61,9 @@ int main( int argc, char **argv )
     ros::Rate loop_rate( 500 );  // 500 hz
     while( ros::ok() )
     {
+        // Divide cmd_vel by the loop rate to get appropriate velocities for gait period
+        control.partitionCmd_vel( &control.cmd_vel_ );
+
         // Start button on controller has been pressed stand up
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == false )
         {
@@ -85,7 +88,7 @@ int main( int argc, char **argv )
         if( control.getHexActiveState() == true && control.getPrevHexActiveState() == true )
         {
             // Gait Sequencer
-            gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
+            gait.gaitCycle( control.cmd_vel_, &control.feet_, &control.gait_vel_ );
             control.publishTwist( control.gait_vel_ );
 
             // IK solver for legs and body orientation
@@ -110,7 +113,7 @@ int main( int argc, char **argv )
                 control.body_.position.z = control.body_.position.z - 0.001; // 1 mm increment
 
                 // Gait Sequencer called to make sure we are on all six feet
-                gait.gaitCycle( control.base_, &control.feet_, &control.gait_vel_ );
+                gait.gaitCycle( control.cmd_vel_, &control.feet_, &control.gait_vel_ );
 
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
@@ -142,3 +145,4 @@ int main( int argc, char **argv )
     }
     return 0;
 }
+

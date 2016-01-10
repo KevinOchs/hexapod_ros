@@ -46,6 +46,8 @@ class HexapodTeleopJoystick
         geometry_msgs::AccelStamped base_scalar_;
         geometry_msgs::AccelStamped body_scalar_;
         geometry_msgs::AccelStamped head_scalar_;
+        geometry_msgs::Twist cmd_vel_;
+        ros::Publisher cmd_vel_pub_;
         ros::Publisher base_scalar_pub_;
         ros::Publisher body_scalar_pub_;
         ros::Publisher head_scalar_pub_;
@@ -57,6 +59,7 @@ class HexapodTeleopJoystick
         ros::NodeHandle nh_;
         ros::Subscriber joy_sub_;
         int STANDUP_BUTTON, SITDOWN_BUTTON, BODY_ROTATION_BUTTON, FORWARD_BACKWARD_AXES, LEFT_RIGHT_AXES, YAW_ROTATION_AXES, PITCH_ROTATION_AXES;
+        double MAX_METERS_PER_SEC, MAX_RADIANS_PER_SEC;
 };
 
 #endif // HEXAPOD_TELEOP_H_

@@ -60,11 +60,12 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
     double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
 
     // Calculate current velocities for this period of the gait
+    // This factors in the sinusoid of the step for accurate odometry
     current_time_ = ros::Time::now();
     double dt = ( current_time_ - last_time_ ).toSec();
-    gait_vel->linear.x = ( ( PI*base.x ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
-    gait_vel->linear.y = ( ( -PI*base.y ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
-    gait_vel->angular.z = ( ( PI*base.theta ) /  CYCLE_LENGTH ) * sin( cycle_period_ * PI / CYCLE_LENGTH ) * ( 1.0 / dt );
+    gait_vel->linear.x = ( ( PI*base.x ) /  CYCLE_LENGTH ) * period_height * ( 1.0 / dt );
+    gait_vel->linear.y = ( ( -PI*base.y ) /  CYCLE_LENGTH ) * period_height * ( 1.0 / dt );
+    gait_vel->angular.z = ( ( PI*base.theta ) /  CYCLE_LENGTH ) * period_height * ( 1.0 / dt );
     last_time_ = current_time_;
 
     for( int leg_index = 0; leg_index < NUMBER_OF_LEGS; leg_index++ )
@@ -92,8 +93,15 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
 // Gait Sequencing
 //=============================================================================
 
-void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
+void Gait::gaitCycle( const geometry_msgs::Twist &cmd_vel, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
 {
+    // Convert velocities into actual distance for gait/foot positions
+    geometry_msgs::Pose2D base;
+    base.x = cmd_vel.linear.x / PI * CYCLE_LENGTH;
+    base.y = cmd_vel.linear.y / PI * CYCLE_LENGTH;
+    base.theta = cmd_vel.angular.z / PI * CYCLE_LENGTH;
+
+    // Low pass filter on the values to avoid jerky movements due to rapid value changes
     smooth_base_.x = base.x * 0.05 + ( smooth_base_.x * ( 1.0 - 0.05 ) );
     smooth_base_.y = base.y * 0.05 + ( smooth_base_.y * ( 1.0 - 0.05 ) );
     smooth_base_.theta = base.theta * 0.05 + ( smooth_base_.theta * ( 1.0 - 0.05 ) );
@@ -154,3 +162,4 @@ void Gait::gaitCycle( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPosit
         std::reverse( cycle_leg_number_.begin(), cycle_leg_number_.end() );
     }
 }
+

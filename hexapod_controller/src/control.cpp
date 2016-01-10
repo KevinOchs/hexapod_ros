@@ -55,7 +55,8 @@ Control::Control( void )
     ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
     current_time_odometry_ = ros::Time::now();
     last_time_odometry_ = ros::Time::now();
-
+    current_time_cmd_vel_ = ros::Time::now();
+    last_time_cmd_vel_ = ros::Time::now();
     // Find out how many servos/joints we have
     for( XmlRpc::XmlRpcValue::iterator it = SERVOS.begin(); it != SERVOS.end(); it++ )
     {
@@ -265,18 +266,18 @@ void Control::publishJointStates( const hexapod_msgs::LegsJoints &legs, const he
 // Topics we subscribe to
 //==============================================================================
 //==============================================================================
-// Base link movement callback
+// cmd_vel callback
 //==============================================================================
 
 void Control::cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg )
 {
-    cmd_vel_.linear.x = cmd_vel_msg->linear.x;
-    cmd_vel_.linear.y = cmd_vel_msg->linear.y;
-    cmd_vel_.angular.z = cmd_vel_msg->angular.z;
+    cmd_vel_incoming_.linear.x = cmd_vel_msg->linear.x;
+    cmd_vel_incoming_.linear.y = cmd_vel_msg->linear.y;
+    cmd_vel_incoming_.angular.z = cmd_vel_msg->angular.z;
 }
 
 //==============================================================================
-// Base link movement callback
+// Base link movement callback ## Deprecated !!! ## 
 //==============================================================================
 
 void Control::baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scalar_msg )
@@ -452,3 +453,20 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
         }
     }
 }
+
+//==============================================================================
+// Partitions up the cmd_vel to the speed of the loop rate
+//==============================================================================
+
+void Control::partitionCmd_vel( geometry_msgs::Twist *cmd_vel )
+{
+    current_time_cmd_vel_ = ros::Time::now();
+    double dt = ( current_time_cmd_vel_ - last_time_cmd_vel_ ).toSec();
+
+    cmd_vel->linear.x = cmd_vel_incoming_.linear.x * dt;
+    cmd_vel->linear.y = cmd_vel_incoming_.linear.y * dt;
+    cmd_vel->angular.z = cmd_vel_incoming_.angular.z * dt;
+
+    last_time_cmd_vel_ = current_time_cmd_vel_;
+}
+

@@ -45,10 +45,13 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     ros::param::get( "LEFT_RIGHT_AXES", LEFT_RIGHT_AXES );
     ros::param::get( "YAW_ROTATION_AXES", YAW_ROTATION_AXES );
     ros::param::get( "PITCH_ROTATION_AXES", PITCH_ROTATION_AXES );
+    ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
+    ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("/joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     base_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/base_scalar", 100);
     body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/body_scalar", 100);
     head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/head_scalar", 100);
+    cmd_vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 100);
     state_pub_ = nh_.advertise<std_msgs::Bool>("/state", 100);
     imu_override_pub_ = nh_.advertise<std_msgs::Bool>("/imu/imu_override", 100);
 }
@@ -99,6 +102,9 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
         base_scalar_.accel.linear.x = joy->axes[FORWARD_BACKWARD_AXES];
         base_scalar_.accel.linear.y = -joy->axes[LEFT_RIGHT_AXES];
         base_scalar_.accel.angular.z = joy->axes[YAW_ROTATION_AXES];
+        cmd_vel_.linear.x = joy->axes[FORWARD_BACKWARD_AXES] * MAX_METERS_PER_SEC;
+        cmd_vel_.linear.y = -joy->axes[LEFT_RIGHT_AXES] * MAX_METERS_PER_SEC;
+        cmd_vel_.angular.z = joy->axes[YAW_ROTATION_AXES] * MAX_RADIANS_PER_SEC;
     }
 }
 
@@ -117,6 +123,7 @@ int main(int argc, char** argv)
         hexapodTeleopJoystick.body_scalar_pub_.publish( hexapodTeleopJoystick.body_scalar_ );
         hexapodTeleopJoystick.head_scalar_pub_.publish( hexapodTeleopJoystick.head_scalar_ );
         hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
+        hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
         hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
         loop_rate.sleep();
     }
