@@ -53,6 +53,7 @@ Control::Control( void )
     ros::param::get( "MAX_BODY_PITCH_COMP", MAX_BODY_PITCH_COMP );
     ros::param::get( "COMPENSATE_INCREMENT", COMPENSATE_INCREMENT );
     ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
+    ros::param::get( "MASTER_LOOP_RATE", MASTER_LOOP_RATE );
     current_time_odometry_ = ros::Time::now();
     last_time_odometry_ = ros::Time::now();
     current_time_cmd_vel_ = ros::Time::now();
@@ -83,7 +84,6 @@ Control::Control( void )
 
     // Topics we are subscribing
     cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>( "/cmd_vel", 1, &Control::cmd_velCallback, this );
-    base_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/base_scalar", 1, &Control::baseCallback, this );
     body_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/body_scalar", 1, &Control::bodyCallback, this );
     head_scalar_sub_ = nh_.subscribe<geometry_msgs::AccelStamped>( "/head_scalar", 1, &Control::headCallback, this );
     state_sub_ = nh_.subscribe<std_msgs::Bool>( "/state", 1, &Control::stateCallback, this );
@@ -277,22 +277,6 @@ void Control::cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg )
 }
 
 //==============================================================================
-// Base link movement callback ## Deprecated !!! ## 
-//==============================================================================
-
-void Control::baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scalar_msg )
-{
-    ros::Time current_time = ros::Time::now();
-    double time_delta = current_time.toSec() - base_scalar_msg->header.stamp.toSec();
-    if ( time_delta < 1.0 ) // Don't move if timestamp is stale over a second
-    {
-        base_.x = base_scalar_msg->accel.linear.x * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.y = base_scalar_msg->accel.linear.y * ( CYCLE_MAX_TRAVEL / 2 );
-        base_.theta = base_scalar_msg->accel.angular.z * CYCLE_MAX_YAW;
-    }
-}
-
-//==============================================================================
 // Override IMU and manipulate body orientation callback
 //==============================================================================
 
@@ -460,13 +444,15 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
 void Control::partitionCmd_vel( geometry_msgs::Twist *cmd_vel )
 {
-    current_time_cmd_vel_ = ros::Time::now();
-    double dt = ( current_time_cmd_vel_ - last_time_cmd_vel_ ).toSec();
+    // Instead of getting delta time we are calculating a static division off of master loop rate
+    double dt = 1.0 / MASTER_LOOP_RATE * 10;
 
-    cmd_vel->linear.x = cmd_vel_incoming_.linear.x * dt;
-    cmd_vel->linear.y = cmd_vel_incoming_.linear.y * dt;
-    cmd_vel->angular.z = cmd_vel_incoming_.angular.z * dt;
+    double delta_th = cmd_vel_incoming_.angular.z * dt;
+    double delta_x = ( cmd_vel_incoming_.linear.x * cos( delta_th ) - cmd_vel_incoming_.linear.y * sin( delta_th ) ) * dt;
+    double delta_y = ( cmd_vel_incoming_.linear.x * sin( delta_th ) + cmd_vel_incoming_.linear.y * cos( delta_th ) ) * dt;
 
-    last_time_cmd_vel_ = current_time_cmd_vel_;
+    cmd_vel->linear.x = delta_x;
+    cmd_vel->linear.y = delta_y;
+    cmd_vel->angular.z = delta_th;
 }
 

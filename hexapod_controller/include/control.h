@@ -67,6 +67,7 @@ class Control
         void publishOdometry( const geometry_msgs::Twist &gait_vel );
         void publishTwist( const geometry_msgs::Twist &gait_vel );
         void partitionCmd_vel( geometry_msgs::Twist *cmd_vel );
+        int MASTER_LOOP_RATE;  // Master loop rate
         sensor_msgs::JointState joint_state_;
         geometry_msgs::Pose2D base_; // Base link movement
         hexapod_msgs::Pose body_;    // Body link rotation
@@ -103,8 +104,6 @@ class Control
         // Topics we are subscribing
         ros::Subscriber cmd_vel_sub_;
         void cmd_velCallback( const geometry_msgs::TwistConstPtr &cmd_vel_msg );
-        ros::Subscriber base_scalar_sub_;
-        void baseCallback( const geometry_msgs::AccelStampedConstPtr &base_scalar_msg );
         ros::Subscriber body_scalar_sub_;
         void bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scalar_msg );
         ros::Subscriber head_scalar_sub_;

@@ -1,5 +1,8 @@
 # Configuration Settings
 
+# Speed in Hz for the master loop rate
+MASTER_LOOP_RATE: 500
+
 # Twist Max Values
 # Currently these are measured and calculated at full spped manually.
 # It is very difficult to find these values automatically due to voltage, leg length and servos used.

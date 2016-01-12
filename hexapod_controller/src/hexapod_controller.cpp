@@ -58,7 +58,7 @@ int main( int argc, char **argv )
 
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
-    ros::Rate loop_rate( 500 );  // 500 hz
+    ros::Rate loop_rate( control.MASTER_LOOP_RATE );  // 500 hz
     while( ros::ok() )
     {
         // Divide cmd_vel by the loop rate to get appropriate velocities for gait period
