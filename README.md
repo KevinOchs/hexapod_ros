@@ -53,7 +53,7 @@ https://help.ubuntu.com/community/Sixaxis
 ## 4. Install
 
 ```
-git clone https://github.com/KevinOchs/ROS_hexapod.git
+git clone https://github.com/KevinOchs/ROS_hexapod.git . 
 ```
 
 For Raspberry Pi2 please add these compiler optimizations after first build.
