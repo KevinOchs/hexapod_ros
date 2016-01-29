@@ -1,0 +1,36 @@
+<package>
+    <name>hexapod</name>
+    <version>1.0.0</version>
+    <description>
+        A hexapod robot stack that provides locomotion and provides odometry and depth sensor
+		streams.
+    </description>
+    <maintainer email="kevin.ochs@gmail.com">Kevin M. Ochs</maintainer>
+    <author>kevin.ochs@gmail.com</author>
+    <author>Kevin M. Ochs</author>
+    <license>BSD</license>  
+    <url></url>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <run_depend>sound_play</run_depend>
+    <run_depend>diagnostic_updater</run_depend>
+    <run_depend>xacro</run_depend>
+    <run_depend>openni2_launch</run_depend>
+    <run_depend>depthimage_to_laserscan</run_depend>
+    <run_depend>joystick_drivers</run_depend>
+    <run_depend>imu_filter_madgwick</run_depend>
+    <run_depend>robot_localization</run_depend>
+    <run_depend>rtabmap</run_depend>
+    <run_depend>rtabmap_ros</run_depend>
+    <run_depend>robot_state_publisher</run_depend>
+    <run_depend>gazebo_ros_control</run_depend>
+    <run_depend>navigation</run_depend>
+    <run_depend>move_base</run_depend>
+    <run_depend>navfn</run_depend>
+    <run_depend>amcl</run_depend>
+
+    <export>
+        <metapackage/>
+    </export>
+</package>
