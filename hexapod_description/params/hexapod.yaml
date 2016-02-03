@@ -1,10 +1,10 @@
 # Configuration Settings
 
-# Speed in Hz for the master loop rate
+# Speed limit in Hz for the master loop rate
 MASTER_LOOP_RATE: 500
 
 # Twist Max Values
-# Currently these are set from a topic echo of the "twist" message coming out of the locomotion node. 0.314
+# Currently these are set from a topic echo of the "twist" message coming out of the locomotion node.
 MAX_METERS_PER_SEC: 0.0723589
 MAX_RADIANS_PER_SEC: !degrees 16.629
 
@@ -65,16 +65,6 @@ CYCLE_LENGTH: 50
 # Leg lift height is the max distance in meters the foot is lifted off the ground in a full step ( Gait Settings )
 # If you set this to close to the total measurement of your femur and tibia the leg IK calculation might fail
 LEG_LIFT_HEIGHT: 0.04
-
-## Deprecated !!! ##
-# Max travel is the diameter distance in meters the body can travel in a full step ( Gait Settings )
-# If you set this to close to the total measurement of your femur and tibia the leg IK calculation might fail
-CYCLE_MAX_TRAVEL: 0.08
-
-## Deprecated !!! ##
-# Max yaw is the max radians the body can rotate in a full step ( Gait Settings )
-# Setting this higher could cause the legs to hit each other, depends of your physical body measurements
-CYCLE_MAX_YAW: !degrees 8
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]

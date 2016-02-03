@@ -56,11 +56,18 @@ int main( int argc, char **argv )
     control.publishOdometry( control.gait_vel_ );
     control.publishTwist( control.gait_vel_ );
 
+    ros::Time current_time_, last_time_;
+    current_time_ = ros::Time::now();
+    last_time_ = ros::Time::now();
+
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
-    ros::Rate loop_rate( control.MASTER_LOOP_RATE );  // 500 hz
+    ros::Rate loop_rate( control.MASTER_LOOP_RATE );  // Speed limit of loop ( Will go slower than this )
     while( ros::ok() )
     {
+        current_time_ = ros::Time::now();
+        double dt = ( current_time_ - last_time_ ).toSec();
+
         // Divide cmd_vel by the loop rate to get appropriate velocities for gait period
         control.partitionCmd_vel( &control.cmd_vel_ );
 
@@ -142,6 +149,7 @@ int main( int argc, char **argv )
             control.publishTwist( control.gait_vel_ );
         }
         loop_rate.sleep();
+        last_time_ = current_time_;
     }
     return 0;
 }

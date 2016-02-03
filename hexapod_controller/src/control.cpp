@@ -45,8 +45,6 @@ Control::Control( void )
     ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
     ros::param::get( "HEAD_MAX_YAW", HEAD_MAX_YAW );
     ros::param::get( "HEAD_MAX_PITCH", HEAD_MAX_PITCH );
-    ros::param::get( "CYCLE_MAX_TRAVEL", CYCLE_MAX_TRAVEL );
-    ros::param::get( "CYCLE_MAX_YAW", CYCLE_MAX_YAW );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
     ros::param::get( "SERVOS", SERVOS );
     ros::param::get( "MAX_BODY_ROLL_COMP", MAX_BODY_ROLL_COMP );
@@ -444,13 +442,12 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
 void Control::partitionCmd_vel( geometry_msgs::Twist *cmd_vel )
 {
-    // Instead of getting delta time we are calculating a static division off of master loop rate
-    double dt = 1.0 / MASTER_LOOP_RATE * 10;
+    // Instead of getting delta time we are calculating a static division off of averaged master loop rate
+    double dt = 0.036; // in seconds // Should move to yaml file
 
     double delta_th = cmd_vel_incoming_.angular.z * dt;
     double delta_x = ( cmd_vel_incoming_.linear.x * cos( delta_th ) - cmd_vel_incoming_.linear.y * sin( delta_th ) ) * dt;
     double delta_y = ( cmd_vel_incoming_.linear.x * sin( delta_th ) + cmd_vel_incoming_.linear.y * cos( delta_th ) ) * dt;
-
     cmd_vel->linear.x = delta_x;
     cmd_vel->linear.y = delta_y;
     cmd_vel->angular.z = delta_th;
