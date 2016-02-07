@@ -72,14 +72,18 @@ Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-
 ------
 _Click on picture for redirect to YouTube video._
 
-Rviz recording of 3D mapping using RTABmap
-[![ScreenShot](http://img.youtube.com/vi/-3Ejgy1nFOg/0.jpg)](https://www.youtube.com/watch?v=-3Ejgy1nFOg)
+
+Rviz recording of 3D mapping using RTABmap.
+[![ScreenShot](http://img.youtube.com/vi/-3Ejgy1nFOg/0.jpg)]
+(https://www.youtube.com/watch?v=-3Ejgy1nFOg)
 
 Small video of Golem research platform and IMU testing. 
-[![ScreenShot](http://img.youtube.com/vi/IP-1HebkZnU/0.jpg)](https://www.youtube.com/watch?v=IP-1HebkZnU)
+[![ScreenShot](http://img.youtube.com/vi/IP-1HebkZnU/0.jpg)]
+(https://www.youtube.com/watch?v=IP-1HebkZnU)
 
 Renée Love's odometry test video using the phantomX.
-[![ScreenShot](http://img.youtube.com/vi/VYBAM0MrvWI/0.jpg)](https://www.youtube.com/watch?v=VYBAM0MrvWI)
+[![ScreenShot](http://img.youtube.com/vi/VYBAM0MrvWI/0.jpg)]
+(https://www.youtube.com/watch?v=VYBAM0MrvWI)
 
 
 ## Pictures
