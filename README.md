@@ -68,11 +68,19 @@ For ODROID XU3 please add these compiler optimizations after first build.
 Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=hard
 ```
 
-Dont forget to add the below after you run catkin_make to your bashrc
+## Videos 
+------
+_Click on picture for redirect to YouTube video._
 
-```
-source ~/ROS_hexapod/devel/setup.bash
-```
+Rviz recording of 3D mapping using RTABmap
+[![ScreenShot](http://img.youtube.com/vi/3Ejgy1nFOg/0.jpg)](https://www.youtube.com/watch?v=-3Ejgy1nFOg)
+
+Small video of Golem research platform and IMU testing. 
+[![ScreenShot](http://img.youtube.com/vi/IP-1HebkZnU/0.jpg)](https://www.youtube.com/watch?v=IP-1HebkZnU)
+
+Renée Love's odometry test video using the phantomX.
+[![ScreenShot](http://img.youtube.com/vi/VYBAM0MrvWI/0.jpg)](https://www.youtube.com/watch?v=VYBAM0MrvWI)
+
 
 ## Pictures
 
@@ -85,13 +93,3 @@ Rviz screenshot of point cloud and laserscan active.
 Renée Love's adaptation of the Hexapod stack for Trossen's  [PhantomX](http://www.trossenrobotics.com/phantomx-ax-hexapod.aspx).
 ![ScreenShot](http://forums.trossenrobotics.com/gallery/files/1/2/6/6/9/screenshot_from_2015-04-22_20_23_15.png)
 
-
-Videos 
-------
-_Click on picture for redirect to YouTube video._
-
-Small video of Golem research platform and IMU testing. 
-[![ScreenShot](http://img.youtube.com/vi/IP-1HebkZnU/0.jpg)](https://www.youtube.com/watch?v=IP-1HebkZnU)
-
-Renée Love's odometry test video using the phantomX.
-[![ScreenShot](http://img.youtube.com/vi/VYBAM0MrvWI/0.jpg)](https://www.youtube.com/watch?v=VYBAM0MrvWI)
