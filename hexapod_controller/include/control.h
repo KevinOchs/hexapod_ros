@@ -69,7 +69,6 @@ class Control
         void partitionCmd_vel( geometry_msgs::Twist *cmd_vel );
         int MASTER_LOOP_RATE;  // Master loop rate
         sensor_msgs::JointState joint_state_;
-        geometry_msgs::Pose2D base_; // Base link movement
         hexapod_msgs::Pose body_;    // Body link rotation
         hexapod_msgs::RPY head_;
         hexapod_msgs::LegsJoints legs_;
@@ -85,6 +84,7 @@ class Control
         double imu_roll_lowpass_, imu_pitch_lowpass_, imu_yaw_lowpass_, imu_roll_init_, imu_pitch_init_; // Auto-levelling
         double MAX_BODY_ROLL_COMP, MAX_BODY_PITCH_COMP, COMPENSATE_INCREMENT, COMPENSATE_TO_WITHIN; // Auto-levelling yaml config
         double BODY_MAX_ROLL, BODY_MAX_PITCH, HEAD_MAX_YAW, HEAD_MAX_PITCH; // Mechanical limits
+        double VELOCITY_DIVISION;
         double pose_x_;  // pose/odometry
         double pose_y_;  // pose/odometry
         double pose_th_; // pose/odometry

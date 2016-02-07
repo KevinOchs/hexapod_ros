@@ -41,7 +41,6 @@
 int main( int argc, char **argv )
 {
     ros::init(argc, argv, "hexapod_controller");
-    ROS_INFO("Hexapod controller node is running.");
 
     // Create class objects
     Control control;

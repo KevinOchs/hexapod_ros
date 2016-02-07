@@ -15,7 +15,7 @@
            the filter will not begin computation until it receives at least one message from
            one of the inputs. It will then run continuously at the frequency specified here,
            regardless of whether it receives more measurements. Defaults to 30 if unspecified. -->
-      <param name="frequency" value="500"/>
+      <param name="frequency" value="30"/>
 
       <!-- The period, in seconds, after which we consider a sensor to have timed out. In this event, we
            carry out a predict cycle on the EKF without correcting it. This parameter can be thought of

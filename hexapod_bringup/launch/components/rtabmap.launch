@@ -6,7 +6,7 @@
         <!-- sync depth with odometry -->
         <node pkg="nodelet" type="nodelet" name="standalone_nodelet" args="manager"/>
         <node pkg="nodelet" type="nodelet" name="data_odom_sync" args="load rtabmap_ros/data_odom_sync standalone_nodelet">
-          <remap from="odom_in"            to="/odometry/calculated"/>
+          <remap from="odom_in"            to="/odometry/filtered"/>
           <remap from="rgb/image_in"       to="/camera/rgb/image_rect_color"/>
           <remap from="depth/image_in"     to="/camera/depth_registered/image_raw"/>
           <remap from="rgb/camera_info_in" to="/camera/depth_registered/camera_info"/>

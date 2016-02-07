@@ -43,12 +43,9 @@ ServoDriver::ServoDriver( void )
 
     if( dxl_initialize( deviceIndex, baudnum ) == 0 )
     {
-        ROS_ERROR("Servo Communication Failed!");
+        ROS_WARN("Servo Communication Failed! Ignore if just running for Rviz or Gazebo.");
     }
-    else
-    {
-        ROS_INFO( "Servo Communication Opened!" );
-    }
+
     // Stating servos do not have torque applied
     servos_free_ = true;
     ros::param::get( "TORQUE_ENABLE", TORQUE_ENABLE );

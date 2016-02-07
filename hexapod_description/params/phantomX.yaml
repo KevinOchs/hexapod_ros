@@ -1,13 +1,15 @@
 # Configuration Settings
 
-# Speed in Hz for the master loop rate
+# Speed limit in Hz for the master loop rate
 MASTER_LOOP_RATE: 500
 
+# Static time division to convert cmd_vel into segments for controller loop
+VELOCITY_DIVISION: 0.033
+
 # Twist Max Values
-# Currently these are measured and calculated at full spped manually.
-# It is very difficult to find these values automatically due to voltage, leg length and servos used.
-MAX_METERS_PER_SEC: 0.092
-MAX_RADIANS_PER_SEC: !degrees 19.6292257
+# Currently these are set from a topic echo of the "twist" message coming out of the locomotion node.
+MAX_METERS_PER_SEC: 0.082
+MAX_RADIANS_PER_SEC: !degrees 17.629
 
 # Number of head segments
 # First segment would be yaw, second would be pitch
@@ -64,8 +66,6 @@ COMPENSATE_TO_WITHIN: !degrees 1
 CYCLE_LENGTH: 50
 LEG_LIFT_HEIGHT: 0.038
 MAX_LIFT_HEIGHT: 0.050
-CYCLE_MAX_TRAVEL: 0.08
-CYCLE_MAX_YAW: !degrees 8
 
 # Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]

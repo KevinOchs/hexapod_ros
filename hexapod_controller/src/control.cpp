@@ -52,6 +52,7 @@ Control::Control( void )
     ros::param::get( "COMPENSATE_INCREMENT", COMPENSATE_INCREMENT );
     ros::param::get( "COMPENSATE_TO_WITHIN", COMPENSATE_TO_WITHIN );
     ros::param::get( "MASTER_LOOP_RATE", MASTER_LOOP_RATE );
+    ros::param::get( "VELOCITY_DIVISION", VELOCITY_DIVISION );
     current_time_odometry_ = ros::Time::now();
     last_time_odometry_ = ros::Time::now();
     current_time_cmd_vel_ = ros::Time::now();
@@ -325,9 +326,6 @@ void Control::stateCallback( const std_msgs::BoolConstPtr &state_msg )
             body_.orientation.pitch = 0.0;
             body_.orientation.yaw = 0.0;
             body_.orientation.roll = 0.0;
-            base_.y = 0.0;
-            base_.x = 0.0;
-            base_.theta = 0.0;
             setHexActiveState( true );
             sounds_.stand = true;
             sounds_pub_.publish( sounds_ );
@@ -345,9 +343,6 @@ void Control::stateCallback( const std_msgs::BoolConstPtr &state_msg )
             body_.orientation.pitch = 0.0;
             body_.orientation.yaw = 0.0;
             body_.orientation.roll = 0.0;
-            base_.y = 0.0;
-            base_.x = 0.0;
-            base_.theta = 0.0;
             setHexActiveState( false );
             sounds_.shut_down = true;
             sounds_pub_.publish( sounds_ );
@@ -442,8 +437,8 @@ void Control::imuCallback( const sensor_msgs::ImuConstPtr &imu_msg )
 
 void Control::partitionCmd_vel( geometry_msgs::Twist *cmd_vel )
 {
-    // Instead of getting delta time we are calculating a static division off of averaged master loop rate
-    double dt = 0.036; // in seconds // Should move to yaml file
+    // Instead of getting delta time we are calculating with a static division
+    double dt = VELOCITY_DIVISION;
 
     double delta_th = cmd_vel_incoming_.angular.z * dt;
     double delta_x = ( cmd_vel_incoming_.linear.x * cos( delta_th ) - cmd_vel_incoming_.linear.y * sin( delta_th ) ) * dt;
