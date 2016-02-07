@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project( hexapod_locomotion )
+project( hexapod_controller )
 
 find_package( catkin REQUIRED COMPONENTS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf )
 
@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES hexapod_locomotion 
+  LIBRARIES hexapod_controller 
   CATKIN_DEPENDS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf
 )
 
@@ -26,11 +26,11 @@ add_library( servo_driver src/servo_driver.cpp )
 target_link_libraries( servo_driver ${catkin_LIBRARIES} dynamixel )
 add_dependencies( servo_driver hexapod_msgs_generate_messages_cpp )
 
-add_executable( hexapod_locomotion src/locomotion.cpp )
-target_link_libraries( hexapod_locomotion ${catkin_LIBRARIES} control gait ik servo_driver )
-add_dependencies( hexapod_locomotion hexapod_msgs_generate_messages_cpp )
+add_executable( hexapod_controller src/hexapod_controller.cpp )
+target_link_libraries( hexapod_controller ${catkin_LIBRARIES} control gait ik servo_driver )
+add_dependencies( hexapod_controller hexapod_msgs_generate_messages_cpp )
 
-install(TARGETS hexapod_locomotion
+install(TARGETS hexapod_controller
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -45,6 +45,6 @@ install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
 
-install(FILES locomotion.xml
+install(FILES hexapod_controller.xml
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 

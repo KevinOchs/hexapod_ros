@@ -1,9 +1,9 @@
-<!-- hexapod_locomotion publisher -->
-<library path="lib/hexapod_locomotion">
-  <class name="hexapod_locomotion/hexapod_locomotion" type="hexapod_locomotion" 
-    base_class_type="nodelet::Nodelet">
+<!-- hexapod_controller publisher -->
+<library path="lib/hexapod_controller">
+  <class name="hexapod_controller/hexapod_controller" type="hexapod_controller" 
+    base_class_type="node::Node">
     <description>
-      Hexapod locomotion publisher.
+      Hexapod controller publisher.
     </description>
   </class>
 </library>

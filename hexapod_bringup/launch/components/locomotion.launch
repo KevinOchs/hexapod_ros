@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Locomotion launch file -->
+<!-- Controller launch file -->
 
 <launch>
-    <node name="Hexapod_Locomotion" pkg="hexapod_locomotion" type="hexapod_locomotion" output="screen" />
+    <node name="Hexapod_Controller" pkg="hexapod_controller" type="hexapod_controller" output="screen" />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 </launch>
 
