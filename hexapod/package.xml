@@ -29,7 +29,16 @@
     <run_depend>move_base</run_depend>
     <run_depend>navfn</run_depend>
     <run_depend>amcl</run_depend>
-
+    <run_depend>dynamixel_sdk</run_depend>
+	<run_depend>hexapod_bringup</run_depend>
+	<run_depend>hexapod_controller</run_depend>
+	<run_depend>hexapod_description</run_depend>
+	<run_depend>hexapod_gazebo</run_depend>
+	<run_depend>hexapod_msgs</run_depend>
+	<run_depend>hexapod_navigation</run_depend>
+	<run_depend>hexapod_sound</run_depend>
+	<run_depend>hexapod_teleop_joystick</run_depend>
+	
     <export>
         <metapackage/>
     </export>
