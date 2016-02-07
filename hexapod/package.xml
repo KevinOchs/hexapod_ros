@@ -3,12 +3,12 @@
     <version>1.0.0</version>
     <description>
         A hexapod robot stack that provides locomotion and provides odometry and depth sensor
-		streams.
+        streams.
     </description>
     <maintainer email="kevin.ochs@gmail.com">Kevin M. Ochs</maintainer>
     <author>kevin.ochs@gmail.com</author>
     <author>Kevin M. Ochs</author>
-    <license>BSD</license>  
+    <license>BSD</license>
     <url></url>
 
     <buildtool_depend>catkin</buildtool_depend>
@@ -30,15 +30,15 @@
     <run_depend>navfn</run_depend>
     <run_depend>amcl</run_depend>
     <run_depend>dynamixel_sdk</run_depend>
-	<run_depend>hexapod_bringup</run_depend>
-	<run_depend>hexapod_controller</run_depend>
-	<run_depend>hexapod_description</run_depend>
-	<run_depend>hexapod_gazebo</run_depend>
-	<run_depend>hexapod_msgs</run_depend>
-	<run_depend>hexapod_navigation</run_depend>
-	<run_depend>hexapod_sound</run_depend>
-	<run_depend>hexapod_teleop_joystick</run_depend>
-	
+    <run_depend>hexapod_bringup</run_depend>
+    <run_depend>hexapod_controller</run_depend>
+    <run_depend>hexapod_description</run_depend>
+    <run_depend>hexapod_gazebo</run_depend>
+    <run_depend>hexapod_msgs</run_depend>
+    <run_depend>hexapod_navigation</run_depend>
+    <run_depend>hexapod_sound</run_depend>
+    <run_depend>hexapod_teleop_joystick</run_depend>
+
     <export>
         <metapackage/>
     </export>
