@@ -15,10 +15,10 @@ Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity 
 * Contributor: Kurt Eckhardt
 * Contributor: Romain Reignier
 
-## 2. Expected Hardware
+## 2. Expected Hardware for mapping
 
-* Primesense Sensor or Asus Xtion
-* IMU (Current master branch uses a Phidgets 3/3/3 Spatial.)
+* Primesense Sensor, Asus Xtion or Intel Realsense
+* IMU (Current master branch uses a Phidgets 3/3/3 Spatial in launch files.)
 
 ## 3. Dependencies
 
