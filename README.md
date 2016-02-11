@@ -72,6 +72,14 @@ This is the main node of the stack. It handles all control, gait, IK and servo c
     twist (geometry_msgs::TwistWithCovarianceStamped) Twist message syncronized with the gait system. 
      
 
+**_hexapod_bringup_**
+
+This package has all the launch files. From simple locomotion only to full mapping and localization examples. 
+
+**_hexapod_description_**
+
+This package has all the param files. You will start with one of the param config files to describe your hexapod. It also has params for different telop controllers. The xacro and meshes also reside in this package.
+
 
 ## 5. Install
 
