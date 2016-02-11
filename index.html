@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Generic Hexapod stack for ROS by KevinOchs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Generic Hexapod stack for ROS</h1>
+      <h2 class="project-tagline">ROS Hexapod stack with functioning 2D and 3D mapping. </h2>
+      <a href="https://github.com/KevinOchs/hexapod_ros" class="btn">View on GitHub</a>
+      <a href="https://github.com/KevinOchs/hexapod_ros/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/KevinOchs/hexapod_ros/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ros-hexapod-stack" class="anchor" href="#ros-hexapod-stack" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ROS Hexapod Stack</h1>
+
+<h2>
+<a id="1-documentation" class="anchor" href="#1-documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Documentation</h2>
+
+<p>This is my implementation of a hexapod functioning in the ROS framework. It is still very much a work in progress and I am still actively developing it. </p>
+
+<p>Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity and smooth transitions between steps.</p>
+
+<ul>
+<li>Author: Kevin M. Ochs</li>
+<li>Contributor: Renée Love</li>
+<li>Contributor: Konstantinos Chatzilygeroudis</li>
+<li>Contributor: Kurt Eckhardt</li>
+<li>Contributor: Romain Reignier</li>
+</ul>
+
+<h2>
+<a id="2-expected-hardware-for-mapping" class="anchor" href="#2-expected-hardware-for-mapping" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. Expected Hardware for mapping</h2>
+
+<ul>
+<li>Primesense Sensor, Asus Xtion or Intel Realsense</li>
+<li>IMU (Current master branch uses a Phidgets 3/3/3 Spatial in launch files.)</li>
+</ul>
+
+<h2>
+<a id="3-dependencies" class="anchor" href="#3-dependencies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. Dependencies</h2>
+
+<pre><code>sudo apt-get install git
+sudo apt-get install ros-indigo-sound-play
+sudo apt-get install ros-indigo-diagnostic-updater
+sudo apt-get install ros-indigo-xacro
+sudo apt-get install ros-indigo-openni2-launch
+sudo apt-get install ros-indigo-depthimage-to-laserscan
+sudo apt-get install ros-indigo-joystick-drivers
+sudo apt-get install ros-indigo-imu-filter-madgwick
+sudo apt-get install ros-indigo-robot-localization
+sudo apt-get install ros-indigo-rtabmap
+sudo apt-get install ros-indigo-rtabmap-ros
+sudo apt-get install ros-indigo-robot-state-publisher
+sudo apt-get install ros-indigo-gazebo-ros-control
+sudo apt-get install ros-indigo-navigation
+sudo apt-get install ros-indigo-move_base
+sudo apt-get install ros-indigo-navfn
+sudo apt-get install ros-indigo-amcl
+sudo apt-get install libusb-1.0-0-dev
+</code></pre>
+
+<p><strong><em>Joystick</em></strong></p>
+
+<p>For pairing a PS3 controller you can either install BlueZ5 or follow the below link.</p>
+
+<p><a href="https://help.ubuntu.com/community/Sixaxis">https://help.ubuntu.com/community/Sixaxis</a></p>
+
+<h2>
+<a id="4-nodes" class="anchor" href="#4-nodes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Nodes</h2>
+
+<p><strong><em>hexapod_controller</em></strong></p>
+
+<p>This is the main node of the stack. It handles all control, gait, IK and servo communications with the legs. Minimal latency was required to keep the gait smooth and synced with odometry hence the reason they are all combined in this one node.</p>
+
+<p><em>Subscribed Topics</em></p>
+
+<pre><code> cmd_vel (geometry_msgs/Twist) Velocity command. 
+ body_scalar (geometry_msgs::AccelStamped) Scalar to modifiy the orientation of the body.
+ head_scalar (geometry_msgs::AccelStamped) Scalar to modifiy the pan and tilt of the optional turret.
+ state (std_msgs::Bool) Bool array to record state of the hexapod. Standing up, sitting etc.
+ imu/data (sensor_msgs::Imu) Used in optional auto body leveling on non level ground.
+</code></pre>
+
+<p><em>Published Topics</em></p>
+
+<pre><code>sounds (hexapod_msgs::Sounds) Custom message to send sound cues to the optional sound package.
+joint_states (sensor_msgs::JointState) Joint states for rviz and such.
+odometry/calculated (nav_msgs::Odometry) Calculated odometry from the gait system in the package.
+twist (geometry_msgs::TwistWithCovarianceStamped) Twist message syncronized with the gait system. 
+</code></pre>
+
+<p><strong><em>hexapod_bringup</em></strong></p>
+
+<p>This package has all the launch files. From simple locomotion only to full mapping and localization examples. </p>
+
+<p><strong><em>hexapod_description</em></strong></p>
+
+<p>This package has all the param files. You will start with one of the param config files to describe your hexapod. It also has params for different telop controllers. The xacro and meshes also reside in this package.</p>
+
+<h2>
+<a id="5-install" class="anchor" href="#5-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. Install</h2>
+
+<pre><code>git clone https://github.com/KevinOchs/hexapod_ros.git . 
+</code></pre>
+
+<p>For Raspberry Pi2 please add these compiler optimizations after first build.</p>
+
+<pre><code>[workspace]/build/CMakeCache.txt
+Change: CMAKE_CXX_FLAGS:STRING=-O3 -mfloat-abi=hard -mfpu=neon-vfpv4 -mcpu=cortex-a7
+</code></pre>
+
+<p>For ODROID XU3 please add these compiler optimizations after first build.</p>
+
+<pre><code>[workspace]/build/CMakeCache.txt
+Change: CMAKE_CXX_FLAGS:STRING=-O3 -pipe -march=armv7-a -mcpu=cortex-a9 -mfloat-abi=hard
+</code></pre>
+
+<h2>
+<a id="videos" class="anchor" href="#videos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Videos</h2>
+
+<hr>
+
+<p><em>Click on picture for redirect to YouTube video.</em></p>
+
+<p>Rviz recording of 3D mapping using RTABmap.</p>
+
+<p><a href="https://www.youtube.com/watch?v=-3Ejgy1nFOg"><img src="http://img.youtube.com/vi/-3Ejgy1nFOg/0.jpg" alt="ScreenShot"></a></p>
+
+<p>Small video of Golem research platform and IMU testing.</p>
+
+<p><a href="https://www.youtube.com/watch?v=IP-1HebkZnU"><img src="http://img.youtube.com/vi/IP-1HebkZnU/0.jpg" alt="ScreenShot"></a></p>
+
+<p>Renée Love's odometry test video using the phantomX.</p>
+
+<p><a href="https://www.youtube.com/watch?v=VYBAM0MrvWI"><img src="http://img.youtube.com/vi/VYBAM0MrvWI/0.jpg" alt="ScreenShot"></a></p>
+
+<h2>
+<a id="pictures" class="anchor" href="#pictures" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pictures</h2>
+
+<p>Rviz screenshot of point cloud and laserscan active.
+<img src="http://forums.trossenrobotics.com/gallery/files/8/6/6/6/depthwithlaser.jpg" alt="ScreenShot"></p>
+
+<p>2D room mapping in Rviz.
+<img src="http://forums.trossenrobotics.com/gallery/files/8/6/6/6/2d_slam.jpg" alt="ScreenShot"></p>
+
+<p>Renée Love's adaptation of the Hexapod stack for Trossen's  <a href="http://www.trossenrobotics.com/phantomx-ax-hexapod.aspx">PhantomX</a>.
+<img src="http://forums.trossenrobotics.com/gallery/files/1/2/6/6/9/screenshot_from_2015-04-22_20_23_15.png" alt="ScreenShot"></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/KevinOchs/hexapod_ros">Generic Hexapod stack for ROS</a> is maintained by <a href="https://github.com/KevinOchs">KevinOchs</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
