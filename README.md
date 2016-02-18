@@ -81,7 +81,7 @@ This package has all the launch files. From simple locomotion only to full mappi
 This package has all the param files. You will start with one of the param config files to describe your hexapod. It also has params for different telop controllers. The xacro and meshes also reside in this package.
 
 
-**_Example Launch_**
+**Example Launch Command**
 
 roslaunch hexapod_bringup hexapod_full.launch config:=phantomX joy_mapping:=joystick_ds3
 
