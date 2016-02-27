@@ -2,6 +2,13 @@
 <!-- rtabmap launch file -->
 
 <launch>
+    <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan" args="load depthimage_to_laserscan/DepthImageToLaserScanNodelet camera/camera_nodelet_manager" >
+        <param name="scan_height" value="10" />
+        <param name="output_frame_id" value="body_link" />
+        <remap from="image" to="/camera/depth_registered/image_raw" />
+        <remap from="camera/image" to="/camera/depth_registered/image_raw" />
+        <remap from="camera/scan" to="scan" />
+    </node>
     <group ns="rtabmap">
         <!-- sync depth with odometry -->
         <node pkg="nodelet" type="nodelet" name="standalone_nodelet" args="manager"/>
