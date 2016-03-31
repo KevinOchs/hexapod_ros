@@ -43,7 +43,6 @@ class HexapodTeleopJoystick
         HexapodTeleopJoystick( void );
         std_msgs::Bool state_;
         std_msgs::Bool imu_override_;
-        geometry_msgs::AccelStamped base_scalar_;
         geometry_msgs::AccelStamped body_scalar_;
         geometry_msgs::AccelStamped head_scalar_;
         geometry_msgs::Twist cmd_vel_;
