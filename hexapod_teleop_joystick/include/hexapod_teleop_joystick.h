@@ -59,6 +59,7 @@ class HexapodTeleopJoystick
         ros::Subscriber joy_sub_;
         int STANDUP_BUTTON, SITDOWN_BUTTON, BODY_ROTATION_BUTTON, FORWARD_BACKWARD_AXES, LEFT_RIGHT_AXES, YAW_ROTATION_AXES, PITCH_ROTATION_AXES;
         double MAX_METERS_PER_SEC, MAX_RADIANS_PER_SEC;
+        bool NON_TELEOP; // Shuts down cmd_vel broadcast
 };
 
 #endif // HEXAPOD_TELEOP_H_

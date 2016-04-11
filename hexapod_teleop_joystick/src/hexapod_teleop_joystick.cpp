@@ -38,6 +38,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 {
     state_.data = false;
     imu_override_.data = false;
+    NON_TELEOP = false; // Static but here for a safety precaution
     ros::param::get( "STANDUP_BUTTON", STANDUP_BUTTON );
     ros::param::get( "SITDOWN_BUTTON", SITDOWN_BUTTON );
     ros::param::get( "BODY_ROTATION_BUTTON", BODY_ROTATION_BUTTON );
@@ -47,6 +48,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
     ros::param::get( "PITCH_ROTATION_AXES", PITCH_ROTATION_AXES );
     ros::param::get( "MAX_METERS_PER_SEC", MAX_METERS_PER_SEC );
     ros::param::get( "MAX_RADIANS_PER_SEC", MAX_RADIANS_PER_SEC );
+    ros::param::get( "NON_TELEOP", NON_TELEOP );
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("/joy", 5, &HexapodTeleopJoystick::joyCallback, this);
     body_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/body_scalar", 100);
     head_scalar_pub_ = nh_.advertise<geometry_msgs::AccelStamped>("/head_scalar", 100);
@@ -62,7 +64,7 @@ HexapodTeleopJoystick::HexapodTeleopJoystick( void )
 void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
 {
     ros::Time current_time = ros::Time::now();
-    if ( joy->buttons[STANDUP_BUTTON] == 1 )
+    if( joy->buttons[STANDUP_BUTTON] == 1 )
     {
         if ( state_.data == false)
         {
@@ -79,7 +81,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     }
 
     // Body rotation L1 Button for testing
-    if ( joy->buttons[BODY_ROTATION_BUTTON] == 1 )
+    if( joy->buttons[BODY_ROTATION_BUTTON] == 1 )
     {
         imu_override_.data = true;
         body_scalar_.header.stamp = current_time;
@@ -95,7 +97,7 @@ void HexapodTeleopJoystick::joyCallback( const sensor_msgs::Joy::ConstPtr &joy )
     }
 
     // Travelling
-    if ( joy->buttons[BODY_ROTATION_BUTTON] != 1 )
+    if( joy->buttons[BODY_ROTATION_BUTTON] != 1 )
     {
         cmd_vel_.linear.x = joy->axes[FORWARD_BACKWARD_AXES] * MAX_METERS_PER_SEC;
         cmd_vel_.linear.y = -joy->axes[LEFT_RIGHT_AXES] * MAX_METERS_PER_SEC;
@@ -114,10 +116,13 @@ int main(int argc, char** argv)
     ros::Rate loop_rate( 100 ); // 100 hz
     while ( ros::ok() )
     {
-        hexapodTeleopJoystick.body_scalar_pub_.publish( hexapodTeleopJoystick.body_scalar_ );
-        hexapodTeleopJoystick.head_scalar_pub_.publish( hexapodTeleopJoystick.head_scalar_ );
-        hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ );
-        hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
+        if( NON_TELEOP == false ) // If True, assumes you are sending these from other packages
+        {
+            hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
+            hexapodTeleopJoystick.body_scalar_pub_.publish( hexapodTeleopJoystick.body_scalar_ );
+            hexapodTeleopJoystick.head_scalar_pub_.publish( hexapodTeleopJoystick.head_scalar_ );
+        }
+        hexapodTeleopJoystick.state_pub_.publish( hexapodTeleopJoystick.state_ ); // Always publish for means of an emergency shutdown type situation
         hexapodTeleopJoystick.imu_override_pub_.publish( hexapodTeleopJoystick.imu_override_ );
         loop_rate.sleep();
     }
