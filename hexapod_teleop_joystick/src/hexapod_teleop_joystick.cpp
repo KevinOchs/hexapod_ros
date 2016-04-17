@@ -116,7 +116,7 @@ int main(int argc, char** argv)
     ros::Rate loop_rate( 100 ); // 100 hz
     while ( ros::ok() )
     {
-        if( NON_TELEOP == false ) // If True, assumes you are sending these from other packages
+        if( hexapodTeleopJoystick.NON_TELEOP == false ) // If True, assumes you are sending these from other packages
         {
             hexapodTeleopJoystick.cmd_vel_pub_.publish( hexapodTeleopJoystick.cmd_vel_ );
             hexapodTeleopJoystick.body_scalar_pub_.publish( hexapodTeleopJoystick.body_scalar_ );
