@@ -151,59 +151,60 @@ Visualization Manager:
       Show Names: false
       Tree:
         map:
-          odom:
-            base_link:
-              body_link:
-                camera_depth_optical_frame:
-                  {}
-                camera_rgb_optical_frame:
-                  {}
-                imu_link:
-                  {}
-                leg_center_LF:
-                  coxa_LF:
-                    femur_LF:
-                      tibia_LF:
-                        tarsus_LF:
-                          foot_LF:
-                            {}
-                leg_center_LM:
-                  coxa_LM:
-                    femur_LM:
-                      tibia_LM:
-                        tarsus_LM:
-                          foot_LM:
-                            {}
-                leg_center_LR:
-                  coxa_LR:
-                    femur_LR:
-                      tibia_LR:
-                        tarsus_LR:
-                          foot_LR:
-                            {}
-                leg_center_RF:
-                  coxa_RF:
-                    femur_RF:
-                      tibia_RF:
-                        tarsus_RF:
-                          foot_RF:
-                            {}
-                leg_center_RM:
-                  coxa_RM:
-                    femur_RM:
-                      tibia_RM:
-                        tarsus_RM:
-                          foot_RM:
-                            {}
-                leg_center_RR:
-                  coxa_RR:
-                    femur_RR:
-                      tibia_RR:
-                        tarsus_RR:
-                          foot_RR:
-                            {}
-                pan_link:
-                  {}
+          {}
+        odom:
+          base_link:
+            body_link:
+              camera_depth_optical_frame:
+                {}
+              camera_rgb_optical_frame:
+                {}
+              imu_link:
+                {}
+              leg_center_LF:
+                coxa_LF:
+                  femur_LF:
+                    tibia_LF:
+                      tarsus_LF:
+                        foot_LF:
+                          {}
+              leg_center_LM:
+                coxa_LM:
+                  femur_LM:
+                    tibia_LM:
+                      tarsus_LM:
+                        foot_LM:
+                          {}
+              leg_center_LR:
+                coxa_LR:
+                  femur_LR:
+                    tibia_LR:
+                      tarsus_LR:
+                        foot_LR:
+                          {}
+              leg_center_RF:
+                coxa_RF:
+                  femur_RF:
+                    tibia_RF:
+                      tarsus_RF:
+                        foot_RF:
+                          {}
+              leg_center_RM:
+                coxa_RM:
+                  femur_RM:
+                    tibia_RM:
+                      tarsus_RM:
+                        foot_RM:
+                          {}
+              leg_center_RR:
+                coxa_RR:
+                  femur_RR:
+                    tibia_RR:
+                      tarsus_RR:
+                        foot_RR:
+                          {}
+              pan_link:
+                {}
       Update Interval: 0
       Value: true
     - Alpha: 0.75
@@ -502,7 +503,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -523,22 +524,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rtabmap_ros/OrbitOriented
-      Distance: 3.17122
+      Distance: 7.58451
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.790189
+        Y: -0.558045
+        Z: 0.400091
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.440398
+      Pitch: 1.0498
       Target Frame: <Fixed Frame>
       Value: OrbitOriented (rtabmap_ros)
-      Yaw: 3.4654
+      Yaw: 3.96222
     Saved:
       - Class: rviz/Orbit
         Distance: 0.775628
@@ -573,5 +574,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1427
-  X: 60
-  Y: 33
+  X: 111
+  Y: 45
