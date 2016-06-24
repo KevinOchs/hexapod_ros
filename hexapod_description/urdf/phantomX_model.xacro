@@ -191,7 +191,7 @@
 			<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${angle}" />
 			<parent link="leg_center_${side}${position}" />
 			<child link="coxa_${side}${position}" />
-			<axis xyz="0.0 0.0 ${-axis}" />
+			<axis xyz="0.0 0.0 1.0" />
 			<limit lower="${joint_lower_limit}" upper="${joint_upper_limit}" effort="${joint_effort}" velocity="${joint_velocity}" />
 		</joint>
 		<transmission name="coxa_transmission_${side}${position}">
