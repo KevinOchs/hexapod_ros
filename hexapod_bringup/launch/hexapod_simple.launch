@@ -3,11 +3,12 @@
 
 <launch>
     <arg name="config" default="hexapod"/>
-    <arg name="joy_mapping" default="joystick"/>
+    <arg name="joy_mapping" default="joystick_ds4"/>
     <rosparam command="load" file="$(find hexapod_description)/params/$(arg config).yaml" />
     <rosparam command="load" file="$(find hexapod_description)/params/dynamixel.yaml" />
     <rosparam command="load" file="$(find hexapod_description)/params/$(arg joy_mapping).yaml" />
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/$(arg config)_model.xacro'" />
+    <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find hexapod_description)/urdf/$(arg config)_model.xacro'" />
     <include file="$(find hexapod_bringup)/launch/components/joy_teleop.launch" />
     <include file="$(find hexapod_bringup)/launch/components/locomotion.launch" />
+    <include file="$(find hexapod_bringup)/launch/rviz.launch" />
 </launch>
