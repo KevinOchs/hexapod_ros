@@ -1,4 +1,3 @@
-
 // ROS Hexapod Locomotion Node
 // Copyright (c) 2014, Kevin M. Ochs
 // All rights reserved.
@@ -33,9 +32,16 @@
 
 #include <cmath>
 #include <ros/ros.h>
-#include <dynamixel.h>
+#include <dynamixel_sdk/dynamixel_sdk.h>
 #include <sensor_msgs/JointState.h>
 
+// Default setting
+#define BAUDRATE    1000000
+#define DEVICENAME  "/dev/ttyUSB0"      // Check which port is being used on your controller
+#define PROTOCOL_VERSION   1.0          // See which protocol version is used in the Dynamixel
+#define TORQUE_ON   1
+#define TORQUE_OFF  0
+#define LEN_GOAL_POSITION  2
 //==============================================================================
 // Define the class(s) for Servo Drivers.
 //==============================================================================
@@ -46,10 +52,16 @@ class ServoDriver
         ServoDriver( void );
         ~ServoDriver( void );
         void transmitServoPositions( const sensor_msgs::JointState &joint_state );
+        void makeSureServosAreOn( const sensor_msgs::JointState &joint_state );
         void freeServos( void );
     private:
+        dynamixel::PortHandler *portHandler = dynamixel::PortHandler::getPortHandler(DEVICENAME); // Initialize PacketHandler instance
+        dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION); // Set the protocol version
+        uint8_t dxl_error = 0;                          // Dynamixel error
+        uint16_t dxl_present_position = 0;              // Present position
+        uint16_t currentPos;
+        uint8_t param_goal_position[2];
         void convertAngles( const sensor_msgs::JointState &joint_state );
-        void makeSureServosAreOn( const sensor_msgs::JointState &joint_state );
         std::vector<int> cur_pos_; // Current position of servos
         std::vector<int> goal_pos_; // Goal position of servos
         std::vector<int> pose_steps_; // Increment to use going from current position to goal position
@@ -63,6 +75,10 @@ class ServoDriver
         XmlRpc::XmlRpcValue SERVOS; // Servo map from yaml config file
         std::vector<int> servo_orientation_; // If the servo is physically mounted backwards this sign is flipped
         std::vector<std::string> servo_map_key_;
+        bool portOpenSuccess = false;
+        bool torque_on = true;
+        bool torque_off = true;
+        bool writeParamSuccess = true;
         bool servos_free_;
         int SERVO_COUNT;
         int TORQUE_ENABLE, PRESENT_POSITION_L, GOAL_POSITION_L, INTERPOLATION_LOOP_RATE;

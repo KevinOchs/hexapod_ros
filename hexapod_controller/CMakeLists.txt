@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project( hexapod_controller )
 
-find_package( catkin REQUIRED COMPONENTS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf )
+find_package( catkin REQUIRED COMPONENTS nodelet roscpp geometry_msgs sensor_msgs std_msgs hexapod_msgs tf dynamixel_sdk)
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 catkin_package(
   INCLUDE_DIRS include
@@ -23,7 +24,7 @@ add_library( ik src/ik.cpp )
 add_dependencies( ik hexapod_msgs_generate_messages_cpp )
 
 add_library( servo_driver src/servo_driver.cpp )
-target_link_libraries( servo_driver ${catkin_LIBRARIES} dynamixel )
+target_link_libraries( servo_driver ${catkin_LIBRARIES} )
 add_dependencies( servo_driver hexapod_msgs_generate_messages_cpp )
 
 add_executable( hexapod_controller src/hexapod_controller.cpp )
