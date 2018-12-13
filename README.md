@@ -10,6 +10,7 @@ This is my implementation of a hexapod functioning in the ROS framework. Agnosti
 Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity and smooth transitions between steps.
 
 * Author: Kevin M. Ochs
+* Contributor: Shubhankar Das
 * Contributor: Renée Love
 * Contributor: Konstantinos Chatzilygeroudis
 * Contributor: Kurt Eckhardt
