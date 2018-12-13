@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<robot xmlns:xacro="http://ros.org/wiki/xacro" name="PhantomX">
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="phantomX">
 
 	<!-- parameters -->
 	<xacro:property name="pi" value="3.1415926535897931" />
@@ -12,7 +12,7 @@
 
     <gazebo>
         <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>/PhantomX</robotNamespace>
+            <robotNamespace>/phantomX</robotNamespace>
         </plugin>
     </gazebo>
 
@@ -197,10 +197,10 @@
 		<transmission name="coxa_transmission_${side}${position}">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="coxa_joint_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
             <actuator name="coxa_motor_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
@@ -247,10 +247,10 @@
 		<transmission name="femur_transmission_${side}${position}">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="femur_joint_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
             <actuator name="femur_motor_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>
@@ -297,10 +297,10 @@
 		<transmission name="tibia_transmission_${side}${position}">
             <type>transmission_interface/SimpleTransmission</type>
             <joint name="tibia_joint_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
             </joint>
             <actuator name="tibia_motor_${side}${position}">
-                <hardwareInterface>EffortJointInterface</hardwareInterface>
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 <mechanicalReduction>1</mechanicalReduction>
             </actuator>
         </transmission>

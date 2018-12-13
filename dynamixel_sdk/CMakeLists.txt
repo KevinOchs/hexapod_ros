@@ -1,29 +1,86 @@
+################################################################################
+# Set minimum required version of cmake, project name and compile options
+################################################################################
 cmake_minimum_required(VERSION 2.8.3)
 project(dynamixel_sdk)
 
-find_package( catkin REQUIRED COMPONENTS )
+################################################################################
+# Find catkin packages and libraries for catkin and system dependencies
+################################################################################
+find_package(catkin REQUIRED COMPONENTS roscpp)
 
+################################################################################
+# Setup for python modules and scripts
+################################################################################
+
+################################################################################
+# Declare ROS messages, services and actions
+################################################################################
+
+################################################################################
+# Declare ROS dynamic reconfigure parameters
+################################################################################
+
+################################################################################
+# Declare catkin specific configuration to be passed to dependent projects
+################################################################################
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES dynamixel_sdk 
-  CATKIN_DEPENDS 
+  CATKIN_DEPENDS roscpp
+  LIBRARIES dynamixel_sdk
 )
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+################################################################################
+# Build
+################################################################################
+include_directories(
+  include/dynamixel_sdk
+  ${catkin_INCLUDE_DIRS}
+)
 
-add_library( dxl_hal src/dxl_hal.cpp )
-add_library( dynamixel src/dynamixel.cpp )
-target_link_libraries( dynamixel dxl_hal )
+if(APPLE)
+  add_library(dynamixel_sdk
+    src/dynamixel_sdk/packet_handler.cpp
+    src/dynamixel_sdk/protocol1_packet_handler.cpp
+    src/dynamixel_sdk/protocol2_packet_handler.cpp
+    src/dynamixel_sdk/group_sync_read.cpp
+    src/dynamixel_sdk/group_sync_write.cpp
+    src/dynamixel_sdk/group_bulk_read.cpp
+    src/dynamixel_sdk/group_bulk_write.cpp
+    src/dynamixel_sdk/port_handler.cpp
+    src/dynamixel_sdk/port_handler_mac.cpp
+  )
+else()
+  add_library(dynamixel_sdk
+    src/dynamixel_sdk/packet_handler.cpp
+    src/dynamixel_sdk/protocol1_packet_handler.cpp
+    src/dynamixel_sdk/protocol2_packet_handler.cpp
+    src/dynamixel_sdk/group_sync_read.cpp
+    src/dynamixel_sdk/group_sync_write.cpp
+    src/dynamixel_sdk/group_bulk_read.cpp
+    src/dynamixel_sdk/group_bulk_write.cpp
+    src/dynamixel_sdk/port_handler.cpp
+    src/dynamixel_sdk/port_handler_linux.cpp
+  )
+endif()
 
+add_dependencies(dynamixel_sdk ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(dynamixel_sdk ${catkin_LIBRARIES})
 
-install(TARGETS dxl_hal dynamixel
-   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+################################################################################
+# Install
+################################################################################
+install(TARGETS dynamixel_sdk
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
-   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-   FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
- 
+
+
+################################################################################
+# Test
+################################################################################

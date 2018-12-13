@@ -2,6 +2,6 @@
 <!-- rviz launch file -->
 
 <launch>
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/urdf.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find hexapod_description)/rviz_prefs/robotViz.rviz" />
 </launch>
 

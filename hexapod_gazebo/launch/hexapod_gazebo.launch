@@ -7,10 +7,11 @@
     </include>
 
     <!-- Convert the xacro description into the parameter server -->
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(find hexapod_description)/urdf/hexapod_model.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find hexapod_description)/urdf/hexapod_model.xacro"/>
+
     <!-- Spawn the robot into Gazebo -->
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model Golem -z 1"/>
 
     <!-- Insert the controllers launch file -->
-    <!--  <include file="$(find hexapod_gazebo)/launch/hexapod_control.launch"/>  -->
+    <include file="$(find hexapod_gazebo)/launch/hexapod_control.launch"/>
 </launch>

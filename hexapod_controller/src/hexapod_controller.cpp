@@ -54,7 +54,6 @@ int main( int argc, char **argv )
     control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
     control.publishOdometry( control.gait_vel_ );
     control.publishTwist( control.gait_vel_ );
-
     ros::Time current_time_, last_time_;
     current_time_ = ros::Time::now();
     last_time_ = ros::Time::now();
@@ -62,6 +61,15 @@ int main( int argc, char **argv )
     ros::AsyncSpinner spinner( 2 ); // Using 2 threads
     spinner.start();
     ros::Rate loop_rate( control.MASTER_LOOP_RATE );  // Speed limit of loop ( Will go slower than this )
+
+    // control.body_.position.z = 0; // 1 mm increment // IK solver for legs and body orientation
+    // ik.calculateIK( control.feet_, control.body_, &control.legs_ );
+    // // Commit new positions and broadcast over USB2AX as well as jointStates
+    // control.publishJointStates( control.legs_, control.head_, &control.joint_state_ );
+    // servoDriver.transmitServoPositions( control.joint_state_ );
+    // control.publishOdometry( control.gait_vel_ );
+    // control.publishTwist( control.gait_vel_ );
+    // ros::Duration( 1.0 ).sleep();
     while( ros::ok() )
     {
         current_time_ = ros::Time::now();
@@ -77,7 +85,6 @@ int main( int argc, char **argv )
         while( control.body_.position.z < control.STANDING_BODY_HEIGHT )
             {
                 control.body_.position.z = control.body_.position.z + 0.001; // 1 mm increment
-
                 // IK solver for legs and body orientation
                 ik.calculateIK( control.feet_, control.body_, &control.legs_ );
 
@@ -134,7 +141,6 @@ int main( int argc, char **argv )
             // Release torque
             ros::Duration( 0.5 ).sleep();
             servoDriver.freeServos();
-            ROS_INFO("Hexapod servos torque is now off.");
 
             // Locomotion is now shut off
             control.setPrevHexActiveState( false );
@@ -152,4 +158,5 @@ int main( int argc, char **argv )
     }
     return 0;
 }
+
 
