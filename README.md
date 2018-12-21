@@ -7,7 +7,7 @@
 
 This is my implementation of a hexapod functioning in the ROS framework. Agnostic to either a 3dof or 4dof hexapod. It is still very much a work in progress and I am still actively developing it. 
 
-Gait style is a simple sinusoidal tripod gait. I chose it due to its simplicity and smooth transitions between steps.
+Thanks to Shubhankar Das there are two gaits offered, the original sinusoidal tripod gait and a new ripple gait.
 
 * Author: Kevin M. Ochs
 * Contributor: Shubhankar Das
