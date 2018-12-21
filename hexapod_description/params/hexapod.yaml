@@ -73,8 +73,7 @@ CYCLE_LENGTH: 50
 # If you set this to close to the total measurement of your femur and tibia the leg IK calculation might fail
 LEG_LIFT_HEIGHT: 0.04
 
-# Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
+GAIT_STYLE: "TRIPOD"
 
 # Speed in Hz that the servos interpolate between gait poses
 INTERPOLATION_LOOP_RATE: 900

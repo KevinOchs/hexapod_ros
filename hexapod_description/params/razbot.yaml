@@ -50,8 +50,9 @@ TIBIA_LENGTH:  0.133
 TARSUS_LENGTH: 0.00
 
 # Body FK maximum rotation
-BODY_MAX_ROLL: !degrees 8
-BODY_MAX_PITCH: !degrees 8
+BODY_MAX_ROLL: !degrees 10
+BODY_MAX_PITCH: !degrees 10
+BODY_MAX_YAW: !degrees 20
 
 # Body Standing Height
 STANDING_BODY_HEIGHT: 0.08
@@ -68,11 +69,10 @@ COMPENSATE_TO_WITHIN: !degrees 1
 
 # Gait Settings
 CYCLE_LENGTH: 50
-LEG_LIFT_HEIGHT: 0.05
+LEG_LIFT_HEIGHT: 0.07
 MAX_LIFT_HEIGHT: 0.070
 
-# Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
-LEG_GAIT_ORDER: [0, 1, 0, 1, 0, 1]
+GAIT_STYLE: "RIPPLE"
 
 # Speed in Hz that the servos interpolate between gait poses
 INTERPOLATION_LOOP_RATE: 550
