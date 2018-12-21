@@ -49,9 +49,9 @@ Gait::Gait( void )
     current_time_ = ros::Time::now();
     last_time_ = ros::Time::now();
     gait_factor = 1.0;
-    cycle_leg_number_ = {1,0,1,0,1,0};
-    
-    if(GAIT_STYLE == "RIPPLE"){
+    cycle_leg_number_ = {1,0,1,0,1,0};    
+    if(GAIT_STYLE == "RIPPLE")
+    {
       gait_factor = 0.5;
       cycle_leg_number_ = {1,0,2,0,2,1};
     }
@@ -64,10 +64,8 @@ Gait::Gait( void )
 //=============================================================================
 
 void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
-{
-    
+{    
     period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
-    
 
     // Calculate current velocities for this period of the gait
     // This factors in the sinusoid of the step for accurate odometry
@@ -93,18 +91,18 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
         if( cycle_leg_number_[leg_index] == 1 )
         {
             period_distance = cos( cycle_period_ * PI * gait_factor / CYCLE_LENGTH);
-            feet->foot[leg_index].position.x = - base.x * period_distance ;
-            feet->foot[leg_index].position.y = - base.y * period_distance ;
+            feet->foot[leg_index].position.x = -base.x * period_distance;
+            feet->foot[leg_index].position.y = -base.y * period_distance;
             feet->foot[leg_index].position.z = 0;
-            feet->foot[leg_index].orientation.yaw = - base.theta * period_distance;
+            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance;
         }
         if( cycle_leg_number_[leg_index] == 2 )
         {
-            period_distance = cos((CYCLE_LENGTH + cycle_period_)* PI * gait_factor/ CYCLE_LENGTH);
-            feet->foot[leg_index].position.x = -base.x * period_distance ;
-            feet->foot[leg_index].position.y = -base.y * period_distance ;
+            period_distance = cos((CYCLE_LENGTH + cycle_period_) * PI * gait_factor / CYCLE_LENGTH);
+            feet->foot[leg_index].position.x = -base.x * period_distance;
+            feet->foot[leg_index].position.y = -base.y * period_distance;
             feet->foot[leg_index].position.z = 0;
-            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance ;
+            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance;
         }
     }
 }
@@ -179,15 +177,20 @@ void Gait::gaitCycle( const geometry_msgs::Twist &cmd_vel, hexapod_msgs::FeetPos
     if( cycle_period_ == CYCLE_LENGTH )
     {
         cycle_period_ = 0;
-        sequence_change(cycle_leg_number_); //sequence change
-    }
-}
-void Gait::sequence_change(std::vector<int> &vec) //gait sequence changer
-{
-    for(int i = 0 ; i < vec.size(); i++){
-        if(vec[i] == 0) vec[i] = 1;
-        else if(vec[i] == 1 && GAIT_STYLE == "RIPPLE") vec[i] = 2;
-        else vec[i] = 0;
+        sequence_change( cycle_leg_number_ ); //sequence change
     }
 }
 
+//=============================================================================
+// Gait Sequence Change
+//=============================================================================
+
+void Gait::sequence_change( std::vector<int> &vec )
+{
+    for( int i = 0 ; i < vec.size(); i++ )
+    {
+        if( vec[i] == 0 ) vec[i] = 1;
+        else if( vec[i] == 1 && GAIT_STYLE == "RIPPLE" ) vec[i] = 2;
+        else vec[i] = 0;
+    }
+}
