@@ -40,14 +40,23 @@ Gait::Gait( void )
 {
     ros::param::get( "CYCLE_LENGTH", CYCLE_LENGTH );
     ros::param::get( "LEG_LIFT_HEIGHT", LEG_LIFT_HEIGHT );
-    ros::param::get( "LEG_GAIT_ORDER", cycle_leg_number_ );
     ros::param::get( "NUMBER_OF_LEGS", NUMBER_OF_LEGS );
-    cycle_period_ = 1;
+    ros::param::get( "GAIT_STYLE", GAIT_STYLE);
+    cycle_period_ = 25;
     is_travelling_ = false;
     in_cycle_ = false;
     extra_gait_cycle_ = 1;
     current_time_ = ros::Time::now();
     last_time_ = ros::Time::now();
+    gait_factor = 1.0;
+    cycle_leg_number_ = {1,0,1,0,1,0};
+    
+    if(GAIT_STYLE == "RIPPLE"){
+      gait_factor = 0.5;
+      cycle_leg_number_ = {1,0,2,0,2,1};
+    }
+    period_distance = 0;
+    period_height = 0;
 }
 
 //=============================================================================
@@ -56,8 +65,9 @@ Gait::Gait( void )
 
 void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
 {
-    double period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
-    double period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
+    
+    period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
+    
 
     // Calculate current velocities for this period of the gait
     // This factors in the sinusoid of the step for accurate odometry
@@ -73,6 +83,7 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
         // Lifts the leg and move it forward
         if( cycle_leg_number_[leg_index] == 0 && is_travelling_ == true )
         {
+            period_distance = cos( cycle_period_ * PI / CYCLE_LENGTH );
             feet->foot[leg_index].position.x = base.x * period_distance;
             feet->foot[leg_index].position.y = base.y * period_distance;
             feet->foot[leg_index].position.z = LEG_LIFT_HEIGHT * period_height;
@@ -81,10 +92,19 @@ void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPos
         // Moves legs backward pushing the body forward
         if( cycle_leg_number_[leg_index] == 1 )
         {
-            feet->foot[leg_index].position.x = -base.x * period_distance;
-            feet->foot[leg_index].position.y = -base.y * period_distance;
-            feet->foot[leg_index].position.z = 0.0;
-            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance;
+            period_distance = cos( cycle_period_ * PI * gait_factor / CYCLE_LENGTH);
+            feet->foot[leg_index].position.x = - base.x * period_distance ;
+            feet->foot[leg_index].position.y = - base.y * period_distance ;
+            feet->foot[leg_index].position.z = 0;
+            feet->foot[leg_index].orientation.yaw = - base.theta * period_distance;
+        }
+        if( cycle_leg_number_[leg_index] == 2 )
+        {
+            period_distance = cos((CYCLE_LENGTH + cycle_period_)* PI * gait_factor/ CYCLE_LENGTH);
+            feet->foot[leg_index].position.x = -base.x * period_distance ;
+            feet->foot[leg_index].position.y = -base.y * period_distance ;
+            feet->foot[leg_index].position.z = 0;
+            feet->foot[leg_index].orientation.yaw = -base.theta * period_distance ;
         }
     }
 }
@@ -152,14 +172,22 @@ void Gait::gaitCycle( const geometry_msgs::Twist &cmd_vel, hexapod_msgs::FeetPos
     else
     {
         // Reset period to start just to be sure. ( It should be here anyway )
-        cycle_period_ = 1;
+        cycle_period_ = 0;
     }
 
     // Loop cycle and switch the leg groupings for cycle
     if( cycle_period_ == CYCLE_LENGTH )
     {
-        cycle_period_ = 1;
-        std::reverse( cycle_leg_number_.begin(), cycle_leg_number_.end() );
+        cycle_period_ = 0;
+        sequence_change(cycle_leg_number_); //sequence change
+    }
+}
+void Gait::sequence_change(std::vector<int> &vec) //gait sequence changer
+{
+    for(int i = 0 ; i < vec.size(); i++){
+        if(vec[i] == 0) vec[i] = 1;
+        else if(vec[i] == 1 && GAIT_STYLE == "RIPPLE") vec[i] = 2;
+        else vec[i] = 0;
     }
 }
 

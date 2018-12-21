@@ -41,7 +41,6 @@
 //=============================================================================
 // Define structs and classes for gait system
 //=============================================================================
-
 class Gait
 {
     public:
@@ -49,6 +48,7 @@ class Gait
         void gaitCycle( const geometry_msgs::Twist &cmd_vel, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel );
     private:
         void cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel );
+        void sequence_change(std::vector<int> &vec);
         geometry_msgs::Pose2D smooth_base_;
         ros::Time current_time_, last_time_;
         bool is_travelling_;      // True if the robot is moving, not just in a cycle
@@ -56,9 +56,13 @@ class Gait
         int CYCLE_LENGTH;         // Number of steps in cycle
         int NUMBER_OF_LEGS;       // Leg order in cycle of the leg
         double LEG_LIFT_HEIGHT;   // Height of a leg cycle
+        std::string GAIT_STYLE;    // gait style Tripod or Ripple
         int cycle_period_;        // Current period in cycle
-        std::vector<int> cycle_leg_number_; // Leg order in cycle of the leg
         int extra_gait_cycle_;    // Forcing some extra timed cycles
+        double period_distance;
+        double period_height;
+        double gait_factor;
+        std::vector<int> cycle_leg_number_; // Leg gait order (grouping) ['RR', 'RM', 'RF', 'LR', 'LM', 'LF']
 };
 
 #endif // GAIT_H_

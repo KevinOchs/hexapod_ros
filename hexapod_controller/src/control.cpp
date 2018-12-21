@@ -43,6 +43,7 @@ Control::Control( void )
     ros::param::get( "NUMBER_OF_HEAD_SEGMENTS", NUMBER_OF_HEAD_JOINTS );
     ros::param::get( "BODY_MAX_ROLL", BODY_MAX_ROLL );
     ros::param::get( "BODY_MAX_PITCH", BODY_MAX_PITCH );
+    ros::param::get( "BODY_MAX_YAW", BODY_MAX_YAW );
     ros::param::get( "HEAD_MAX_YAW", HEAD_MAX_YAW );
     ros::param::get( "HEAD_MAX_PITCH", HEAD_MAX_PITCH );
     ros::param::get( "STANDING_BODY_HEIGHT", STANDING_BODY_HEIGHT );
@@ -290,6 +291,7 @@ void Control::bodyCallback( const geometry_msgs::AccelStampedConstPtr &body_scal
             // To prevent violent motion changes the values are ran through a low pass filter
             body_.orientation.roll = ( body_scalar_msg->accel.angular.x * BODY_MAX_ROLL )* 0.01 + ( body_.orientation.roll * ( 1.0 - 0.01 ) );
             body_.orientation.pitch = ( body_scalar_msg->accel.angular.y * BODY_MAX_PITCH ) * 0.01 + ( body_.orientation.pitch * ( 1.0 - 0.01 ) );
+            body_.orientation.yaw = ( body_scalar_msg->accel.angular.z * BODY_MAX_YAW ) * 0.01 + ( body_.orientation.yaw * ( 1.0 - 0.01 ) );
         }
     }
 }
