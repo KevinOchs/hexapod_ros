@@ -78,6 +78,9 @@ GAIT_STYLE: "TRIPOD"
 # Speed in Hz that the servos interpolate between gait poses
 INTERPOLATION_LOOP_RATE: 900
 
+# Dynamixel protocol to use
+PROTOCOL_VERSION: 2.0
+
 # Servo descriptions
 SERVOS: {
     '01': {name: coxa_joint_RR, type: MX, id: 1, ticks: 4096, center: 2048, max_radians: !degrees 360, sign: -1, offset: !degrees 0},
