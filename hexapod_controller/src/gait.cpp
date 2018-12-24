@@ -49,7 +49,7 @@ Gait::Gait( void )
     current_time_ = ros::Time::now();
     last_time_ = ros::Time::now();
     gait_factor = 1.0;
-    cycle_leg_number_ = {1,0,1,0,1,0};    
+    cycle_leg_number_ = {1,0,1,0,1,0};
     if(GAIT_STYLE == "RIPPLE")
     {
       gait_factor = 0.5;
@@ -64,7 +64,7 @@ Gait::Gait( void )
 //=============================================================================
 
 void Gait::cyclePeriod( const geometry_msgs::Pose2D &base, hexapod_msgs::FeetPositions *feet, geometry_msgs::Twist *gait_vel )
-{    
+{
     period_height = sin( cycle_period_ * PI / CYCLE_LENGTH );
 
     // Calculate current velocities for this period of the gait

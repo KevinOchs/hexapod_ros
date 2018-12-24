@@ -36,20 +36,12 @@
 
 ServoDriver::ServoDriver( void )
 {
-    // Initialize the USB2AX
-    //int baudnum = 1000000;
-    // int deviceIndex = 0;
-
-    // if( dxl_initialize( deviceIndex, baudnum ) == 0 )
-    // {
-    //     ROS_WARN("Servo Communication Failed! Ignore if just running for Rviz or Gazebo.");
-    // }
-     // Open port
-    if (portHandler->openPort())
+    // Open port
+    if ( portHandler->openPort() )
     {
         ROS_INFO("Succeeded to open the port!");
             // Set port baudrate
-            if (portHandler->setBaudRate(BAUDRATE)) ROS_INFO("Succeeded to change the baudrate!");
+            if ( portHandler->setBaudRate(BAUDRATE) ) ROS_INFO("Succeeded to change the baudrate!");
             else ROS_WARN("Failed to change the baudrate!");
             portOpenSuccess = true;
     }
@@ -132,28 +124,33 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
     else
     {
         // Initialize current position as cur since values would be 0 for all servos ( Possibly servos are off till now )
-        for( int i = 0; i < SERVO_COUNT; i++ ){
+        for( int i = 0; i < SERVO_COUNT; i++ )
+        {
             // Read present position
-            if(packetHandler->read2ByteTxRx(portHandler, ID[i], PRESENT_POSITION_L, &currentPos, &dxl_error) == COMM_SUCCESS){
+            if( packetHandler->read2ByteTxRx(portHandler, ID[i], PRESENT_POSITION_L, &currentPos, &dxl_error) == COMM_SUCCESS )
+            {
                 cur_pos_[i] = currentPos;
                 //ROS_INFO("[ID:%02d]  PresPos:%02d", ID[i], cur_pos_[i]);
             }
-            else{
-                if(portOpenSuccess) ROS_WARN("Read error on [ID:%02d]", ID[i]);
+            else
+            {
+                if( portOpenSuccess ) ROS_WARN("Read error on [ID:%02d]", ID[i]);
             }
         }
         ros::Duration( 0.1 ).sleep();
         // Turn torque on
         for( int i = 0; i < SERVO_COUNT; i++ ){
-        if(packetHandler->write1ByteTxRx(portHandler, ID[i], TORQUE_ENABLE, TORQUE_ON, &dxl_error) != COMM_SUCCESS && portOpenSuccess){
-            ROS_WARN("TURN TORQUE ON SERVO FAILED [ID:%02d]", ID[i]);
-            torque_on = false;
+            if( packetHandler->write1ByteTxRx(portHandler, ID[i], TORQUE_ENABLE, TORQUE_ON, &dxl_error) != COMM_SUCCESS && portOpenSuccess )
+            {
+                ROS_WARN("TURN TORQUE ON SERVO FAILED [ID:%02d]", ID[i]);
+                torque_on = false;
+            }
         }
+        if( torque_on )
+        {
+            ROS_INFO("Hexapod servos torque is now ON.");
+            servos_free_ = false;
         }
-        if(torque_on){
-        ROS_INFO("Hexapod servos torque is now ON.");
-        servos_free_ = false;
-        }     
     }
 }
 
@@ -163,7 +160,7 @@ void ServoDriver::makeSureServosAreOn( const sensor_msgs::JointState &joint_stat
 
 void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_state )
 {
-    dynamixel::GroupSyncWrite groupSyncWrite(portHandler, packetHandler, GOAL_POSITION_L, LEN_GOAL_POSITION);
+    dynamixel::GroupSyncWrite groupSyncWrite( portHandler, packetHandler, GOAL_POSITION_L, LEN_GOAL_POSITION );
     convertAngles( joint_state ); // Convert angles to servo resolution
     makeSureServosAreOn( joint_state );
 
@@ -227,15 +224,17 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
                 // Complete sync_write packet for broadcast
                 param_goal_position[0] = DXL_LOBYTE(write_pos_[i]);
                 param_goal_position[1] = DXL_HIBYTE(write_pos_[i]);
-                if(!groupSyncWrite.addParam(ID[i], param_goal_position) && portOpenSuccess){
-                   ROS_WARN("Goal position param write failed on [ID:%02d]", ID[i]);
-                   writeParamSuccess = false;
+                if( !groupSyncWrite.addParam(ID[i], param_goal_position) && portOpenSuccess )
+                {
+                    ROS_WARN("Goal position param write failed on [ID:%02d]", ID[i]);
+                    writeParamSuccess = false;
                 }
 
             }
-            // Broadcast packet over USB2AX
-            if(writeParamSuccess){
-                if(groupSyncWrite.txPacket() != COMM_SUCCESS && portOpenSuccess) ROS_WARN("Position write not successfull!!");
+            // Broadcast packet over U2D2
+            if( writeParamSuccess )
+            {
+                if( groupSyncWrite.txPacket() != COMM_SUCCESS && portOpenSuccess ) ROS_WARN("Position write not successfull!!");
             }
             groupSyncWrite.clearParam();
             loop_rate.sleep();
@@ -256,14 +255,17 @@ void ServoDriver::transmitServoPositions( const sensor_msgs::JointState &joint_s
 void ServoDriver::freeServos( void )
 {
     // Turn off torque
-        for( int i = 0; i < SERVO_COUNT; i++ ){
-        if(packetHandler->write1ByteTxRx(portHandler, ID[i], TORQUE_ENABLE, TORQUE_OFF, &dxl_error) != COMM_SUCCESS && portOpenSuccess){
-            ROS_WARN("TURN TORQUE OFF FAILED ON SERVO [ID:%02d]", ID[i]);
-            torque_off = false;
+        for( int i = 0; i < SERVO_COUNT; i++ )
+        {
+            if( packetHandler->write1ByteTxRx(portHandler, ID[i], TORQUE_ENABLE, TORQUE_OFF, &dxl_error) != COMM_SUCCESS && portOpenSuccess )
+            {
+                ROS_WARN("TURN TORQUE OFF FAILED ON SERVO [ID:%02d]", ID[i]);
+                torque_off = false;
+            }
         }
+        if( torque_off )
+        {
+            ROS_INFO("Hexapod servos torque is now OFF.");
+            servos_free_ = true;
         }
-        if(torque_off){
-        ROS_INFO("Hexapod servos torque is now OFF.");
-        servos_free_ = true;
-        }     
 }
