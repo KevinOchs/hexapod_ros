@@ -79,7 +79,7 @@ GAIT_STYLE: "TRIPOD"
 INTERPOLATION_LOOP_RATE: 900
 
 # Dynamixel protocol to use
-PROTOCOL_VERSION: 2.0
+PROTOCOL_VERSION: 2
 
 # Servo descriptions
 SERVOS: {
